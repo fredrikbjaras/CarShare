@@ -12,7 +12,6 @@ base.mainController = (function() {
             controller: base.userAdminController
         }
     };
-	//testarbajsetc
 
     var model = {
         route: ''
