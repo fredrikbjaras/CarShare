@@ -4,21 +4,13 @@ import java.security.Principal;
 
 //Not implemented yet
 
-public class BookingRequests implements Principal {
+public class BookingRequests {
 
-    //public static User NONE = new User(0, Role.NONE, "-");
-
-    //declerations
+    //Declarations
 
     public BookingRequests() {
-       
+       //constructors
     }
-
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
     //Methods
 }
