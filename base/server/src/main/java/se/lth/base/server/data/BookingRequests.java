@@ -2,6 +2,8 @@ package se.lth.base.server.data;
 
 import java.security.Principal;
 
+//Not implemented yet
+
 public class BookingRequests implements Principal {
 
     //public static User NONE = new User(0, Role.NONE, "-");
