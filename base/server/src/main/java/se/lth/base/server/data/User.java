@@ -9,11 +9,13 @@ public class User implements Principal {
     private final int id;
     private final Role role;
     private final String username;
-
+    //add more declarations
+    
     public User(int id, Role role, String username) {
         this.id = id;
         this.role = role;
         this.username = username;
+        //add the rest
     }
 
     public Role getRole() {

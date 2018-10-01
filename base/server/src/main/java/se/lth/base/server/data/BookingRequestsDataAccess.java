@@ -11,42 +11,41 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
- /* @author 
- * @see DataAccess
- */
-public class UserDataAccess extends DataAccess<User> {
 
-    private static class UserMapper implements Mapper<User> {
+public class BookingRequestsDataAccess extends DataAccess<BookingRequests> {
+
+
+    private static class BookingMapper implements Mapper<BookingRequests> {
         // Feel free to change this to a lambda expression
         @Override
-        public User map(ResultSet resultSet) throws SQLException {
-            return new User(resultSet.getInt("user_id"),
-                    Role.valueOf(resultSet.getString("role")),
-                    resultSet.getString("username"));
+        public BookingRequests map(ResultSet resultSet) throws SQLException {
+            return new BookingRequests(//not implemented yet
+            		);
         }
+
     }
-    public UserDataAccess(String driverUrl) {
-        super(driverUrl, new UserMapper());
+    public BookingRequestsDataAccess(String driverUrl) {
+        super(driverUrl, new BookingMapper());
     }
 
     /**
      * Add a new user to the system.
      *
-     * @param credentials of the new user, containing name, role, and password.
-     * @throws DataAccessException if duplicated username or too short user names.
+     * @param credentials of the new BookingRequests, containing name, role, and password.
+     * @throws DataAccessException if duplicated BookingRequestsname or too short BookingRequests names.
      */
-    public User addUser(Credentials credentials) {
+    public BookingRequests addBookingRequests(Credentials credentials) {
         long salt = Credentials.generateSalt();
-        int userId = insert("INSERT INTO user (role_id, username, password_hash, salt) VALUES ((" +
-                        "SELECT role_id FROM user_role WHERE user_role.role=?),?,?,?)",
-                credentials.getRole().name(), credentials.getUsername(), credentials.generatePasswordHash(salt), salt);
-        return new User(userId, credentials.getRole(), credentials.getUsername());
+        int BookingRequestsId = insert("INSERT INTO BookingRequests (role_id, BookingRequestsname, password_hash, salt) VALUES ((" +
+                        "SELECT role_id FROM BookingRequests_role WHERE BookingRequests_role.role=?),?,?,?)",
+                credentials.getRole().name(), credentials.getBookingRequestsname(), credentials.generatePasswordHash(salt), salt);
+        return new BookingRequests(userId, credentials.getRole(), credentials.getUsername());
     }
 
-    public User updateUser(int userId, Credentials credentials) {
+    public BookingRequests updateBookingRequests(int userId, Credentials credentials) {
         if (credentials.hasPassword()) {
             long salt = Credentials.generateSalt();
-            execute("UPDATE user SET username = ?, password_hash = ?, salt = ?, role_id = (" +
+            execute("UPDATE BookingRequests SET username = ?, password_hash = ?, salt = ?, role_id = (" +
                             "    SELECT user_role.role_id FROM user_role WHERE user_role.role = ?) " +
                             "WHERE user_id = ?",
                     credentials.getUsername(), credentials.generatePasswordHash(salt), salt,
@@ -60,19 +59,19 @@ public class UserDataAccess extends DataAccess<User> {
         return getUser(userId);
     }
 
-    public User getUser(int userId) {
+    public BookingRequests getBookingRequests(int userId) {
         return queryFirst("SELECT user_id, role, username FROM user, user_role " +
                 "WHERE user.user_id = ? AND user.role_id = user_role.role_id", userId);
     }
 
-    public boolean deleteUser(int userId) {
+    public boolean deleteBookingRequests(int userId) {
         return execute("DELETE FROM user WHERE user_id = ?", userId) > 0;
     }
 
     /**
      * @return all users in the system.
      */
-    public List<User> getUsers() {
+    public List<BookingRequests> getBookingRequestss() {
         return query("SELECT user_id, username, role FROM user, user_role " +
                 "WHERE user.role_id = user_role.role_id");
     }
@@ -126,3 +125,4 @@ public class UserDataAccess extends DataAccess<User> {
         return new Session(sessionId, user);
     }
 }
+

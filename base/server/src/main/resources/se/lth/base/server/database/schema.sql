@@ -51,7 +51,7 @@ CREATE TABLE Routes(routeId INT AUTO_INCREMENT NOT NULL,
 					);
 
 --Table used to store reports/flags 
-CREATE TABLE Flag_Reports(flagReportID INT AUTO_INCREMENT NOT NULL,
+CREATE TABLE FlagReports(flagReportID INT AUTO_INCREMENT NOT NULL,
 							routeID INT NOT NULL,
 							fromUserID INT NOT NULL,
 							toUserID INT NOT NULL,
@@ -66,7 +66,7 @@ CREATE TABLE Flag_Reports(flagReportID INT AUTO_INCREMENT NOT NULL,
 );
 
 --Table used to store requests to join an active route
-CREATE TABLE Booking_Requests(bookingReqID INT AUTO_INCREMENT,
+CREATE TABLE BookingRequests(bookingReqID INT AUTO_INCREMENT,
 								routeID INT NOT NULL,
 								fromUserID INT Not NULL,
 								toUserID INT Not NULL,
