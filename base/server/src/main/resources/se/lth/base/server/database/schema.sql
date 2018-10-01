@@ -1,66 +1,80 @@
 -- This is the schema file that the database is initialized with. It is specific to the H2 SQL dialect.
--- Author: Rasmus Ros, rasmus.ros@cs.lth.se
+-- Author: Jonathan Jakobsson
 
+--TODO: Session table 
+--TODO: DATATYPES of User(password), User(userNAME) och Flag_Reports(flags) see comments
+--TODO: Routes(passengers) make foreign key if possible
 
--- User roles describe what each user can do on a generic level.
-CREATE TABLE user_role(role_id TINYINT,
-                       role VARCHAR(10) NOT NULL UNIQUE,
-                       PRIMARY KEY (role_id));
+--Table one made for Userlogin, user information and role specification
+CREATE TABLE User(userID INT AUTO_INCREMENT NOT NULL,
+                  userName VARCHAR_IGNORECASE NOT NULL UNIQUE, --Vet inte om username ska vara casesesitive?
+                  password VARCHAR NOT NULL, --Kommer förmodligen ändras till något annat om vi kör ett hashat lösen typ UUID 
+				  phoneNr INT NOT NULL,
+				  profilePicture BLOB,
+				  description VARCHAR,
+				  isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
+				  
+                  PRIMARY KEY (userID),
+                  CHECK (LENGTH(userName) >= 8),
+				  CHECK (LENGTH(userName) <= 16),
+				  CHECK (LENGTH(password) >= 8)
+				
+); 
 
-CREATE TABLE user(user_id INT AUTO_INCREMENT NOT NULL,
-                  role_id TINYINT NOT NULL,
-                  username VARCHAR_IGNORECASE NOT NULL UNIQUE, -- username should be unique
-                  salt BIGINT NOT NULL,
-                  password_hash UUID NOT NULL,
-                  PRIMARY KEY (user_id),
-                  FOREIGN KEY (role_id) REFERENCES user_role (role_id),
-                  CHECK (LENGTH(username) >= 4)); -- ensures that username have 4 or more characters
+	--Lägger till en admin med Användarnamn: Admin och lösen: password
+	INSERT INTO User (userID,userName,password,phoneNr,isAdmin) 
+	VALUES (1,'AdminAdmin','password',123456789,TRUE);
 
--- Sessions are indexed by large random numbers instead of a sequence of integers, because they could otherwise
--- be guessed by a malicious user.
-CREATE TABLE session(session_uuid UUID DEFAULT RANDOM_UUID(),
-                     user_id INT NOT NULL,
+--Tagen mestadels från labben. Gör en chansning tills vi har har specificerat hur vi ska hantera våra sessions.
+CREATE TABLE Session(session_uuid UUID DEFAULT RANDOM_UUID(),
+                     userID INT NOT NULL,
                      last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP(),
+					 isAdmin BOOLEAN NOT NULL,
+					 
                      PRIMARY KEY(session_uuid),
-                     FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE);
+                     FOREIGN KEY(userID) REFERENCES User(userID) ON DELETE CASCADE);
 
-INSERT INTO user_role VALUES (1, 'ADMIN'), (2, 'USER');
-INSERT INTO user (role_id, username, salt, password_hash)
-    VALUES (1, 'Admin', -2883142073796788660, '8dc0e2ab-4bf1-7671-c0c4-d22ffb55ee59'),
-           (2, 'Test', 5336889820313124494, '144141f3-c868-85e8-0243-805ca28cdabd');
--- Example table containing some data per user, you are expected to remove this table in your project.
-CREATE TABLE foo(
-    -- First the four columns are specified:
+-- Table used to store active routes
+CREATE TABLE Routes(routeId INT AUTO_INCREMENT NOT NULL,
+					driverID INT NOT NULL,
+					freeSeats INT NOT NULL,
+					--location ARRAY<DOUBLE> NOT NULL,
+					--destination ARRAY<DOUBLE> NOT NULL,
+					timeOfDeparture TIMESTAMP NOT NULL,
+					timeOfArrival TIMESTAMP NOT NULL,
+					--passengers ARRAY<INT> NOT NULL, 
+					recurring ENUM ('no', 'daily', 'weekly', 'monthly') DEFAULT ('no'),
+					finished BOOLEAN NOT NULL,
 
-    foo_id INT AUTO_INCREMENT,
-    -- foo_id is the first column with type INT. This is used to uniquely identify each foo. In this way, the foo can be
-    -- deleted or updated by referring only to its foo_id. The AUTO_INCREMENT keyword is H2 specific and indicates
-    -- that the column is supplied with a default value that is incremented for each row. The first row
-    -- will automatically get foo_id = 1, the second one will get foo_id = 2, and so on.
+					PRIMARY KEY(routeId),
+					FOREIGN KEY(driverID) REFERENCES User(userID)
+					);
 
-    payload VARCHAR NOT NULL,
-    -- payload is the second column with type VARCHAR. This is the data that is typed in the input field
-    -- on the foo tab in the front end. There is no limit to how long the string can be.
-    -- NOT NULL specifies that the row must have a payload.
+--Table used to store reports/flags 
+CREATE TABLE Flag_Reports(flagReportID INT AUTO_INCREMENT NOT NULL,
+							routeID INT NOT NULL,
+							fromUserID INT NOT NULL,
+							toUserID INT NOT NULL,
+							reason VARCHAR DEFAULT '', --skulle vara comment men går inte i h2 syntax
+							--flags ARRAY<BOOLEAN> NOT NULL, --Inte säker vad denna är till?
+							
+							PRIMARY KEY(flagReportID),
+							FOREIGN KEY(fromUserID) REFERENCES User(userID),
+							FOREIGN KEY(toUserID) REFERENCES User(userID) ON DELETE CASCADE,
+							FOREIGN KEY(routeID) REFERENCES Routes(routeID) ON DELETE CASCADE
 
-    user_id INT NOT NULL,
-    -- user_id is the third column with type INT. This keeps track of who the user is, so that each user has their own
-    -- foos only.
-
-    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP() NOT NULL,
-    -- created is the fourth and final column with type TIMESTAMP. This column also has a default value
-    -- which is created by the function CURRENT_TIMESTAMP() if not supplied during creation.
-
-    -- Here are some additional constraints that the data must relate to:
-
-    PRIMARY KEY(foo_id),
-    -- This defines foo_id as the unique identifier of the table. It adds NOT NULL to the column and
-    -- enforces that the values rows all have a unique identifier.
-
-    FOREIGN KEY(user_id) REFERENCES user(user_id) ON DELETE CASCADE
-    -- This informs that the column user_id is a relation to another table's primary key. In combination
-    -- with the NOT NULL constraint above it is not possible to enter data that is not connected to a user.
-    -- Note that there can be multiple rows with the same user_id (but the foo_id is unique for each row).
-    -- The ON DELETE CASCADE ensures that when a user is deleted then all their foo data will also be deleted.
 );
 
+--Table used to store requests to join an active route
+CREATE TABLE Booking_Requests(bookingReqID INT AUTO_INCREMENT,
+								routeID INT NOT NULL,
+								fromUserID INT Not NULL,
+								toUserID INT Not NULL,
+								accepted BOOLEAN NOT NULL,
+								
+								PRIMARY KEY(bookingReqID),
+								FOREIGN KEY(routeID) REFERENCES Routes(routeID) ON DELETE CASCADE,
+								FOREIGN KEY(fromUserID) REFERENCES User(userID) ON DELETE CASCADE,
+								FOREIGN KEY(toUserID) REFERENCES User(userID) ON DELETE CASCADE
+								
+);
