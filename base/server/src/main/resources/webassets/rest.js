@@ -24,6 +24,17 @@ base.rest = (function() {
         };
     };
 
+    var Route = function(json) {
+        //TODO
+    };
+
+    var BookingRequest = function(json) {
+        //TODO
+    };
+
+    var FlagReport = function(json) {
+        //TODO
+    };
 
     var objOrError = function(json, cons) {
         if (json.error) {
@@ -36,6 +47,9 @@ base.rest = (function() {
     base.Foo = Foo;
     base.User = User;
     base.Role = Role;
+    base.Route = Route;
+    base.BookingRequest = BookingRequest;
+    base.FlagReport = FlagReport;
 
     var baseFetch = function(url, config) {
         config = config || {};
@@ -52,11 +66,6 @@ base.rest = (function() {
     };
 
     return {
-        getUser: function() {
-            return baseFetch('/rest/user')
-                .then(response => response.json())
-                .then(u => new User(u));
-        },
         login: function(username, password, rememberMe) {
             var loginObj = {username: username, password: password};
             return baseFetch('/rest/user/login?remember=' + rememberMe, {
@@ -67,17 +76,23 @@ base.rest = (function() {
         logout: function() {
             return baseFetch('/rest/user/logout', {method: 'POST'});
         },
-        getUsers: function() {
-            return baseFetch('/rest/user/all')
+        getUser: function(userID) {
+            return baseFetch('/rest/user/' + userID)
+                .then(response => response.json())
+                .then(u => new User(u));
+        },
+        getUsers: function(name, telephoneNum, routeID) {
+            var userFilterObj = { name: name, telephoneNum: telephoneNum, routeID: routeID };
+            return baseFetch('/rest/user/filter', {
+                method: 'GET',
+                body: JSON.stringify(userFilterObj),
+                headers: jsonHeader
+            })
                 .then(response => response.json())
                 .then(users => users.map(u => new User(u)));
         },
-        getRoles: function() {
-            return baseFetch('/rest/user/roles')
-                .then(response => response.json())
-                .then(roles => roles.map(r => new Role(r)));
-        },
-        addUser: function(credentials) {
+        addUser: function(username, encPassword) {
+            var credentials = {username: username, encPassword: encPassword}
             return baseFetch('/rest/user', {
                     method: 'POST',
                     body: JSON.stringify(credentials),
@@ -85,16 +100,22 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        putUser: function(id, credentials) {
-            return baseFetch('/rest/user/'+id, {
+        updateUser: function(userId, name, encPassword, telephoneNum, description) {
+            var userObj = {name: name, encPassword: encPassword, telephoneNum: telephoneNum, description: description}
+            return baseFetch('/rest/user/' + userid, {
                     method: 'PUT',
-                    body: JSON.stringify(credentials),
+                    body: JSON.stringify(userObj),
                     headers: jsonHeader})
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        deleteUser: function(username) {
-            return baseFetch('/rest/user/'+username, {method: 'DELETE'});
+        deleteUser: function(userId) {
+            return baseFetch('/rest/user/'+userId, {method: 'DELETE'});
+        },
+        getRoles: function() {
+            return baseFetch('/rest/user/roles')
+                .then(response => response.json())
+                .then(roles => roles.map(r => new Role(r)));
         },
         getFoos: function(userId) {
             var postfix = "";
