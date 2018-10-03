@@ -100,26 +100,26 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        updateUser: function(userId, name, encPassword, telephoneNum, description) {
+        updateUser: function(userID, name, encPassword, telephoneNum, description) {
             var userObj = {name: name, encPassword: encPassword, telephoneNum: telephoneNum, description: description}
-            return baseFetch('/rest/user/' + userid, {
+            return baseFetch('/rest/user/' + userID, {
                     method: 'PUT',
                     body: JSON.stringify(userObj),
                     headers: jsonHeader})
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        deleteUser: function(userId) {
-            return baseFetch('/rest/user/'+userId, {method: 'DELETE'});
+        deleteUser: function(userID) {
+            return baseFetch('/rest/user/' + userID, {method: 'DELETE'});
         },
         getRoles: function() {
             return baseFetch('/rest/user/roles')
                 .then(response => response.json())
                 .then(roles => roles.map(r => new Role(r)));
         },
-        getFoos: function(userId) {
+        getFoos: function(userID) {
             var postfix = "";
-            if (typeof userId !== "undefined") postfix = "/user/" + userId;
+            if (typeof userID !== "undefined") postfix = "/user/" + userID;
             return baseFetch('/rest/foo' + postfix)
                 .then(response => response.json())
                 .then(foos => foos.map(f => new Foo(f)));
@@ -132,11 +132,11 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(f => new Foo(f));
         },
-        deleteFoo: function(fooId) {
-            return baseFetch('/rest/foo/'+fooId, {method: 'DELETE'});
+        deleteFoo: function(fooID) {
+            return baseFetch('/rest/foo/'+fooID, {method: 'DELETE'});
         },
-        updateFoo: function(fooId, total) {
-            return baseFetch('/rest/foo/'+fooId+'/total/'+total, {method: 'POST'})
+        updateFoo: function(fooID, total) {
+            return baseFetch('/rest/foo/'+fooID+'/total/'+total, {method: 'POST'})
                 .then(function() {
                     return total;
                 });
