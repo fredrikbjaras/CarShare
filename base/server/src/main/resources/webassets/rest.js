@@ -132,11 +132,11 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(f => new Foo(f));
         },
-        deleteFoo: function(fooID) {
-            return baseFetch('/rest/foo/'+fooID, {method: 'DELETE'});
+        deleteFoo: function(fooId) {
+            return baseFetch('/rest/foo/'+fooId, {method: 'DELETE'});
         },
-        updateFoo: function(fooID, total) {
-            return baseFetch('/rest/foo/'+fooID+'/total/'+total, {method: 'POST'})
+        updateFoo: function(fooId, total) {
+            return baseFetch('/rest/foo/'+fooId+'/total/'+total, {method: 'POST'})
                 .then(function() {
                     return total;
                 });
