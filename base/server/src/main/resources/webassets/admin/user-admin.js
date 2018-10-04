@@ -126,6 +126,7 @@ base.userAdminController = function() {
             document.getElementById('user-form').onsubmit = controller.submitUser;
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
+            base.mainController.hideUserLinks(); // Visa bara admin-länkar
             Promise.all([
                 base.rest.getUsers().then(function(users) {
                     model.users = users;
