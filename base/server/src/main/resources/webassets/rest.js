@@ -24,7 +24,7 @@ base.rest = (function() {
         };
     };
 
-    var Route = function(json) { // HEj
+    var Route = function(json) { // hejHej
         //TODO
     };
 
