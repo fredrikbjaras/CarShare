@@ -30,9 +30,7 @@ base.loginController = (function() {
             var remember = document.getElementById('remember').checked;
             base.rest.login(username, password, remember)
                 .then(function(response) {
-                
-                		 console.log(base.rest.getUser.getRole);
-                
+           
                     if (response.ok) {
                         base.changeLocation('/');
                     } else {
