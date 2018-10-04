@@ -15,7 +15,6 @@ base.rest = (function() {
         Object.assign(this, json);
         this.role = new Role(json.role);
         this.json = json;
-
         this.isAdmin = function() {
             return this.role.name === 'ADMIN';
         };
