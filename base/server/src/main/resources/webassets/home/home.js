@@ -20,7 +20,7 @@ base.homeController = function() {
         },
         // Update a single table row to display a foo
         update: function(trElement, foo) {
-        }
+        
             var tds = trElement.children;
             tds[0].textContent = foo.payload;
             var d = foo.createdDate;
@@ -40,6 +40,7 @@ base.homeController = function() {
                 });
 
     		
+    }
     };
     window.initOnLoad();
     return controller;

@@ -32,6 +32,21 @@ base.userAdminController = function() {
             var el = document.getElementById('user-list').querySelectorAll('button')[ix];
             el.parentElement.removeChild(el);
         },
+        
+        showForm: function(formId){   
+        	console.log('första hej');
+            var form = document.getElementById(formId);	
+            if(form.style.display == 'block'){
+            	form.style.display = 'none';
+            	console.log('if hej');
+            }
+            	else{
+             	    
+            	form.style.display = 'block';
+            	console.log('else hej');
+            }
+            	},
+        
         resetEdit: function() {
             var userView = document.getElementById('user-view');
             var isEdit = userView.classList.contains('edit');
@@ -72,6 +87,9 @@ base.userAdminController = function() {
             options[roleIx].defaultSelected = true;
             document.getElementById('user-form').reset();
         }
+ 
+        
+        
     };
 
     var controller = {
@@ -111,6 +129,7 @@ base.userAdminController = function() {
             }
             return false;
         },
+       
         deleteUser: function() {
             var userId = document.getElementById('user-id').value;
             var ix = model.users.map(user => user.id).indexOf(parseInt(userId));
@@ -120,13 +139,21 @@ base.userAdminController = function() {
                 model.users.splice(ix, 1);
                 document.querySelector('#user-list button').click();
             });
+            
         },
         load: function() {
             document.getElementById('change-password').onclick = (event) => view.editPassword(false);
             document.getElementById('user-form').onsubmit = controller.submitUser;
+            document.getElementById('new-user').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-route').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-bookingRequest').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-flagReport').onclick = (event) => view.showForm('user-form');
+            
+          
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
-            base.mainController.hideUserLinks(); // Visa bara admin-länkar
+          
+            //base.mainController.view.hideUserLinks(); // Visa bara admin-länkar
             Promise.all([
                 base.rest.getUsers().then(function(users) {
                     model.users = users;

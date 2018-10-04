@@ -48,7 +48,7 @@ base.userpageController = function() {
             	});
             });
         	
-        }
+        },
         load: function() {
             base.rest.getUser(model.userId).then(function(user) {
                 model = user;

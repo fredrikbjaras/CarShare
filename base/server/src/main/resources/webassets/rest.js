@@ -88,7 +88,7 @@ base.rest = (function() {
         getUsers: function(name, telephoneNum, routeID) {
             var userFilterObj = { name: name, telephoneNum: telephoneNum, routeID: routeID };
             return baseFetch('/rest/user/filter', {
-                method: 'GET',
+                method: 'POST',
                 body: JSON.stringify(userFilterObj),
                 headers: jsonHeader
             })

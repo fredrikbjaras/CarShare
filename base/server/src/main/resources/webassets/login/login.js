@@ -17,17 +17,22 @@ base.loginController = (function() {
                 return false;
             };
             base.rest.getUser().then(function(user) {
+
+
                 if (!user.isNone()) {
                     base.changeLocation('/');
                 }
             });
         },
         loginUser: function() {
-            var username = document.getElementById('username').value;
+            var username = document.getElementById('username').value; 
             var password = document.getElementById('password').value;
             var remember = document.getElementById('remember').checked;
             base.rest.login(username, password, remember)
                 .then(function(response) {
+                
+                		 console.log(base.rest.getUser.getRole);
+                
                     if (response.ok) {
                         base.changeLocation('/');
                     } else {
