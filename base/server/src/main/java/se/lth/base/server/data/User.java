@@ -39,7 +39,7 @@ public class User implements Principal {
     public String getPassword() {
     	return password;
     }
-    public String getuserName() {
+    public String getUserName() {
     	return userName;
     }
     public int getPhoneNr() {
@@ -61,8 +61,5 @@ public class User implements Principal {
     		return Role.USER;
     	}
     }
-	@Override
-	public String getName() {
-		return userName;
-	}
+	
 }
