@@ -75,6 +75,11 @@ base.rest = (function() {
         logout: function() {
             return baseFetch('/rest/user/logout', {method: 'POST'});
         },
+        getLoggedInUser: function() {
+            return baseFetch('/rest/user')
+                .then(response => response.json())
+                .then(u => new User(u));
+        },
         getUser: function(userID) {
             return baseFetch('/rest/user/' + userID)
                 .then(response => response.json())

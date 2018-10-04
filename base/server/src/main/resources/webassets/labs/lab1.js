@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 var testJavaScript = function(param1, param2) {alert(param1 + param2);}
 
 var systemBrowseValidate = function() {
-    base.rest.getUser()
+    base.rest.getLoggedInUser()
         .catch(error => baseLab.complete('systemBrowse', false))
         .then(function(user) {
             baseLab.complete('systemBrowse', !user.isNone());

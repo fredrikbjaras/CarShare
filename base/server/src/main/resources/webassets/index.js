@@ -61,7 +61,7 @@ base.mainController = (function() {
             document.getElementById('logout').onclick = controller.logout;
             window.onhashchange = base.mainController.changeRoute;
             base.mainController.changeRoute();
-            base.rest.getUser().then(function(user) {
+            base.rest.getLoggedInUser().then(function(user) {
                 model.user = user;
                 view.renderUsername();
                 if (user.isNone()) {
