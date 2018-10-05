@@ -85,16 +85,12 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUsers: function(name, telephoneNum, routeID) {
-            var userFilterObj = { name: name, telephoneNum: telephoneNum, routeID: routeID };
-            return baseFetch('/rest/user/filter', {
-                method: 'POST',
-                body: JSON.stringify(userFilterObj),
-                headers: jsonHeader
-            })
+        getUsers: function() {
+            return baseFetch('/rest/user/all')
                 .then(response => response.json())
                 .then(users => users.map(u => new User(u)));
         },
+
 
         addUser: function(username, encPassword) {
             var credentials = {username: username, encPassword: encPassword}
