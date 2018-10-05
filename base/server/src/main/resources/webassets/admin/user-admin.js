@@ -90,7 +90,6 @@ base.userAdminController = function() {
             
             
             var roleIx = model.roleNames.indexOf(user.role.name);
-            var mymap = L.map('mapid').setView([51.505, -0.09], 13);
             var options = document.getElementById('set-role').querySelectorAll('option');
             options.forEach(o => o.defaultSelected = false);
             options[roleIx].defaultSelected = true;
