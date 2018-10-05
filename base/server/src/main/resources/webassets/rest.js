@@ -85,8 +85,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUsers: function(name, telephoneNum, routeID) {
-            var userFilterObj = { name: name, telephoneNum: telephoneNum, routeID: routeID };
+        getUsers: function(userName, phoneNr, routeID) {
+            var userFilterObj = { userName: userName, phoneNr: phoneNr, routeID: routeID };
             return baseFetch('/rest/user/filter', {
                 method: 'POST',
                 body: JSON.stringify(userFilterObj),
@@ -96,8 +96,8 @@ base.rest = (function() {
                 .then(users => users.map(u => new User(u)));
         },
 
-        addUser: function(username, encPassword) {
-            var credentials = {username: username, encPassword: encPassword}
+        addUser: function(userName, password, role = 'NONE') {
+            var credentials = {userName: userName, password: password, role: role}
             return baseFetch('/rest/user', {
                     method: 'POST',
                     body: JSON.stringify(credentials),
@@ -105,8 +105,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        updateUser: function(userID, name, encPassword, role, telephoneNum, description) {
-            var userObj = {name: name, encPassword: encPassword, role: role, telephoneNum: telephoneNum, description: description}
+        updateUser: function(userID, userName, password, phoneNr = null, role = 'NONE', description = null, profilePicture = null) {
+            var userObj = {userID: null, userName: userName, password: password, phoneNr: phoneNr, role: role, description: description, profilePicture: profilePicture}
             return baseFetch('/rest/user/' + userID, {
                     method: 'PUT',
                     body: JSON.stringify(userObj),
