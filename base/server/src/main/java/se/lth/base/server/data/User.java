@@ -61,5 +61,9 @@ public class User implements Principal {
     		return Role.USER;
     	}
     }
+ public String getName() {
+    	return  userName;
+    }
+	
 	
 }
