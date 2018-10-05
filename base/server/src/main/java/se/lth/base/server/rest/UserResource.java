@@ -104,14 +104,32 @@ public class UserResource {
             return userDao.addUser(credentials);
     	}
     }
+    
+    //dosen't work yet, Filter class has to be added for the search Algorithm to work.
+   @Path("{filter}") // object
+	@GET
+	@RolesAllowed(Role.Names.ADMIN)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public List<User> getUsers(@PathParam("filter") UserFilter filter) { // filter object could contain String name, int
+																			// phoneNr, RouteID
 
-    @Path("all")
-    @GET
-    @RolesAllowed(Role.Names.ADMIN)
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public List<User> getUsers() {
-        return userDao.getUsers();
-    }
+		if (user.getIsAdmin()) {
+			UserSearch search = new UserSearch(userDao, routeDao, filter);
+			return search.returnSortedList();
+
+		} else {
+			UserSearch search = new UserSearch(userDao, routeDao, filter, user.getUserID());
+			List<User> temp = search.returnSortedList();
+			if (temp.get(0).getUserID() == -1) {
+				throw new WebApplicationException("You are not a part of this Route", Response.Status.BAD_REQUEST);
+				List<User> emptyUserList = new ArrayList<User>();
+				return emptyUserList;
+			} else {
+				return temp;
+			}
+		}
+
+	}
 
     /**
      * @param userId
