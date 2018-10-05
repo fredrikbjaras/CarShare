@@ -10,30 +10,43 @@ public class UserSearch {
 	private List<User> userList;
 	private UserFilter filter;
 	private List<Routes> routeList;
+	private int userId;
 
 	public UserSearch(List<User> userList, UserFilter filter) {
 
-		/*
-		 * filter could be either String name, int telephoneNum or int routeID
-		 * 
-		 */
 		this.filter = filter;
 		this.userList = userList;
+		userId = -1; // so we now that we call was made by an admin
 	}
 
 	// if filter contains routeId
 	public UserSearch(List<User> userList, List<Routes> routeList, UserFilter filter) {
 
-		/*
-		 * filter could be either String name, int telephoneNum or int routeID
-		 * 
-		 */
 		this.filter = filter;
 		this.userList = userList;
 		this.routeList = routeList;
+		userId = -1; //so we now that we call was made by an admin
 	}
 	
-	public List<User> sortByPhoneNbr(int phoneNbr) {
+	// if filter contains routeId and call was NOT made by an admin 
+	public UserSearch(List<User> userList, List<Routes> routeList, UserFilter filter, int userId) {
+
+		this.filter = filter;
+		this.userList = userList;
+		this.routeList = routeList;
+		this.userId = userId;
+	}
+	
+	
+	// is supposed to return the sorted list dependent on the filter. 
+	// due to filter class is not implemented this method can't be implemented yet.
+	public List<User> returnSortedList(){
+		List<User> tempUserList = new ArrayList<User>();
+		return tempUserList;
+	}
+	
+	//returns an empty array if no User with matching phone number was found
+	private List<User> sortByPhoneNbr(int phoneNbr) {
 		List<User> tempUserList = new ArrayList<User>();
 		for (int i = 0; i < userList.size(); i++) {
 			if(userList.get(i).getPhoneNr() == phoneNbr) {
@@ -42,9 +55,9 @@ public class UserSearch {
 		}
 		return tempUserList;
 	}
-
-	public List<User> sortByName(String name) {
-
+	
+	//returns an empty array if no User with matching name was found
+	private List<User> sortByName(String name) {
 		List<User> tempUserList = new ArrayList<User>();
 
 		for (int i = 0; i < userList.size(); i++) {
@@ -60,10 +73,10 @@ public class UserSearch {
 		return tempUserList;
 	}
 
-	//
-	public List<User> sortByRouteId(int RouteId) {
+	
+	private List<User> sortByRouteId(int RouteId) {
 		List<User> tempUserList = new ArrayList<User>();// list to return
-		List<Integer> passengersInRoute; // saves ID of people in route
+		List<Integer> passengersInRoute = new ArrayList<Integer>(); // saves ID of people in route
 		int driverId;
 		boolean doesRouteExist = false;
 
@@ -77,6 +90,16 @@ public class UserSearch {
 			}
 		}
 		
+		//if caller is NOT an admin, the callers userID must be in the route, as either driver or passenger
+		if(userId != -1) {
+			if(driverId != userId && !passengersInRoute.contains(userId)) {
+				//error user, flags to UserResource that the user dosen't exist in the route
+				User errorUser = new User(-1, "I am Error", "Error",404,false);
+				tempUserList.add(errorUser);
+				return tempUserList;
+			}
+		}
+		
 		//no route  with the specified RouteId was found, return an empty array. 
 		if(!doesRouteExist) {
 			return tempUserList;
@@ -85,7 +108,7 @@ public class UserSearch {
 		// first add the driver to the List so driver is always located at index 0 in
 		// the returned list.
 		for (int i = 0; i < userList.size(); i++) {
-			if (userList.get(i).getId() == driverId) {
+			if (userList.get(i).getUserID() == driverId) {
 				tempUserList.add(userList.get(i));
 			}
 		}
@@ -93,7 +116,7 @@ public class UserSearch {
 		// then add the passengers
 		for (int i = 0; i < userList.size(); i++) {
 			for (int j = 0; j < passengersInRoute.size(); j++) {
-				if (userList.get(i).getId() == passengersInRoute.get(j)) {
+				if (userList.get(i).getUserID() == passengersInRoute.get(j)) {
 					tempUserList.add(userList.get(i));
 					passengersInRoute.remove(j);
 				}
