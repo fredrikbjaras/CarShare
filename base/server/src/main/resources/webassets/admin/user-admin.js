@@ -50,6 +50,7 @@ base.userAdminController = function() {
         resetEdit: function() {
             var userView = document.getElementById('user-view');
             var isEdit = userView.classList.contains('edit');
+                 
             view.editPassword(isEdit);
         },
         editPassword: function(disabled) {
@@ -59,6 +60,7 @@ base.userAdminController = function() {
         selectUser: function(user, clickedEl) {
             // Set appropriate user-view class to either add or edit.
             var userView = document.getElementById('user-view');
+            view.showForm('user-form');
             if (user.username === '') {
                 userView.classList.remove('edit');
                 userView.classList.add('add');
@@ -67,6 +69,7 @@ base.userAdminController = function() {
                 userView.classList.add('edit');
                 userView.classList.remove('add');
                 view.editPassword(true);
+                
             }
 
             // Set active link the left-hand side menu.
@@ -81,6 +84,11 @@ base.userAdminController = function() {
             document.getElementById('user-id').defaultValue = user.id;
             document.getElementById('set-username').defaultValue = user.username;
             document.getElementById('set-password').defaultValue = '';
+            document.getElementById('set-phoneNr').defaultValue = user.telephoneNum;
+            document.getElementById('description').defaultValue = user.description;
+
+            
+            
             var roleIx = model.roleNames.indexOf(user.role.name);
             var options = document.getElementById('set-role').querySelectorAll('option');
             options.forEach(o => o.defaultSelected = false);
@@ -99,12 +107,14 @@ base.userAdminController = function() {
             var username = document.getElementById('set-username').value;
             var role = document.getElementById('set-role').value;
             var id = document.getElementById('user-id').value;
-            var credentials = {username, password, role};
+            var phoneNr = document.getElementById('set-phoneNr').value;
+            var description = document.getElementById('description').value;
+            var credentials = {username, password, role,phoneNr, description};
             if (password === '') {
                 delete credentials.password;
             }
             if (id !== '') {
-                base.rest.putUser(id, credentials).then(function(user) {
+                base.rest.updateUser(id, credentials).then(function(user) {
                     if (user.error) {
                         alert(user.message);
                     } else {

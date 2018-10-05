@@ -80,8 +80,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUser: function(userID) {
-            return baseFetch('/rest/user/' + userID)
+        getUser: function(userId) {
+            return baseFetch('/rest/user/' + userId) // tagit bort + id
                 .then(response => response.json())
                 .then(u => new User(u));
         },
@@ -95,6 +95,7 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(users => users.map(u => new User(u)));
         },
+
         addUser: function(username, encPassword) {
             var credentials = {username: username, encPassword: encPassword}
             return baseFetch('/rest/user', {
@@ -104,8 +105,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        updateUser: function(userID, name, encPassword, telephoneNum, description) {
-            var userObj = {name: name, encPassword: encPassword, telephoneNum: telephoneNum, description: description}
+        updateUser: function(userID, name, encPassword, role, telephoneNum, description) {
+            var userObj = {name: name, encPassword: encPassword, role: role, telephoneNum: telephoneNum, description: description}
             return baseFetch('/rest/user/' + userID, {
                     method: 'PUT',
                     body: JSON.stringify(userObj),
@@ -147,4 +148,5 @@ base.rest = (function() {
         }
     };
 })();
+
 
