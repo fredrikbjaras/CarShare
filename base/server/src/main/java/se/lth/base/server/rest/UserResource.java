@@ -163,20 +163,32 @@ public class UserResource {
     	}
     }
 
-    @Path("{id}")
-    @RolesAllowed(Role.Names.ADMIN)
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-    public User putUser(@PathParam("id") int userId, Credentials credentials) {
-        if (credentials.hasPassword() && !credentials.validPassword()) {
-            throw new WebApplicationException("Password too short", Response.Status.BAD_REQUEST);
-        }
-        if (userId == user.getId() && user.getRole().getLevel() > credentials.getRole().getLevel()) {
-            throw new WebApplicationException("Cant't demote yourself", Response.Status.BAD_REQUEST);
-        }
-        return userDao.updateUser(userId, credentials);
-    }
+ 	@Path("{id}")
+	@PermitAll
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public User updateUser(@PathParam("id") int userId, Credentials credentials) {
+
+		if (currentUser().getIsAdmin() || userId == currentUser().getUserID() ) {
+
+			if (credentials.hasPassword() && !credentials.validPassword()) {
+				throw new WebApplicationException("Password too short", Response.Status.BAD_REQUEST);
+			}
+			if (userId == user.getUserID() && user.getRole().getLevel() > credentials.getRole().getLevel()) {
+				throw new WebApplicationException("Cant't demote yourself", Response.Status.BAD_REQUEST);
+			}
+			return userDao.updateUser(userId, credentials);
+		}
+		
+		else {
+			throw new WebApplicationException("You don't have the permisson to update this user",
+					Response.Status.BAD_REQUEST);
+			 User errorUser = new User(-1, "I am Error", "Error",404,false);
+			 return errorUser;
+		}
+	}
+	
 	@Path("{username}")
 	@PermitAll
 	@DELETE
