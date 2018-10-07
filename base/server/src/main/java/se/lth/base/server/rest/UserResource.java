@@ -177,16 +177,37 @@ public class UserResource {
         }
         return userDao.updateUser(userId, credentials);
     }
+	@Path("{username}")
+	@PermitAll
+	@DELETE
+	public boolean deleteUser(int userId) {
 
-    @Path("{id}")
-    @RolesAllowed(Role.Names.ADMIN)
-    @DELETE
-    public void deleteUser(@PathParam("id") int userId) {
-        if (userId == currentUser().getId()) {
-            throw new WebApplicationException("Don't delete yourself", Response.Status.BAD_REQUEST);
-        }
-        if (!userDao.deleteUser(userId)) {
-            throw new WebApplicationException("User not found", Response.Status.NOT_FOUND);
-        }
-    }
+		if (user.getIsAdmin()) {
+			if (userId == currentUser().getUserID()) {
+				throw new WebApplicationException("Don't delete yourself!, you are an Admin",
+						Response.Status.BAD_REQUEST);
+				return false;
+			}
+			if (!userDao.deleteUser(userId)) {
+				throw new WebApplicationException("User not found", Response.Status.NOT_FOUND);
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+
+			if (userId == currentUser().getUserID()) {
+				if (!userDao.deleteUser(userId)) {
+					throw new WebApplicationException("User not found", Response.Status.NOT_FOUND);
+					return false;
+				} else {
+					// also all booking request made by user should be deleted 
+					// Maybe the use should be automatically logged out?
+					return true;
+				}
+			}
+			throw new WebApplicationException("You don't have the permisson to delete this user", Response.Status.BAD_REQUEST);
+			return false;
+		}
+	}
 }
