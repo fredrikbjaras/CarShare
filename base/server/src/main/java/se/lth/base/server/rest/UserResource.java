@@ -182,7 +182,7 @@ public class UserResource {
 	@DELETE
 	public boolean deleteUser(int userId) {
 
-		if (user.getIsAdmin()) {
+		if (currentUser().getIsAdmin()) {
 			if (userId == currentUser().getUserID()) {
 				throw new WebApplicationException("Don't delete yourself!, you are an Admin",
 						Response.Status.BAD_REQUEST);
