@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
- /* @author 
+ /* @author Jonathan Jakobsson
  * @see DataAccess
  */
 public class UserDataAccess extends DataAccess<User> {

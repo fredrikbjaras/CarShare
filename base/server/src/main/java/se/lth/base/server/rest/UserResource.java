@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Path("user")
 public class UserResource {
 
- /*   public static final String USER_TOKEN = "USER_TOKEN";
+    public static final String USER_TOKEN = "USER_TOKEN";
 
     private final ContainerRequestContext context;
     private final User user;
@@ -134,5 +134,4 @@ public class UserResource {
             throw new WebApplicationException("User not found", Response.Status.NOT_FOUND);
         }
     }
-    */
 }
