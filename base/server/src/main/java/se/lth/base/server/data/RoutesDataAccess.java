@@ -1,11 +1,8 @@
 package se.lth.base.server.data;
 
 import se.lth.base.server.database.DataAccess;
-import se.lth.base.server.database.DataAccessException;
-import se.lth.base.server.database.ErrorType;
 import se.lth.base.server.database.Mapper;
 
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -20,11 +17,11 @@ public class RoutesDataAccess extends DataAccess<Routes> {
         	int routeID = resultSet.getInt("routeID");
         	int driverID = resultSet.getInt("driverID");
         	int freeSeats = resultSet.getInt("freeSeats");
-        	Array location = (Array) resultSet.getArray("location").getArray();
-        	Array destination = (Array) resultSet.getArray("destination").getArray();
+        	String location = resultSet.getString("location");
+        	String destination = resultSet.getString("destination");
         	Timestamp timeOfDeparture = resultSet.getTimestamp("timeOfDeparture");
         	Timestamp timeOfArrival = resultSet.getTimestamp("TimeOfArrival");
-        	Array passengers = (Array) resultSet.getArray("passengers").getArray();
+        	String passengers = resultSet.getString("passengers");
         	String description = resultSet.getString("description");
         	Timestamp bookingEndTime = resultSet.getTimestamp("bookingEndTime");
         	int recurring = resultSet.getInt("recurring");
@@ -45,7 +42,7 @@ public class RoutesDataAccess extends DataAccess<Routes> {
      * @param driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring and finished.
      * @return Routes object containing routeID and the entered info.
      */
-    public Routes addRoutes(int driverID, int freeSeats, Array location, Array destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, Array passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Routes addRoutes(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES ((" +
                  "?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     	 return new Routes(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);

@@ -1,7 +1,5 @@
 package se.lth.base.server.data;
 
-import java.lang.reflect.Array;
-
 public class FlagReports{
 
 	private int flagReportID;
@@ -9,9 +7,9 @@ public class FlagReports{
 	private int fromUserID;
 	private int toUserID;
 	private String comment;
-	private Array flags;		//Need to test with this Array type, might not work as intended
+	private String flags;		
 	
-    public FlagReports(int flagReportID, int routeID, int fromUserID, int toUserID, String comment, Array flags) {
+    public FlagReports(int flagReportID, int routeID, int fromUserID, int toUserID, String comment, String flags) {
     	this.flagReportID = flagReportID;
     	this.routeID = routeID;
     	this.fromUserID = fromUserID;
@@ -40,7 +38,7 @@ public class FlagReports{
     	return comment;
     }
     
-    public Array getFlags() {
+    public String getFlags() {
     	return flags;
     }
 }

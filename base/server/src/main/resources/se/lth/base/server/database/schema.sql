@@ -56,7 +56,7 @@ CREATE TABLE FlagReports(flagReportID INT AUTO_INCREMENT NOT NULL,
 							fromUserID INT NOT NULL,
 							toUserID INT NOT NULL,
 							reason VARCHAR DEFAULT '', --skulle vara comment men går inte i h2 syntax
-							flags VARCHAR NOT NULL, --Inte säker vad denna är till?
+							flags VARCHAR NOT NULL, 
 							
 							PRIMARY KEY(flagReportID),
 							FOREIGN KEY(fromUserID) REFERENCES User(userID),
@@ -68,8 +68,8 @@ CREATE TABLE FlagReports(flagReportID INT AUTO_INCREMENT NOT NULL,
 --Table used to store requests to join an active route
 CREATE TABLE BookingRequests(bookingReqID INT AUTO_INCREMENT,
 								routeID INT NOT NULL,
-								fromUserID INT NOT NULL,
-								toUserID INT NOT NULL,
+								fromUserID INT Not NULL,
+								toUserID INT Not NULL,
 								accepted BOOLEAN NOT NULL,
 								
 								PRIMARY KEY(bookingReqID),

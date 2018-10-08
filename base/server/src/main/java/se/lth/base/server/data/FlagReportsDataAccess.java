@@ -1,11 +1,8 @@
 package se.lth.base.server.data;
 
 import se.lth.base.server.database.DataAccess;
-import se.lth.base.server.database.DataAccessException;
-import se.lth.base.server.database.ErrorType;
 import se.lth.base.server.database.Mapper;
 
-import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,10 +19,7 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
         	int fromUserID = resultSet.getInt("fromUserID");
         	int toUserID = resultSet.getInt("toUserID");
         	String reason = resultSet.getString("reason");
-        	Array flags = (Array) resultSet.getArray("flags").getArray(); //Need to test with this Array type, might not work as intended
-        	
-        	
-        	
+        	String flags = resultSet.getString("flags");
             return new FlagReports(flagReportID, routeID, fromUserID, toUserID, reason, flags);
         }
     }
@@ -40,7 +34,7 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
      * @param routeID, fromUserID, toUserID, reason and flags[].
      * @return FlagReports object containing flagReportID and the entered info.
      */
-    public FlagReports addFlagReports(int routeID, int fromUserID, int toUserID, String reason, Array flags) {
+    public FlagReports addFlagReports(int routeID, int fromUserID, int toUserID, String reason, String flags) {
     	 int flagReportID = insert("INSERT INTO FlagReports (routeID, fromUserID, toUserID, reason, flags) VALUES ((" +
                  "?,?,?,?,?)",  routeID, fromUserID, toUserID, reason, flags);
     	 return new FlagReports(flagReportID, routeID, fromUserID, toUserID, reason, flags);
