@@ -80,7 +80,7 @@ base.userAdminController = function() {
             document.getElementById('user-id').defaultValue = user.id;
             document.getElementById('set-username').defaultValue = user.username;
             document.getElementById('set-password').defaultValue = '';
-            document.getElementById('set-phoneNr').defaultValue = user.telephoneNum; //Kanske phoneNr? Se hur JSON ser ut
+            document.getElementById('set-phoneNr').defaultValue = user.phoneNr; //Kanske phoneNr? Se hur JSON ser ut
             document.getElementById('description').defaultValue = user.description;
 
             var roleIx = model.roleNames.indexOf(user.role.name);
@@ -92,39 +92,39 @@ base.userAdminController = function() {
     };
 
     var controller = {
-    		
-    
+
+
    		search: function(){
-        		var inputParam = document.getElementById('search-form').value; 
+        		var inputParam = document.getElementById('search-form').value;
         		var userName;
         		var phoneNr;
-        		var routeId; 
-        		
+        		var routeId;
+
         		if(isNaN(searchParam)&& searchParam.String().length> 10){
         			phoneNr = searchParam;
-        			username = 0; 
-        			routeId = 0; 
-        			
+        			username = 0;
+        			routeId = 0;
+
         		}
         		else if(searchParam.length > 10){
-        			userName = searchParam; 
-        			phoneNr = 0; 
-        			routeId = 0; 
+        			userName = searchParam;
+        			phoneNr = 0;
+        			routeId = 0;
         		}
         		else if(searchParam.length > 1){
         			routeId = searchParam
-        			userName = 0; 
-        			phoneNr = 0; 
+        			userName = 0;
+        			phoneNr = 0;
         		}
 
-        		var filterObject = username + "," + phoneNr + "," + routeId; 
-        		
+        		var filterObject = username + "," + phoneNr + "," + routeId;
+
 
         		// Hitta ett sätt att anropa Promise.all, kanske göra om den till en funktion? Den ska iaf få searchParam som input till att se anropa getUsers(filterObject)
-        		
-        		
-        	},	
-        
+
+
+        	},
+
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
             var password = document.getElementById('set-password').value;
@@ -179,7 +179,7 @@ base.userAdminController = function() {
             document.getElementById('new-route').onclick = (event) => view.showForm('user-form');
             document.getElementById('new-bookingRequest').onclick = (event) => view.showForm('user-form');
             document.getElementById('new-flagReport').onclick = (event) => view.showForm('user-form');
-       
+
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
 

@@ -14,7 +14,7 @@ base.userpageController = function() {
         render: function() {
         	document.getElementById('set-username').defaultValue = model.username;
         	document.getElementById('set-password').defaultValue = '';//model.password;
-        	document.getElementById('set-phoneNbr').defaultValue = model.telephoneNum;
+        	document.getElementById('set-phoneNbr').defaultValue = model.phoneNr;
         	document.getElementById('set-description').defaultValue = model.description;
         },
 
@@ -28,11 +28,11 @@ base.userpageController = function() {
         submitChange: function(submitEvent) { //pop up notis att det är ändrad
         	//model.username = document.getElementById('set-username').value;
         	model.password = document.getElementById('set-password').value;
-        	model.telephoneNum = document.getElementById('set-phoneNbr').value;
+        	model.phoneNr = document.getElementById('set-phoneNbr').value;
         	model.description = document.getElementById('set-description').value;
             model.password = (model.password === "") ? null : model.password;
 
-        	base.rest.updateUser(model.userID, model.password, model.telephoneNum, null, model.description);
+        	base.rest.updateUser(model.userID, model.password, model.phoneNr, null, model.description);
 
         },
 
