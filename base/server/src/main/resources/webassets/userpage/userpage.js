@@ -26,13 +26,13 @@ base.userpageController = function() {
 
     var controller = {
         submitChange: function(submitEvent) { //pop up notis att det är ändrad
-        	model.username = document.getElementById('set-username').value;
+        	//model.username = document.getElementById('set-username').value;
         	model.password = document.getElementById('set-password').value;
         	model.telephoneNum = document.getElementById('set-phoneNbr').value;
         	model.description = document.getElementById('set-description').value;
 
         	//todo ::: encrypt password
-        	base.rest.updateUser(model.userID, model.username, encPassword, model.telephoneNum, model.description);
+        	base.rest.updateUser(model.userID, model.password, model.telephoneNum, null, model.description);
 
         },
 
