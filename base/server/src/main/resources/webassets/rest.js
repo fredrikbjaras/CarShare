@@ -85,7 +85,7 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUsers: function(userName, phoneNr, routeID) {
+        getUsers: function(userName = null, phoneNr = null, routeID = null) {
             var userFilterObj = { userName: userName, phoneNr: phoneNr, routeID: routeID };
             return baseFetch('/rest/user/filter', {
                 method: 'POST',
@@ -96,7 +96,7 @@ base.rest = (function() {
                 .then(users => users.map(u => new User(u)));
         },
 
-        addUser: function(userName, password, role = 'NONE') {
+        addUser: function(userName, password, role = null) {
             var credentials = {userName: userName, password: password, role: role}
             return baseFetch('/rest/user', {
                     method: 'POST',
@@ -105,8 +105,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        updateUser: function(userID, userName, password, phoneNr = null, role = 'NONE', description = null, profilePicture = null) {
-            var userObj = {userID: null, userName: userName, password: password, phoneNr: phoneNr, role: role, description: description, profilePicture: profilePicture}
+        updateUser: function(userID, password = null, phoneNr = null, role = null, description = null) {
+            var userObj = {password: password, phoneNr: phoneNr, role: role, description: description}
             return baseFetch('/rest/user/' + userID, {
                     method: 'PUT',
                     body: JSON.stringify(userObj),
