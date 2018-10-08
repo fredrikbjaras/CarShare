@@ -76,7 +76,8 @@ public class RoutesResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Routes getRoute(int routeID) {
-		return null;
+		//mabye should it be a difference between a Admin call and a user call 
+		return routeDao.getRoutes(routeID);
 
 	}
 	
