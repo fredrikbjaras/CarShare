@@ -1,41 +1,31 @@
 var base = base || {};
-
-
+base.newUserController = (function() {
     var controller = {
-    	  
+
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
-            var password = document.getElementById('set-password').value;
             var username = document.getElementById('set-username').value;
-            var role = document.getElementById('set-role').value;
-            var phoneNr = document.getElementById('set-phoneNr').value;
-            var description = document.getElementById('description').value;
-            var credentials = {username, password, role,phoneNr, description};
-            if (password === '') {
-                delete credentials.password;
-            }
-            else {
-                base.rest.addUser(credentials).then(function(user) {
-                    if (user.error) {
-                        alert(user.message);
-                    } else {
-                        model.users.push(user);
-                        view.renderPart(user);
-                        var el = document.querySelector('#user-list .list-group button:last-of-type');
-                        el.onclick = () => view.selectUser(user, el);
-                        view.selectUser(user, el);
-                        location.href='http://localhost:8080/home/home.html
-                        
-                    }
-                });
-            }
-            return false;
+            var password = document.getElementById('set-password').value;
+            base.rest.addUser(username, password).then(function(user) {
+            	console.log("inside add user then");
+                if (user.error) {
+                	console.log("ERROR ADDING USER");
+                    alert(user.message);
+                } else {
+                	console.log("all good?")
+                }
+            });
         },
-        
-        load: function() { 
-        document.getElementById('user-form').onsubmit = controller.submitUser;
+
+        load: function() {
+            console.log("new user page loaded");
+            document.getElementById('user-form').onsubmit = controller.submitUser;
+        },
+
+        initOnLoad: function() {
+        	console.log("haaloj");
+            document.addEventListener('DOMContentLoaded', base.newUserController.load);
         }
-            return controller;
-        };
-        
-       
+    };
+    return controller;
+})();
