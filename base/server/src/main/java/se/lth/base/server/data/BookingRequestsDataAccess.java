@@ -8,20 +8,19 @@ import se.lth.base.server.database.Mapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Supplier;
 
-//Not implemented yet
 
 public class BookingRequestsDataAccess extends DataAccess<BookingRequests> {
 
 
     private static class BookingMapper implements Mapper<BookingRequests> {
-        // Feel free to change this to a lambda expression
         @Override
         public BookingRequests map(ResultSet resultSet) throws SQLException {
-            return new BookingRequests(//not implemented yet
-            		);
+            return new BookingRequests(resultSet.getInt("bookingReqID"),
+            		resultSet.getInt("routeID"),
+            		resultSet.getInt("fromUserID"),
+            		resultSet.getInt("toUserID"),
+            		resultSet.getBoolean("accepted"));
         }
 
     }
@@ -30,100 +29,56 @@ public class BookingRequestsDataAccess extends DataAccess<BookingRequests> {
     }
 
     /**
-     * Add a new user to the system.
+     * Add a new BookingRequest to the database.
+     * bookingReqID is generated automagically.
      *
-     * @param credentials of the new BookingRequests, containing name, role, and password.
-     * @throws DataAccessException if duplicated BookingRequestsname or too short BookingRequests names.
+     * @param routeID, fromUserID, toUserID,  and accepted.
+     * @return BookingRequests object containing bookingReqID and the entered info.
      */
-    public BookingRequests addBookingRequests(Credentials credentials) {
-        long salt = Credentials.generateSalt();
-        int BookingRequestsId = insert("INSERT INTO BookingRequests (role_id, BookingRequestsname, password_hash, salt) VALUES ((" +
-                        "SELECT role_id FROM BookingRequests_role WHERE BookingRequests_role.role=?),?,?,?)",
-                credentials.getRole().name(), credentials.getBookingRequestsname(), credentials.generatePasswordHash(salt), salt);
-        return new BookingRequests(userId, credentials.getRole(), credentials.getUsername());
+    public BookingRequests addBookingRequests(int routeID, int fromUserID, int toUserID, boolean accepted) {
+    	 int bookingReqID = insert("INSERT INTO BookingRequests (routeID, fromUserID, toUserID, accepted) VALUES ((" +
+                 "?,?,?,?)",  routeID, fromUserID, toUserID, accepted);
+    	 return new BookingRequests(bookingReqID, routeID, fromUserID, toUserID, accepted);
     }
 
-    public BookingRequests updateBookingRequests(int userId, Credentials credentials) {
-        if (credentials.hasPassword()) {
-            long salt = Credentials.generateSalt();
-            execute("UPDATE BookingRequests SET username = ?, password_hash = ?, salt = ?, role_id = (" +
-                            "    SELECT user_role.role_id FROM user_role WHERE user_role.role = ?) " +
-                            "WHERE user_id = ?",
-                    credentials.getUsername(), credentials.generatePasswordHash(salt), salt,
-                    credentials.getRole().name(), userId);
-        } else {
-            execute("UPDATE user SET username = ?, role_id = (" +
-                            "    SELECT user_role.role_id FROM user_role WHERE user_role.role = ?) " +
-                            "WHERE user_id = ?",
-                    credentials.getUsername(), credentials.getRole().name(), userId);
-        }
-        return getUser(userId);
+    public BookingRequests updateBookingRequests(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
+    	execute("UPDATE BookingRequests SET  routeID= ?, fromUserID = ?,toUserID = ?, accepted = ?" +
+                "WHERE bookingReqID = ?",  routeID, fromUserID, toUserID, accepted, bookingReqID);
+        return getBookingRequests(bookingReqID);
     }
 
-    public BookingRequests getBookingRequests(int userId) {
-        return queryFirst("SELECT user_id, role, username FROM user, user_role " +
-                "WHERE user.user_id = ? AND user.role_id = user_role.role_id", userId);
+    public BookingRequests getBookingRequests(int bookingReqID) {
+        return queryFirst("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+                "WHERE bookingReqID = ?", bookingReqID);
     }
 
-    public boolean deleteBookingRequests(int userId) {
-        return execute("DELETE FROM user WHERE user_id = ?", userId) > 0;
+    public boolean deleteBookingRequests(int bookingReqID) {
+        return execute("DELETE FROM BookingRequests WHERE bookingReqID = ?", bookingReqID) > 0;
     }
 
     /**
-     * @return all users in the system.
+     * @return all BookingRequests in the system.
      */
-    public List<BookingRequests> getBookingRequestss() {
-        return query("SELECT user_id, username, role FROM user, user_role " +
-                "WHERE user.role_id = user_role.role_id");
+    public List<BookingRequests> getAllBookingRequests() {
+        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests");
     }
-
+    
     /**
-     * Fetch session and the corresponding user.
-     *
-     * @param sessionId globally unqiue identifier, stored in the client.
-     * @return session object wrapping the user.
-     * @throws DataAccessException if the session is not found.
+     * @return all BookingRequests from a specified user.
+     * @param UserID
      */
-    public Session getSession(UUID sessionId) {
-        User user = queryFirst("SELECT user.user_id, username, role FROM user, user_role, session " +
-                "WHERE user_role.role_id = user.role_id " +
-                "    AND session.user_id = user.user_id " +
-                "    AND session.session_uuid = ?", sessionId);
-        execute("UPDATE session SET last_seen = CURRENT_TIMESTAMP() " +
-                "WHERE session_uuid = ?", sessionId);
-        return new Session(sessionId, user);
+    public List<BookingRequests> getBookingRequestsFromUser(int fromUserID) {
+        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+                "WHERE fromUserID = ?", fromUserID);
     }
-
+    
     /**
-     * Logout a user. This method is idempotent, meaning it is safe to repeat indefinitely.
-     *
-     * @param sessionId session to remove
-     * @return true if the session was found, false otherwise.
+     * @return all BookingRequests sent to a specified user.
+     * @param UserID 
      */
-    public boolean removeSession(UUID sessionId) {
-        return execute("DELETE FROM session WHERE session_uuid = ?", sessionId) > 0;
-    }
-
-    /**
-     * Login a user.
-     *
-     * @param credentials username and plain text password.
-     * @return New user session, consisting of a @{@link UUID} and @{@link User}.
-     * @throws DataAccessException if the username or password does not match.
-     */
-    public Session authenticate(Credentials credentials) {
-        Supplier<DataAccessException> onError = () ->
-                new DataAccessException("Username or password incorrect", ErrorType.DATA_QUALITY);
-        long salt = new DataAccess<>(getDriverUrl(), (rs) -> rs.getLong(1))
-                .queryFirst("SELECT salt FROM user WHERE username = ?", credentials.getUsername());
-        UUID hash = credentials.generatePasswordHash(salt);
-        User user = queryFirst("SELECT user_id, username, role FROM user, user_role " +
-                "WHERE user_role.role_id = user.role_id " +
-                "    AND username = ? " +
-                "    AND password_hash = ?", credentials.getUsername(), hash);
-        UUID sessionId = insert("INSERT INTO session (user_id) " +
-                "SELECT user_id from USER WHERE username = ?", user.getName());
-        return new Session(sessionId, user);
+    public List<BookingRequests> getBookingRequestsToUser(int toUserID) {
+        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+                "WHERE toUserID = ?", toUserID);
     }
 }
 

@@ -38,11 +38,11 @@ CREATE TABLE Session(session_uuid UUID DEFAULT RANDOM_UUID(),
 CREATE TABLE Routes(routeId INT AUTO_INCREMENT NOT NULL,
 					driverID INT NOT NULL,
 					freeSeats INT NOT NULL,
-					--location ARRAY<DOUBLE> NOT NULL,
-					--destination ARRAY<DOUBLE> NOT NULL,
+					location ARRAY NOT NULL,
+					destination ARRAY NOT NULL,
 					timeOfDeparture TIMESTAMP NOT NULL,
 					timeOfArrival TIMESTAMP NOT NULL,
-					--passengers ARRAY<INT> NOT NULL, 
+					passengers ARRAY NOT NULL, 
 					recurring ENUM ('no', 'daily', 'weekly', 'monthly') DEFAULT ('no'),
 					finished BOOLEAN NOT NULL,
 
@@ -56,7 +56,7 @@ CREATE TABLE FlagReports(flagReportID INT AUTO_INCREMENT NOT NULL,
 							fromUserID INT NOT NULL,
 							toUserID INT NOT NULL,
 							reason VARCHAR DEFAULT '', --skulle vara comment men går inte i h2 syntax
-							--flags ARRAY<BOOLEAN> NOT NULL, --Inte säker vad denna är till?
+							flags ARRAY NOT NULL, --Inte säker vad denna är till?
 							
 							PRIMARY KEY(flagReportID),
 							FOREIGN KEY(fromUserID) REFERENCES User(userID),

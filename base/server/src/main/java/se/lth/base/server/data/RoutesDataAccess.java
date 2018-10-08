@@ -5,125 +5,86 @@ import se.lth.base.server.database.DataAccessException;
 import se.lth.base.server.database.ErrorType;
 import se.lth.base.server.database.Mapper;
 
+import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Supplier;
-
-//Not implemented yes
 
 public class RoutesDataAccess extends DataAccess<Routes> {
 
 
-    private static class BookingMapper implements Mapper<Routes> {
-        // Feel free to change this to a lambda expression
+    private static class RoutesMapper implements Mapper<Routes> {
         @Override
-        public Routes map(ResultSet resultSet) throws SQLException {
-            return new Routes(//not implemented yet
-            		);
+        public Routes map(ResultSet resultSet) throws SQLException {//<------Fix management of arrays from the database
+        	int routeID = resultSet.getInt("routeID");
+        	int driverID = resultSet.getInt("driverID");
+        	int freeSeats = resultSet.getInt("freeSeats");
+        	Array location = (Array) resultSet.getArray("location").getArray();
+        	Array destination = (Array) resultSet.getArray("destination").getArray();
+        	Timestamp timeOfDeparture = resultSet.getTimestamp("timeOfDeparture");
+        	Timestamp timeOfArrival = resultSet.getTimestamp("TimeOfArrival");
+        	Array passengers = (Array) resultSet.getArray("passengers").getArray();
+        	String description = resultSet.getString("description");
+        	Timestamp bookingEndTime = resultSet.getTimestamp("bookingEndTime");
+        	int recurring = resultSet.getInt("recurring");
+        	boolean finished = resultSet.getBoolean("finished");
+        	
+            return new Routes(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
         }
 
     }
     public RoutesDataAccess(String driverUrl) {
-        super(driverUrl, new BookingMapper());
+        super(driverUrl, new RoutesMapper());
     }
 
     /**
-     * Add a new user to the system.
+     * Add a new Route to the database.
+     * routeID is generated automagically.
      *
-     * @param credentials of the new Routes, containing name, role, and password.
-     * @throws DataAccessException if duplicated Routesname or too short Routes names.
+     * @param driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring and finished.
+     * @return Routes object containing routeID and the entered info.
      */
-    public Routes addRoutes(Credentials credentials) {
-        long salt = Credentials.generateSalt();
-        int RoutesId = insert("INSERT INTO Routes (role_id, Routesname, password_hash, salt) VALUES ((" +
-                        "SELECT role_id FROM Routes_role WHERE Routes_role.role=?),?,?,?)",
-                credentials.getRole().name(), credentials.getRoutesname(), credentials.generatePasswordHash(salt), salt);
-        return new Routes(userId, credentials.getRole(), credentials.getUsername());
+    public Routes addRoutes(int driverID, int freeSeats, Array location, Array destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, Array passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES ((" +
+                 "?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
+    	 return new Routes(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     }
 
-    public Routes updateRoutes(int userId, Credentials credentials) {
-        if (credentials.hasPassword()) {
-            long salt = Credentials.generateSalt();
-            execute("UPDATE Routes SET username = ?, password_hash = ?, salt = ?, role_id = (" +
-                            "    SELECT user_role.role_id FROM user_role WHERE user_role.role = ?) " +
-                            "WHERE user_id = ?",
-                    credentials.getUsername(), credentials.generatePasswordHash(salt), salt,
-                    credentials.getRole().name(), userId);
-        } else {
-            execute("UPDATE user SET username = ?, role_id = (" +
-                            "    SELECT user_role.role_id FROM user_role WHERE user_role.role = ?) " +
-                            "WHERE user_id = ?",
-                    credentials.getUsername(), credentials.getRole().name(), userId);
-        }
-        return getUser(userId);
+    public Routes updateRoutes(int routeID, int driverID, int freeSeats, double[] location, double[] destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, int[] passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    	execute("UPDATE Routes SET  driverID= ?, freeSeats = ?, location = ?, destination = ?, timeOfDeparture = ?, timeOfArrival = ?, passengers = ?, description = ?, bookingEndTime = ?, recurring = ?, finished = ?" +
+                "WHERE routeID = ?",  driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished, routeID);
+        return getRoutes(routeID);
     }
 
-    public Routes getRoutes(int userId) {
-        return queryFirst("SELECT user_id, role, username FROM user, user_role " +
-                "WHERE user.user_id = ? AND user.role_id = user_role.role_id", userId);
+    public boolean deleteRoutes(int routeID) {
+        return execute("DELETE FROM Routes WHERE routeID = ?", routeID) > 0;
     }
-
-    public boolean deleteRoutes(int userId) {
-        return execute("DELETE FROM user WHERE user_id = ?", userId) > 0;
+    
+    /**
+     * Get a specific Route from the database
+     * @param routeID
+     * @return Routes-object of specified routeID
+     */
+    public Routes getRoutes(int routeID) {
+        return queryFirst("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+                "WHERE routeID = ?", routeID);
     }
 
     /**
-     * @return all users in the system.
+     * @return all Routes in the database.
      */
-    public List<Routes> getRoutes() {
-        return query("SELECT user_id, username, role FROM user, user_role " +
-                "WHERE user.role_id = user_role.role_id");
+    public List<Routes> getAllRoutes() {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes");
     }
-
+    
     /**
-     * Fetch session and the corresponding user.
-     *
-     * @param sessionId globally unqiue identifier, stored in the client.
-     * @return session object wrapping the user.
-     * @throws DataAccessException if the session is not found.
+     * @param UserID of the driver
+     * @return all Routes from a specific user.
      */
-    public Session getSession(UUID sessionId) {
-        User user = queryFirst("SELECT user.user_id, username, role FROM user, user_role, session " +
-                "WHERE user_role.role_id = user.role_id " +
-                "    AND session.user_id = user.user_id " +
-                "    AND session.session_uuid = ?", sessionId);
-        execute("UPDATE session SET last_seen = CURRENT_TIMESTAMP() " +
-                "WHERE session_uuid = ?", sessionId);
-        return new Session(sessionId, user);
-    }
-
-    /**
-     * Logout a user. This method is idempotent, meaning it is safe to repeat indefinitely.
-     *
-     * @param sessionId session to remove
-     * @return true if the session was found, false otherwise.
-     */
-    public boolean removeSession(UUID sessionId) {
-        return execute("DELETE FROM session WHERE session_uuid = ?", sessionId) > 0;
-    }
-
-    /**
-     * Login a user.
-     *
-     * @param credentials username and plain text password.
-     * @return New user session, consisting of a @{@link UUID} and @{@link User}.
-     * @throws DataAccessException if the username or password does not match.
-     */
-    public Session authenticate(Credentials credentials) {
-        Supplier<DataAccessException> onError = () ->
-                new DataAccessException("Username or password incorrect", ErrorType.DATA_QUALITY);
-        long salt = new DataAccess<>(getDriverUrl(), (rs) -> rs.getLong(1))
-                .queryFirst("SELECT salt FROM user WHERE username = ?", credentials.getUsername());
-        UUID hash = credentials.generatePasswordHash(salt);
-        User user = queryFirst("SELECT user_id, username, role FROM user, user_role " +
-                "WHERE user_role.role_id = user.role_id " +
-                "    AND username = ? " +
-                "    AND password_hash = ?", credentials.getUsername(), hash);
-        UUID sessionId = insert("INSERT INTO session (user_id) " +
-                "SELECT user_id from USER WHERE username = ?", user.getName());
-        return new Session(sessionId, user);
+    public List<Routes> getAllRoutesFromUser(int UserID) {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
+                "WHERE driverID = ?", UserID);
     }
 }
 
