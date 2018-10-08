@@ -8,22 +8,22 @@ import java.sql.SQLException;
 import java.util.List;
 
 
-public class FlagReportsDataAccess extends DataAccess<FlagReports> {
+public class FlagReportDataAccess extends DataAccess<FlagReport> {
 
 
-    private static class FlagReportsMapper implements Mapper<FlagReports> {
+    private static class FlagReportsMapper implements Mapper<FlagReport> {
         @Override
-        public FlagReports map(ResultSet resultSet) throws SQLException {
+        public FlagReport map(ResultSet resultSet) throws SQLException {
         	int flagReportID = resultSet.getInt("flagReportID");
         	int routeID = resultSet.getInt("routeID");
         	int fromUserID = resultSet.getInt("fromUserID");
         	int toUserID = resultSet.getInt("toUserID");
         	String reason = resultSet.getString("reason");
         	String flags = resultSet.getString("flags");
-            return new FlagReports(flagReportID, routeID, fromUserID, toUserID, reason, flags);
+            return new FlagReport(flagReportID, routeID, fromUserID, toUserID, reason, flags);
         }
     }
-    public FlagReportsDataAccess(String driverUrl) {
+    public FlagReportDataAccess(String driverUrl) {
         super(driverUrl, new FlagReportsMapper());
     }
 
@@ -34,15 +34,15 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
      * @param routeID, fromUserID, toUserID, reason and flags[].
      * @return FlagReports object containing flagReportID and the entered info.
      */
-    public FlagReports addFlagReports(int routeID, int fromUserID, int toUserID, String reason, String flags) {
+    public FlagReport addFlagReports(int routeID, int fromUserID, int toUserID, String reason, String flags) {
     	 int flagReportID = insert("INSERT INTO FlagReports (routeID, fromUserID, toUserID, reason, flags) VALUES ((" +
                  "?,?,?,?,?)",  routeID, fromUserID, toUserID, reason, flags);
-    	 return new FlagReports(flagReportID, routeID, fromUserID, toUserID, reason, flags);
+    	 return new FlagReport(flagReportID, routeID, fromUserID, toUserID, reason, flags);
     }
 
     
     
-    public FlagReports updateFlagReports(int flagReportID, int routeID, int fromUserID, int toUserID, String reason, boolean[] flags) {
+    public FlagReport updateFlagReports(int flagReportID, int routeID, int fromUserID, int toUserID, String reason, boolean[] flags) {
         execute("UPDATE FlagReports SET  routeID= ?, fromUserID = ?,toUserID = ?,reason = ?, flags = ?" +
                 "WHERE flagReportID = ?",  routeID, fromUserID, toUserID, reason, flags, flagReportID);
         return getFlagReport(flagReportID);
@@ -50,7 +50,7 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
 
     
     
-    public FlagReports getFlagReport(int flagReportID) {
+    public FlagReport getFlagReport(int flagReportID) {
         return queryFirst("SELECT flagReportID, routeID, fromUserID, toUserID, reason, flags FROM FlagReports " +
                 "WHERE FlagReportID = ?", flagReportID);
     }
@@ -67,7 +67,7 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
      * @return all flagReports given to a specific user.
      * @param UserID
      */
-    public List<FlagReports> getFlagReportsToSpecificUser(int toUserID) {
+    public List<FlagReport> getFlagReportsToSpecificUser(int toUserID) {
         return query("SELECT flagReportID, routeID, fromUserID, toUserID, reason, flags FROM flagReports " +
                 "WHERE toUserID = ?", toUserID);
     }
@@ -76,7 +76,7 @@ public class FlagReportsDataAccess extends DataAccess<FlagReports> {
      * @return all flagReports from a specific user.
      * @param UserID
      */
-    public List<FlagReports> getFlagReportsFromSpecificUser(int fromUserID) {
+    public List<FlagReport> getFlagReportsFromSpecificUser(int fromUserID) {
         return query("SELECT flagReportID, routeID, fromUserID, toUserID, reason, flags FROM flagReports " +
                 "WHERE fromUserID = ?", fromUserID);
     }

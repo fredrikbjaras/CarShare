@@ -1,6 +1,6 @@
 package se.lth.base.server.data;
 
-public class FlagReports{
+public class FlagReport{
 
 	private int flagReportID;
 	private int routeID;
@@ -9,7 +9,7 @@ public class FlagReports{
 	private String comment;
 	private String flags;		
 	
-    public FlagReports(int flagReportID, int routeID, int fromUserID, int toUserID, String comment, String flags) {
+    public FlagReport(int flagReportID, int routeID, int fromUserID, int toUserID, String comment, String flags) {
     	this.flagReportID = flagReportID;
     	this.routeID = routeID;
     	this.fromUserID = fromUserID;

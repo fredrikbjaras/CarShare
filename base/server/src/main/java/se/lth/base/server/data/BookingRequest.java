@@ -1,6 +1,6 @@
 package se.lth.base.server.data;
 
-public class BookingRequests {
+public class BookingRequest {
 
 	private int bookingReqID;
 	private int routeID;
@@ -9,7 +9,7 @@ public class BookingRequests {
 	private boolean accepted;
 	private String comment;
 	
-    public BookingRequests(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted, String comment) {
+    public BookingRequest(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted, String comment) {
     this.bookingReqID = bookingReqID;
     this.routeID = routeID;
     this.fromUserID = fromUserID;
@@ -19,7 +19,7 @@ public class BookingRequests {
     }
     
     // Constructor without comment
-    public BookingRequests(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
+    public BookingRequest(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
     this.bookingReqID = bookingReqID;
     this.routeID = routeID;
     this.fromUserID = fromUserID;

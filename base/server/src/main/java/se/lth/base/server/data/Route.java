@@ -1,7 +1,7 @@
 package se.lth.base.server.data;
 import java.sql.Timestamp;
 
-public class Routes {
+public class Route {
 	
 	private int routeID;
 	private int driverID;
@@ -10,7 +10,7 @@ public class Routes {
 	private String destination;			//See above
 	private Timestamp timeOfDeparture;
 	private Timestamp timeOfArrival;	private String passengers;			//See above	private String description;	private Timestamp bookingEndTime;	private int recurring;	private boolean finished;		//Recurring ENUM mapped to int.	//Description VARCHAR mapped to String.	//All TIMESTAMPS mapped to java.sql.Timestamp.	//All of this according to official H2 data types documentation	
-    public Routes(int routeID, int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route(int routeID, int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
        this.routeID = routeID;       this.driverID = driverID;       this.freeSeats = freeSeats;       this.location = location;       this.destination = destination;       this.timeOfDeparture = timeOfDeparture;       this.timeOfArrival = timeOfArrival;       this.passengers = passengers;       this.description = description;       this.bookingEndTime = bookingEndTime;       this.recurring = recurring;       this.finished = finished;
     }
 

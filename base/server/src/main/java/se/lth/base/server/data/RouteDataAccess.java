@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class RoutesDataAccess extends DataAccess<Routes> {
+public class RouteDataAccess extends DataAccess<Route> {
 
 
-    private static class RoutesMapper implements Mapper<Routes> {
+    private static class RoutesMapper implements Mapper<Route> {
         @Override
-        public Routes map(ResultSet resultSet) throws SQLException {//<------Fix management of arrays from the database
+        public Route map(ResultSet resultSet) throws SQLException {//<------Fix management of arrays from the database
         	int routeID = resultSet.getInt("routeID");
         	int driverID = resultSet.getInt("driverID");
         	int freeSeats = resultSet.getInt("freeSeats");
@@ -27,11 +27,11 @@ public class RoutesDataAccess extends DataAccess<Routes> {
         	int recurring = resultSet.getInt("recurring");
         	boolean finished = resultSet.getBoolean("finished");
         	
-            return new Routes(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
+            return new Route(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
         }
 
     }
-    public RoutesDataAccess(String driverUrl) {
+    public RouteDataAccess(String driverUrl) {
         super(driverUrl, new RoutesMapper());
     }
 
@@ -42,13 +42,13 @@ public class RoutesDataAccess extends DataAccess<Routes> {
      * @param driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring and finished.
      * @return Routes object containing routeID and the entered info.
      */
-    public Routes addRoutes(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route addRoutes(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES ((" +
                  "?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
-    	 return new Routes(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
+    	 return new Route(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     }
 
-    public Routes updateRoutes(int routeID, int driverID, int freeSeats, double[] location, double[] destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, int[] passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route updateRoutes(int routeID, int driverID, int freeSeats, double[] location, double[] destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, int[] passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	execute("UPDATE Routes SET  driverID= ?, freeSeats = ?, location = ?, destination = ?, timeOfDeparture = ?, timeOfArrival = ?, passengers = ?, description = ?, bookingEndTime = ?, recurring = ?, finished = ?" +
                 "WHERE routeID = ?",  driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished, routeID);
         return getRoutes(routeID);
@@ -63,7 +63,7 @@ public class RoutesDataAccess extends DataAccess<Routes> {
      * @param routeID
      * @return Routes-object of specified routeID
      */
-    public Routes getRoutes(int routeID) {
+    public Route getRoutes(int routeID) {
         return queryFirst("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
                 "WHERE routeID = ?", routeID);
     }
@@ -71,7 +71,7 @@ public class RoutesDataAccess extends DataAccess<Routes> {
     /**
      * @return all Routes in the database.
      */
-    public List<Routes> getAllRoutes() {
+    public List<Route> getAllRoutes() {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes");
     }
     
@@ -79,7 +79,7 @@ public class RoutesDataAccess extends DataAccess<Routes> {
      * @param UserID of the driver
      * @return all Routes from a specific user.
      */
-    public List<Routes> getAllRoutesFromUser(int UserID) {
+    public List<Route> getAllRoutesFromUser(int UserID) {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
                 "WHERE driverID = ?", UserID);
     }
