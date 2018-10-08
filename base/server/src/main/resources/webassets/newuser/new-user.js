@@ -2,6 +2,7 @@ var base = base || {};
 
 
     var controller = {
+    	  
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
             var password = document.getElementById('set-password').value;
