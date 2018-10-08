@@ -32,7 +32,6 @@ base.userpageController = function() {
         	model.description = document.getElementById('set-description').value;
             model.password = (model.password === "") ? null : model.password;
 
-        	//todo ::: encrypt password
         	base.rest.updateUser(model.userID, model.password, model.telephoneNum, null, model.description);
 
         },
