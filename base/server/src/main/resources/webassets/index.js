@@ -64,7 +64,7 @@ base.mainController = (function() {
             base.rest.getLoggedInUser().then(function(user) {
                 model.user = user;
                 view.renderUsername();
-                if (user.isNone()) { // Lägg till if-sats, om man är admin ska man direkt dit istället
+                if (user.isNone()) {
                     base.changeLocation('/login/login.html');
                 } else if (!user.isAdmin()) {
                     view.hideAdminLinks();
