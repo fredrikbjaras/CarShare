@@ -39,7 +39,7 @@ public class UserDataAccess extends DataAccess<User> {
      * Note: removed param Credentials as it is only user for security. 
      */
     public User addUser(String userName,String password,int phoneNr,boolean isAdmin) {
-        int userId = insert("INSERT INTO User (userName, password,phoneNr,isAdmin) VALUES ((" +
+        int userId = insert("INSERT INTO User (userName, password,phoneNr,isAdmin) VALUES (" +
                         "?,?,?,?)",
                 userName, password, phoneNr, isAdmin);
         return new User(userId, userName, password,phoneNr,isAdmin);
@@ -155,4 +155,5 @@ public class UserDataAccess extends DataAccess<User> {
         return new Session(sessionID,user);
         }
     }
+
 }
