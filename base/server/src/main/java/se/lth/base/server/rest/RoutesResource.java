@@ -45,17 +45,22 @@ public class RoutesResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public boolean addRoute(int routeID, int driverID, int freeSeats, Array location, Array destination,
-			Timestamp timeOfDeparture, Timestamp timeOfArrival, Array passengers, String description,
-			Timestamp bookingEndTime, int recurring, boolean finished) {
+			String timeOfDeparture, String timeOfArrival, Array passengers, String description, String bookingEndTime,
+			int recurring, boolean finished) {
+
+		Timestamp timeStampOfDeparture = Timestamp.valueOf(timeOfDeparture);
+		Timestamp timeStampOfArrival = Timestamp.valueOf(timeOfArrival);
+		Timestamp timeStampBookingEndTime = Timestamp.valueOf(bookingEndTime);
+
 		if (user.getIsAdmin() || user.getUserID() == driverID) {
 
 			List<Routes> tempList = routeDao.getAllRoutesFromUser(driverID);
 			for (int i = 0; i < tempList.size(); i++) {
 				// checks if the driver already has a route on that specific time.
-				if ((tempList.get(i).getTimeOfDeparture().before(timeOfDeparture)
-						&& tempList.get(i).getTimeOfDeparture().after(timeOfArrival))
-						|| (tempList.get(i).getTimeOfArrival().after(timeOfDeparture)
-								&& tempList.get(i).getTimeOfDeparture().before(timeOfDeparture))) {
+				if ((tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture)
+						&& tempList.get(i).getTimeOfDeparture().after(timeStampOfArrival))
+						|| (tempList.get(i).getTimeOfArrival().after(timeStampOfDeparture)
+								&& tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture))) {
 
 					throw new WebApplicationException("This user already has a route during the specified timeframe",
 							Response.Status.BAD_REQUEST);
@@ -63,12 +68,13 @@ public class RoutesResource {
 				}
 
 			}
-			routeDao.addRoutes(driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers,
-					description, bookingEndTime, recurring, finished);
+			routeDao.addRoutes(driverID, freeSeats, location, destination, timeStampOfDeparture, timeStampOfArrival, passengers,
+					description, timeStampBookingEndTime, recurring, finished);
 			return true;
 		}
-		throw new WebApplicationException("You can't create a route where someonelse is the driver", Response.Status.BAD_REQUEST);
-		return false; 
+		throw new WebApplicationException("You can't create a route where someonelse expect you is the driver",
+				Response.Status.BAD_REQUEST);
+		return false;
 	}
 
 	@Path("{RouteID}")
