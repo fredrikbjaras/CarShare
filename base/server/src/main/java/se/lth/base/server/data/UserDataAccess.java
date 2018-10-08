@@ -78,6 +78,22 @@ public class UserDataAccess extends DataAccess<User> {
                 "WHERE userID = ?", userID);
     }
     
+    public List<User> getUsersByName(String name) {
+        return query("SELECT user_id, username, role FROM user, user_role " +
+                "WHERE user.role_id = user_role.role_id AND username LIKE ?%", name);
+    }
+    
+    public List<User> getUsersByNumber(String number) {
+        return query("SELECT user_id, username, role FROM user, user_role " +
+                "WHERE user.role_id = user_role.role_id AND number = ?", number); //Alltid singular? Namn på number i db?
+    }
+    
+    public List<User> getUsersByRouteId(String routeId) {
+        return query("SELECT passengers FROM Routes WHERE routeID = ? ", routeId); 
+        //Kommer passengers som List<User då? Står array
+    }
+
+    
     /* @param  userName
     * @return Returns the user with the ID.
     * @throws DataAccessException if userID does not exist.
