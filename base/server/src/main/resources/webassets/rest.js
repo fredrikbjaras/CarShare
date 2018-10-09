@@ -96,11 +96,11 @@ base.rest = (function() {
                 .then(users => users.map(u => new User(u)));
         },
 
-        addUser: function(userName, password, role = null) {
-            var credentials = {userName: userName, password: password, role: role}
+        addUser: function(userName, password, phoneNr = null, role = null) {
+            var shortUserObj = {userName: userName, password: password, phoneNr: phoneNr, role: role}
             return baseFetch('/rest/user', {
                     method: 'POST',
-                    body: JSON.stringify(credentials),
+                    body: JSON.stringify(shortUserObj),
                     headers: jsonHeader})
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
