@@ -140,7 +140,7 @@ public class UserResource {
 				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
 				for (int i = 0; i < temp.size(); i++) {
 					if (temp.get(i).getUserID() == user.getUserID()) {
-						return userDao.getPassengersByRouteId(filter.getRouteID());
+						return routeDao.getUsersByRouteId(filter.getRouteID());
 					}
 				}
 			}
