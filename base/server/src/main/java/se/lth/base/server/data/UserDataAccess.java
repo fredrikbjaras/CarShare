@@ -77,20 +77,27 @@ public class UserDataAccess extends DataAccess<User> {
         return queryFirst("SELECT userID, userName, password,phoneNr,isAdmin FROM User " +
                 "WHERE userID = ?", userID);
     }
-    
+   /**
+     * Retrieves a list of users beginning with the search "name". 
+     *
+     * @param  name
+     * @return Returns the list of found users. 
+     * 
+     */
     public List<User> getUsersByName(String name) {
         return query("SELECT user_id, username, role FROM user, user_role " +
                 "WHERE user.role_id = user_role.role_id AND username LIKE ?%", name);
     }
-    
+    /**
+     *Retrieve a user with a specific phone number.
+     *
+     * @param  number
+     * @return Returns the user with the phone number
+     * 
+     */
     public List<User> getUsersByNumber(String number) {
         return query("SELECT user_id, username, role FROM user, user_role " +
-                "WHERE user.role_id = user_role.role_id AND number = ?", number); //Alltid singular? Namn på number i db?
-    }
-    
-    public List<User> getUsersByRouteId(String routeId) {
-        return query("SELECT passengers FROM Routes WHERE routeID = ? ", routeId); 
-        //Kommer passengers som List<User då? Står array
+                "WHERE user.role_id = user_role.role_id AND phoneNr = ?", number); //Alltid singular? Namn på number i db?
     }
 
     
