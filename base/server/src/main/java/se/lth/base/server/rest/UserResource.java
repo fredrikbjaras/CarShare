@@ -184,59 +184,6 @@ public class UserResource {
 		}
 	}
 	
-	//one of the Users has to be a driver 
-	private boolean checkIfOnSameRoute(int userId) {
-
-		List<Routes> routeList1 = routeDao.getAllRoutesFromUser(user.getUserID());
-		List<User> passangerList1 = new ArrayList<User>();
-
-		List<Routes> routeList2 = routeDao.getAllRoutesFromUser(userId);
-		List<User> passangerList2 = new ArrayList<User>();
-
-		for (int i = 0; i < routeList1.size(); i++) {
-			passangerList1.addAll(routeDao.getUsersByRouteId(routeList1.get(i).getRouteID()));
-		}
-		for (int i = 0; i < routeList2.size(); i++) {
-			passangerList2.addAll(routeDao.getUsersByRouteId(routeList2.get(i).getRouteID()));
-		}
-		for (int i = 0; i < passangerList1.size(); i++) {
-			if (passangerList1.get(i).getUserID() == userId) {
-				return true;
-			}
-		}
-		for (int i = 0; i < passangerList2.size(); i++) {
-			if (passangerList2.get(i).getUserID() == user.getUserID()) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	@Path("{id}")
-	@GET
-	@PermitAll
-	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public User getUser(@PathParam("id") int userId) {
-		try {
-			if (user.getIsAdmin() || user.getUserID() == userId) {
-				return userDao.getUser(userId);
-			} else if (checkIfOnSameRoute(userId)) {
-				return new User(-1, null, null, userDao.getUser(userId).getPhoneNr(), false);
-			} else {
-				throw new WebApplicationException("You don't share any Route with this User", Response.Status.BAD_REQUEST);
-			}
-		} catch (DataAccessException e) {
-			// Man kanske inte behöver if-else-satserna i catch-blocket.
-			if (user.getIsAdmin() || user.getUserID() == userId || checkIfOnSameRoute(userId)) {
-				throw new WebApplicationException("Requirements met but User not found", Response.Status.BAD_REQUEST);
-			} else {
-				throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-			}
-		}
-	}
-
-	
-
 	@Path("{id}")
 	@PermitAll
 	@PUT
