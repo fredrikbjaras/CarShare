@@ -1,10 +1,12 @@
-package se.lth.base.server.rest;
+/*package se.lth.base.server.rest;
 
 import java.lang.reflect.Array;
 import java.sql.Timestamp;
 
 import javax.annotation.security.PermitAll;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -37,7 +39,7 @@ public class RoutesResource {
 		this.session = (Session) context.getProperty(Session.class.getSimpleName());
 	}
 
-	@GET
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public boolean addRoute(int routeID, int driverID, int freeSeats, String location, String destination,
@@ -82,7 +84,7 @@ public class RoutesResource {
 	}
 	
 	@Path("filter")
-	@GET
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public List<Route> getRoutes(RouteFilter filter) {
@@ -91,7 +93,7 @@ public class RoutesResource {
 	}
 	
 	@Path("{RouteID}")
-	@GET
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public boolean putRoute(Route routeUpdate) {
@@ -100,7 +102,7 @@ public class RoutesResource {
 	}
 	
 	@Path("{RouteID}")
-	@GET
+	@DELETE
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public boolean deleteRoute(@PathParam("RouteID") int routeID) {
@@ -108,4 +110,4 @@ public class RoutesResource {
 
 	}
 
-}
+}*/
