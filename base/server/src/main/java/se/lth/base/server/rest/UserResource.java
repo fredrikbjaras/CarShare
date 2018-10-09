@@ -107,29 +107,48 @@ public class UserResource {
 
 	// dosen't work yet, Filter class has to be added for the search Algorithm to
 	// work.
-	/*
-	 * @Path("{filter}") // object
-	 * 
-	 * @GET
-	 * 
-	 * @RolesAllowed(Role.Names.ADMIN)
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8") public List<User>
-	 * getUsers(@PathParam("filter") UserFilter filter) { // filter object could
-	 * contain String name, int // phoneNr, RouteID
-	 * 
-	 * if (user.getIsAdmin()) { UserSearch search = new UserSearch(userDao,
-	 * routeDao, filter); return search.returnSortedList();
-	 * 
-	 * } else { UserSearch search = new UserSearch(userDao, routeDao, filter,
-	 * user.getUserID()); List<User> temp = search.returnSortedList(); if
-	 * (temp.get(0).getUserID() == -1) { throw new
-	 * WebApplicationException("You are not a part of this Route",
-	 * Response.Status.BAD_REQUEST); List<User> emptyUserList = new
-	 * ArrayList<User>(); return emptyUserList; } else { return temp; } }
-	 * 
-	 * }
-	 */
+	
+	@Path("{filter}") // object
+	@GET
+	@RolesAllowed(Role.Names.ADMIN)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public List<User> getUsers(@PathParam("filter") UserFilter filter) { // filter object could contain String name, int
+																			// phoneNr, RouteID
+
+		if (currentUser().getIsAdmin()) {
+
+			switch (filter.getFilter()) {
+
+			case 1:
+				return userDao.getUsersByName(filter.getUsername());
+
+			case 2:
+				return userDao.getUsersByNumber(filter.getTelephoneNom());
+
+			case 3:
+				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
+				return temp;
+
+			default:
+				throw new WebApplicationException("Something is wonky with the filter parameters",
+						Response.Status.BAD_REQUEST);
+
+			}
+		} else {
+
+			if (filter.getFilter() == 3) {
+				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
+				for (int i = 0; i < temp.size(); i++) {
+					if (temp.get(i).getUserID() == user.getUserID()) {
+						return userDao.getPassengersByRouteId(filter.getRouteID());
+					}
+				}
+			}
+			throw new WebApplicationException("You don't access to retrive information from these Users",
+					Response.Status.BAD_REQUEST);
+		}
+	}
+	 
 	/**
 	 * @param userId
 	 * @return returns the user with the userId
@@ -164,6 +183,58 @@ public class UserResource {
 			}
 		}
 	}
+	
+	private boolean checkIfOnSameRoute(int userId) {
+
+		List<Routes> routeList1 = routeDao.getAllRoutesFromUser(user.getUserID());
+		List<User> passangerList1 = new ArrayList<User>();
+
+		List<Routes> routeList2 = routeDao.getAllRoutesFromUser(userId);
+		List<User> passangerList2 = new ArrayList<User>();
+
+		for (int i = 0; i < routeList1.size(); i++) {
+			passangerList1.addAll(routeDao.getUsersByRouteId(routeList1.get(i).getRouteID()));
+		}
+		for (int i = 0; i < routeList2.size(); i++) {
+			passangerList2.addAll(routeDao.getUsersByRouteId(routeList2.get(i).getRouteID()));
+		}
+		for (int i = 0; i < passangerList1.size(); i++) {
+			if (passangerList1.get(i).getUserID() == userId) {
+				return true;
+			}
+		}
+		for (int i = 0; i < passangerList2.size(); i++) {
+			if (passangerList2.get(i).getUserID() == user.getUserID()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	@Path("{id}")
+	@GET
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public User getUser(@PathParam("id") int userId) {
+		try {
+			if (user.getIsAdmin() || user.getUserID() == userId) {
+				return userDao.getUser(userId);
+			} else if (checkIfOnSameRoute(userId)) {
+				return new User(-1, null, null, userDao.getUser(userId).getPhoneNr(), false);
+			} else {
+				throw new WebApplicationException("You don't share any Route with this User", Response.Status.BAD_REQUEST);
+			}
+		} catch (DataAccessException e) {
+			// Man kanske inte behöver if-else-satserna i catch-blocket.
+			if (user.getIsAdmin() || user.getUserID() == userId || checkIfOnSameRoute(userId)) {
+				throw new WebApplicationException("Requirements met but User not found", Response.Status.BAD_REQUEST);
+			} else {
+				throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
+			}
+		}
+	}
+
+	
 
 	@Path("{id}")
 	@PermitAll
