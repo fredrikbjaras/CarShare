@@ -115,7 +115,7 @@ public class UserResourceTest extends BaseResourceTest {
     public void getUserAsUser() {
         login(TEST_CREDENTIALS);
         target("user")
-                .path(Integer.toString(ADMIN.getId()))
+                .path(Integer.toString(ADMIN.getUserID()))
                 .request()
                 .get(User.class);
     }
@@ -132,7 +132,7 @@ public class UserResourceTest extends BaseResourceTest {
     public void deleteUserAsUser() {
         login(TEST_CREDENTIALS);
         target("user")
-                .path(Integer.toString(ADMIN.getId()))
+                .path(Integer.toString(ADMIN.getUserID()))
                 .request()
                 .delete(Void.class); // Include response type to trigger exception
     }
@@ -144,8 +144,8 @@ public class UserResourceTest extends BaseResourceTest {
                 .path("all")
                 .request()
                 .get(USER_LIST);
-        assertTrue(users.stream().mapToInt(User::getId).anyMatch(id -> id == ADMIN.getId()));
-        assertTrue(users.stream().mapToInt(User::getId).anyMatch(id -> id == TEST.getId()));
+        assertTrue(users.stream().mapToInt(User::getUserID).anyMatch(id -> id == ADMIN.getUserID()));
+        assertTrue(users.stream().mapToInt(User::getUserID).anyMatch(id -> id == TEST.getUserID()));
     }
 
     @Test
@@ -168,22 +168,22 @@ public class UserResourceTest extends BaseResourceTest {
                 .post(Entity.json(newCredentials), User.class);
         assertEquals(newCredentials.getUsername(), newUser.getName());
         assertEquals(newCredentials.getRole(), newUser.getRole());
-        assertTrue(newUser.getId() > 0);
+        assertTrue(newUser.getUserID() > 0);
 
         // Test if we can login as new user
         login(newCredentials);
         User currentUser = target("user").request().get(User.class);
-        assertEquals(newUser.getId(), currentUser.getId());
+        assertEquals(newUser.getUserID(), currentUser.getUserID());
     }
 
     @Test
     public void getUser() {
         login(ADMIN_CREDENTIALS);
         User responseTest = target("user")
-                .path(Integer.toString(TEST.getId()))
+                .path(Integer.toString(TEST.getUserID()))
                 .request()
                 .get(User.class);
-        assertEquals(TEST.getId(), responseTest.getId());
+        assertEquals(TEST.getUserID(), responseTest.getUserID());
         assertEquals(TEST.getName(), responseTest.getName());
         assertEquals(TEST.getRole(), responseTest.getRole());
     }
@@ -192,7 +192,7 @@ public class UserResourceTest extends BaseResourceTest {
     public void dontDeleteYourself() {
         login(ADMIN_CREDENTIALS);
         target("user")
-                .path(Integer.toString(ADMIN.getId()))
+                .path(Integer.toString(ADMIN.getUserID()))
                 .request()
                 .delete(Void.class);
     }
@@ -201,11 +201,11 @@ public class UserResourceTest extends BaseResourceTest {
     public void deleteTestUser() {
         login(ADMIN_CREDENTIALS);
         target("user")
-                .path(Integer.toString(TEST.getId()))
+                .path(Integer.toString(TEST.getUserID()))
                 .request()
                 .delete(Void.class);
         target("user")
-                .path(Integer.toString(TEST.getId()))
+                .path(Integer.toString(TEST.getUserID()))
                 .request()
                 .get(User.class);
     }
@@ -233,7 +233,7 @@ public class UserResourceTest extends BaseResourceTest {
         login(ADMIN_CREDENTIALS);
         Credentials update = new Credentials("admin", "password", Role.USER);
         target("user")
-                .path(Integer.toString(ADMIN.getId()))
+                .path(Integer.toString(ADMIN.getUserID()))
                 .request()
                 .put(Entity.json(update), User.class);
     }
@@ -243,10 +243,10 @@ public class UserResourceTest extends BaseResourceTest {
         login(ADMIN_CREDENTIALS);
         Credentials newTest = new Credentials("test2", null, Role.ADMIN);
         User user = target("user")
-                .path(Integer.toString(TEST.getId()))
+                .path(Integer.toString(TEST.getUserID()))
                 .request()
                 .put(Entity.json(newTest), User.class);
-        assertEquals(TEST.getId(), user.getId());
+        assertEquals(TEST.getUserID(), user.getUserID());
         assertEquals(newTest.getUsername(), user.getName());
         assertEquals(newTest.getRole(), user.getRole());
     }
