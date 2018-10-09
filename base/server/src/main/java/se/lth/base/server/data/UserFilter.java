@@ -24,6 +24,26 @@ public class UserFilter {
 	public int getRouteID() {
 		return routeID;
 	}
+	
+		/*
+	 * 1 if username 
+	 * 2 if telephone number
+	 * 3 if routeID
+	 * 0 if nothing
+	 */
+	public int getFilter() {
+		if(username != null) {// could be a empty String
+			return 1; 
+		}
+		else if (telephoneNom != null) {
+			return 2;
+		}
+		else if(routeID != 0) {
+			return 3;
+		}
+		return 0;
+	}
+
 
 
 }
