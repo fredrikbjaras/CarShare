@@ -37,25 +37,7 @@
 			</div>
 		</div>
 
-		<div class="form-group row">
-			<label class="col-md-2 col-form-label" for="set-phoneNr">Phone
-				number</label>
-			<div class="col-md-10">
-				<input type="text" class="form-control" id="set-phoneNr"
-					placeholder="Enter Phone number">
-			</div>
-		</div>
-		<div class="form-group row">
-			<label class="col-md-2 col-form-label" for="description">Description</label>
-			<div class="col-md-10">
-				<textarea class="form-control" rows="5" id="description"
-					placeholder="Enter description here"></textarea>
-			</div>
-		</div>
-
-
-
-
+		
 
 		</div>
 		<div class="row">
@@ -63,8 +45,8 @@
 				<div class="row">
 					<div class="col-md">
 						<button id="submit-user" type="submit"
-							class="ml-auto mr-3 btn btn-primary">Submit</button>
-						<button id="submit-user" type="button"
+							class="ml-auto mr-3 btn btn-primary" onclick="location.href='http://localhost:8080/login/login.html'">Submit</button>
+						<button id="back" type="button"
 							class="ml-auto mr-3 btn btn-secondary" onclick="location.href='http://localhost:8080/login/login.html'">Back</button>	
 						<!--   <button id="reset-user" type="reset"
 							//class="mr-auto btn btn-secondary">Reset</button>
@@ -78,11 +60,11 @@
 
 
 	<script src="/rest.js"></script>
-	<script src="login.js"></script>
+	<script src="new-user.js"></script>
 	<script type="application/javascript">
 		
 		
-    base.loginController.initOnLoad();
+  // base.loginController.initOnLoad();
 
 	
 	</script>
