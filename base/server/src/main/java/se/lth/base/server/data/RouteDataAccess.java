@@ -75,6 +75,24 @@ public class RouteDataAccess extends DataAccess<Route> {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes");
     }
     
+    
+    /**
+     * Returns ALL users of a route, including the driver. 
+     * @param routeId
+     * @return list of users
+     */
+    public List<User> getUsersByRouteId(int routeId) {
+    	Route route = getRoute(routeId);
+    	String[] passList = route.getPassengers().split(","); // separeras på ,??
+    	List<User> userList = new ArrayList<User>();
+    	userList.add(userDao.getUser(route.getDriverID()));
+    	for(String user : passList) {
+    		userList.add(userDao.getUser(Integer.parseInt(user)));
+    	}
+        return userList;
+    }
+    
+    
     /**
      * @param UserID of the driver
      * @return all Routes from a specific user.
