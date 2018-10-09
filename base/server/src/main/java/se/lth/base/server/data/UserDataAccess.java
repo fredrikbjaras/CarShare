@@ -22,7 +22,7 @@ public class UserDataAccess extends DataAccess<User> {
             return new User(resultSet.getInt("userID"),
                     resultSet.getString("password"),
                     resultSet.getString("userName"),
-                    resultSet.getInt("phoneNr"),
+                    resultSet.getString("phoneNr"),
                     resultSet.getBoolean("isAdmin"));
         }
     }
@@ -38,7 +38,7 @@ public class UserDataAccess extends DataAccess<User> {
      * @throws DataAccessException if duplicated userName,too short password or too short user names.
      * Note: removed param Credentials as it is only user for security. 
      */
-    public User addUser(String userName,String password,int phoneNr,boolean isAdmin) {
+    public User addUser(String userName,String password,String phoneNr,boolean isAdmin) {
         int userId = insert("INSERT INTO User (userName, password,phoneNr,isAdmin) VALUES (" +
                         "?,?,?,?)",
                 userName, password, phoneNr, isAdmin);
@@ -156,20 +156,23 @@ public class UserDataAccess extends DataAccess<User> {
      * @return New user session, consisting of a @{@link UUID}
      * @throws DataAccessException if the username or password does not match.
      */ 
-    public Session authenticate(String userName,String password) {
-    	@SuppressWarnings("unused")
-		Supplier<DataAccessException> onError = () ->
-        new DataAccessException("Username or password incorrect", ErrorType.DATA_QUALITY);
-        User user = getUserWithName(userName);
-        if(user.getPassword()!=password) {
-        	throw new DataAccessException("Username or password incorrect", ErrorType.DATA_QUALITY);
-        }
-        else {
-        boolean isAdmin = user.getIsAdmin();
-        UUID sessionID = insert("INSERT INTO Session Session (userID,isAdmin) VALUES (?,?)" ,
-        		user.getUserID(),isAdmin);
-        return new Session(sessionID,user);
-        }
+    public Session authenticate(Credentials credentials) {
+        Supplier<DataAccessException> onError = () ->
+                new DataAccessException("Username or password incorrect", ErrorType.DATA_QUALITY);
+        long salt = new DataAccess<>(getDriverUrl(), (rs) -> rs.getLong(1))
+                .queryFirst("SELECT salt FROM user WHERE username = ?", credentials.getUsername());
+        UUID hash = credentials.generatePasswordHash(salt);
+        User user = queryFirst("SELECT user_id, username, role FROM user, user_role " +
+                "WHERE user_role.role_id = user.role_id " +
+                "    AND username = ? " +
+                "    AND password_hash = ?", credentials.getUsername(), hash);
+        UUID sessionId = insert("INSERT INTO session (user_id) " +
+                "SELECT user_id from USER WHERE username = ?", user.getName());
+        return new Session(sessionId, user);
+    }
+    
+    public boolean sharesRoute(int userID1, int userID2) {
+        return execute("SELECT * FROM routes WHERE  user_ID = ? INTERSECT SELECT * FROM routes WHERE  user_ID = ?", userID1, userID2) > 0;
     }
 
 }

@@ -15,11 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import se.lth.base.server.Config;
-import se.lth.base.server.data.Routes;
-import se.lth.base.server.data.RoutesDataAccess;
-import se.lth.base.server.data.Session;
-import se.lth.base.server.data.User;
-import se.lth.base.server.data.UserDataAccess;
+import se.lth.base.server.data.*;
 import java.util.List;
 
 @Path("route")
@@ -30,7 +26,7 @@ public class RoutesResource {
 	// private final Route route;
 	private final Session session;
 	private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
-	private final RoutesDataAccess routeDao = new RoutesDataAccess(Config.instance().getDatabaseDriver());
+	private final RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
 	private final BookingRequestDataAccess bookDao = new BookingRequestDataAccess(
 			Config.instance().getDatabaseDriver());
 
@@ -44,8 +40,8 @@ public class RoutesResource {
 	@GET
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public boolean addRoute(int routeID, int driverID, int freeSeats, Array location, Array destination,
-			String timeOfDeparture, String timeOfArrival, Array passengers, String description, String bookingEndTime,
+	public boolean addRoute(int routeID, int driverID, int freeSeats, String location, String destination,
+			String timeOfDeparture, String timeOfArrival, String passengers, String description, String bookingEndTime,
 			int recurring, boolean finished) {
 
 		Timestamp timeStampOfDeparture = Timestamp.valueOf(timeOfDeparture);
@@ -54,7 +50,7 @@ public class RoutesResource {
 
 		if (user.getIsAdmin() || user.getUserID() == driverID) {
 
-			List<Routes> tempList = routeDao.getAllRoutesFromUser(driverID);
+			List<Route> tempList = routeDao.getAllRoutesFromUser(driverID);
 			for (int i = 0; i < tempList.size(); i++) {
 				// checks if the driver already has a route on that specific time.
 				if ((tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture)
@@ -64,7 +60,6 @@ public class RoutesResource {
 
 					throw new WebApplicationException("This user already has a route during the specified timeframe",
 							Response.Status.BAD_REQUEST);
-					return false;
 				}
 
 			}
@@ -74,14 +69,13 @@ public class RoutesResource {
 		}
 		throw new WebApplicationException("You can't create a route where someonelse expect you is the driver",
 				Response.Status.BAD_REQUEST);
-		return false;
 	}
 
 	@Path("{RouteID}")
 	@GET
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public Routes getRoute(int routeID) {
+	public Route getRoute(int routeID) {
 		//mabye should it be a difference between a Admin call and a user call 
 		return routeDao.getRoutes(routeID);
 
@@ -91,7 +85,7 @@ public class RoutesResource {
 	@GET
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
-	public List<Routes> getRoutes(RouteFilter filter) {
+	public List<Route> getRoutes(RouteFilter filter) {
 		return null;
 
 	}
@@ -100,7 +94,7 @@ public class RoutesResource {
 	@GET
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
-	public boolean putRoute(Routes routeUpdate) {
+	public boolean putRoute(Route routeUpdate) {
 		return false;
 
 	}

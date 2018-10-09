@@ -2,14 +2,12 @@ package se.lth.base.server.data;
 
 import java.util.ArrayList;
 import java.util.List;
-import Routes.java;
-import RoutesDataAccess.java;
 
 public class UserSearch {
 
 	private List<User> userList;
 	private UserFilter filter;
-	private List<Routes> routeList;
+	private List<Route> routeList;
 	private int userId;
 
 	public UserSearch(List<User> userList, UserFilter filter) {
@@ -20,7 +18,7 @@ public class UserSearch {
 	}
 
 	// if filter contains routeId
-	public UserSearch(List<User> userList, List<Routes> routeList, UserFilter filter) {
+	public UserSearch(List<User> userList, List<Route> routeList, UserFilter filter) {
 
 		this.filter = filter;
 		this.userList = userList;
@@ -29,7 +27,7 @@ public class UserSearch {
 	}
 	
 	// if filter contains routeId and call was NOT made by an admin 
-	public UserSearch(List<User> userList, List<Routes> routeList, UserFilter filter, int userId) {
+	public UserSearch(List<User> userList, List<Route> routeList, UserFilter filter, int userId) {
 
 		this.filter = filter;
 		this.userList = userList;
@@ -46,7 +44,7 @@ public class UserSearch {
 	}
 	
 	//returns an empty array if no User with matching phone number was found
-	private List<User> sortByPhoneNbr(int phoneNbr) {
+	private List<User> sortByPhoneNbr(String phoneNbr) {
 		List<User> tempUserList = new ArrayList<User>();
 		for (int i = 0; i < userList.size(); i++) {
 			if(userList.get(i).getPhoneNr() == phoneNbr) {
@@ -77,14 +75,14 @@ public class UserSearch {
 	private List<User> sortByRouteId(int RouteId) {
 		List<User> tempUserList = new ArrayList<User>();// list to return
 		List<Integer> passengersInRoute = new ArrayList<Integer>(); // saves ID of people in route
-		int driverId;
+		int driverId = 0;
 		boolean doesRouteExist = false;
 
 		// find the Users on specified route and gets there userID
 		for (int i = 0; i < routeList.size(); i++) {
-			if (routeList.get(i).getRouteId() == RouteId) {
-				passengersInRoute = routeList.get(i).getPassengers();
-				driverId = routeList.get(i).getDriver();
+			if (routeList.get(i).getRouteID() == RouteId) {
+				String passengerString = routeList.get(i).getPassengers();
+				driverId = routeList.get(i).getDriverID();
 				doesRouteExist = true;
 				break;
 			}
@@ -94,7 +92,7 @@ public class UserSearch {
 		if(userId != -1) {
 			if(driverId != userId && !passengersInRoute.contains(userId)) {
 				//error user, flags to UserResource that the user dosen't exist in the route
-				User errorUser = new User(-1, "I am Error", "Error",404,false);
+				User errorUser = new User(-1, "I am Error", "Error","404",false);
 				tempUserList.add(errorUser);
 				return tempUserList;
 			}

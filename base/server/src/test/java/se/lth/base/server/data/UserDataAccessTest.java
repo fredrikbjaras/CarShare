@@ -20,7 +20,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 
     @Test
     public void addNewUser() {
-    	User misterExample = userDao.addUser("misterExample","password",0,false);
+    	User misterExample = userDao.addUser("misterExample","password","0",false);
         assertTrue(misterExample.getName()=="misterExample");
     }
 }

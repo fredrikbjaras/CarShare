@@ -41,7 +41,7 @@ public class FooResourceTest extends BaseResourceTest {
     public void addFoo() {
         Foo foo = target("foo").request()
                 .post(Entity.json(Collections.singletonMap("payload", "asdf")), Foo.class);
-        assertEquals(TEST.getId(), foo.getUserId());
+        assertEquals(TEST.getUserID(), foo.getUserId());
         assertEquals("asdf", foo.getPayload());
         assertNotEquals(0, foo.getId());
         assertNotEquals(0L, foo.getCreated());
@@ -94,7 +94,7 @@ public class FooResourceTest extends BaseResourceTest {
         login(ADMIN_CREDENTIALS);
         List<Foo> testsFoos = target("foo")
                 .path("user")
-                .path(Integer.toString(TEST.getId()))
+                .path(Integer.toString(TEST.getUserID()))
                 .request()
                 .get(FOO_LIST);
         assertEquals("tests", testsFoos.get(0).getPayload());

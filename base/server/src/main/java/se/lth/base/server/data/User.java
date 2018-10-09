@@ -5,25 +5,25 @@ import java.security.Principal;
 import se.lth.base.server.data.Role;
 public class User implements Principal {
 
-    public static User NONE = new User(0, "NONEACCOUNT", "password",123456789,false);
+    public static User NONE = new User(0, "NONEACCOUNT", "password","123456789",false);
 
     private final int userID;
     private final String userName;
     private final String password;
-    private final int phoneNr;
+    private final String phoneNr;
     private File profilePicture;
     private String description = "";
     private final boolean isAdmin;
     //add more declarations
     
-    public User(int userID, String userName, String password,int phoneNr,boolean isAdmin) {
+    public User(int userID, String userName, String password,String phoneNr,boolean isAdmin) {
         this.userID = userID;
         this.userName = userName;
         this.password = password;
         this.phoneNr = phoneNr;
         this.isAdmin = isAdmin;
     }
-    public User(int userID, String userName, String password,int phoneNr,boolean isAdmin,String description,File profilePicture) {
+    public User(int userID, String userName, String password,String phoneNr,boolean isAdmin,String description,File profilePicture) {
         this.userID = userID;
         this.userName = userName;
         this.password = password;
@@ -43,7 +43,7 @@ public class User implements Principal {
     public String getUserName() {
     	return userName;
     }
-    public int getPhoneNr() {
+    public String getPhoneNr() {
     	return phoneNr;
     }
     public boolean getIsAdmin() {
@@ -61,5 +61,16 @@ public class User implements Principal {
     	else {
     		return Role.USER;
     	}
+    }
+	public String getName() {
+		return userName;
+	}
+	
+	public boolean validPassword() {
+        return this.password.length() >= 8;
+    }
+
+    public boolean hasPassword() {
+        return password != null;
     }
 }
