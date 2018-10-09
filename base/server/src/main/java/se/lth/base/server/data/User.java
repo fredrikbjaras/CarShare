@@ -31,6 +31,7 @@ public class User implements Principal {
         this.isAdmin = isAdmin;
         this.description = description;
         this.profilePicture = profilePicture;
+
     }
 
     public int getUserID() {
@@ -61,9 +62,4 @@ public class User implements Principal {
     		return Role.USER;
     	}
     }
- public String getName() {
-    	return  userName;
-    }
-	
-	
 }
