@@ -24,7 +24,7 @@ public class FooResource {
         this.user = (User) context.getProperty(User.class.getSimpleName());
     }
 
-    @POST
+   /* @POST
     @Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
     @RolesAllowed(Role.Names.USER)
     public Foo addFoo(Foo foo) throws URISyntaxException {
@@ -52,5 +52,5 @@ public class FooResource {
     @Path("all")
     public List<Foo> getAllFoos() {
         return fooDao.getAllFoo();
-    }
+    }*/
 }
