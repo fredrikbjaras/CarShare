@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public class RouteDataAccess extends DataAccess<Route> {
-
+    private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
 
     private static class RoutesMapper implements Mapper<Route> {
         @Override
