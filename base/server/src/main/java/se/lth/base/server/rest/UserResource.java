@@ -184,6 +184,7 @@ public class UserResource {
 		}
 	}
 	
+	//one of the Users has to be a driver 
 	private boolean checkIfOnSameRoute(int userId) {
 
 		List<Routes> routeList1 = routeDao.getAllRoutesFromUser(user.getUserID());
