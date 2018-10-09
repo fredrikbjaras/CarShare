@@ -1,4 +1,3 @@
 #user-view:not(.add) .show-add, #user-view:not(.edit) .show-edit {
     display: none;
 }
-

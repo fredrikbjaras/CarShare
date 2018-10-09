@@ -32,6 +32,19 @@ base.userAdminController = function() {
             var el = document.getElementById('user-list').querySelectorAll('button')[ix];
             el.parentElement.removeChild(el);
         },
+
+        showForm: function(formId){
+        	console.log('första hej');
+            var form = document.getElementById(formId);
+            if (form.style.display == 'block') {
+            	form.style.display = 'none';
+            	console.log('if hej');
+            } else {
+            	form.style.display = 'block';
+            	console.log('else hej');
+            }
+    	},
+
         resetEdit: function() {
             var userView = document.getElementById('user-view');
             var isEdit = userView.classList.contains('edit');
@@ -44,6 +57,7 @@ base.userAdminController = function() {
         selectUser: function(user, clickedEl) {
             // Set appropriate user-view class to either add or edit.
             var userView = document.getElementById('user-view');
+            view.showForm('user-form');
             if (user.username === '') {
                 userView.classList.remove('edit');
                 userView.classList.add('add');
@@ -66,6 +80,9 @@ base.userAdminController = function() {
             document.getElementById('user-id').defaultValue = user.id;
             document.getElementById('set-username').defaultValue = user.username;
             document.getElementById('set-password').defaultValue = '';
+            document.getElementById('set-phoneNr').defaultValue = user.phoneNr; //Kanske phoneNr? Se hur JSON ser ut
+            document.getElementById('description').defaultValue = user.description;
+
             var roleIx = model.roleNames.indexOf(user.role.name);
             var options = document.getElementById('set-role').querySelectorAll('option');
             options.forEach(o => o.defaultSelected = false);
@@ -75,18 +92,51 @@ base.userAdminController = function() {
     };
 
     var controller = {
+
+
+   		search: function(){
+        		var inputParam = document.getElementById('search-form').value;
+        		var userName;
+        		var phoneNr;
+        		var routeId;
+
+        		if(isNaN(searchParam)&& searchParam.String().length> 10){
+        			phoneNr = searchParam;
+        			username = 0;
+        			routeId = 0;
+
+        		}
+        		else if(searchParam.length > 10){
+        			userName = searchParam;
+        			phoneNr = 0;
+        			routeId = 0;
+        		}
+        		else if(searchParam.length > 1){
+        			routeId = searchParam
+        			userName = 0;
+        			phoneNr = 0;
+        		}
+
+        		var filterObject = username + "," + phoneNr + "," + routeId;
+
+
+        		// Hitta ett sätt att anropa Promise.all, kanske göra om den till en funktion? Den ska iaf få searchParam som input till att se anropa getUsers(filterObject)
+
+
+        	},
+
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
             var password = document.getElementById('set-password').value;
-            var username = document.getElementById('set-username').value;
+            //var username = document.getElementById('set-username').value;
             var role = document.getElementById('set-role').value;
             var id = document.getElementById('user-id').value;
-            var credentials = {username, password, role};
-            if (password === '') {
-                delete credentials.password;
-            }
+            var phoneNr = document.getElementById('set-phoneNr').value;
+            var description = document.getElementById('description').value;
+            password = (password === "") ? null: password;
+            phoneNr = (phoneNr === "") ? null: phoneNr;
             if (id !== '') {
-                base.rest.putUser(id, credentials).then(function(user) {
+                base.rest.updateUser(id, password, phoneNr, role, description).then(function(user) {
                     if (user.error) {
                         alert(user.message);
                     } else {
@@ -97,7 +147,7 @@ base.userAdminController = function() {
                     }
                 });
             } else {
-                base.rest.addUser(credentials).then(function(user) {
+                base.rest.addUser(username, password).then(function(user) {
                     if (user.error) {
                         alert(user.message);
                     } else {
@@ -111,6 +161,7 @@ base.userAdminController = function() {
             }
             return false;
         },
+
         deleteUser: function() {
             var userId = document.getElementById('user-id').value;
             var ix = model.users.map(user => user.id).indexOf(parseInt(userId));
@@ -124,8 +175,15 @@ base.userAdminController = function() {
         load: function() {
             document.getElementById('change-password').onclick = (event) => view.editPassword(false);
             document.getElementById('user-form').onsubmit = controller.submitUser;
+            document.getElementById('new-user').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-route').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-bookingRequest').onclick = (event) => view.showForm('user-form');
+            document.getElementById('new-flagReport').onclick = (event) => view.showForm('user-form');
+
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
+
+            //base.mainController.view.hideUserLinks(); // Visa bara admin-länkar
             Promise.all([
                 base.rest.getUsers().then(function(users) {
                     model.users = users;

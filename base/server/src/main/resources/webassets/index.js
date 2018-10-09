@@ -3,9 +3,13 @@ base.mainController = (function() {
 
     var routingTable = {
         // first in table is the default
-        'foo': {
-            partial: 'foo/foo.html',
-            controller: base.fooController
+        'home': {
+            partial: 'home/home.html',
+            controller: base.homeController
+        },
+        'userpage': {
+            partial: 'userpage/userpage.html',
+            controller: base.userpageController
         },
         'admin': {
             partial: 'admin/user-admin.html',
@@ -30,6 +34,9 @@ base.mainController = (function() {
         },
         renderUsername: function() {
             document.getElementById('username').textContent = model.user.username;
+        },
+        hideUserLinks(){
+            document.querySelectorAll('#main-nav li.user-only').forEach(li => li.style.display = 'none');
         }
     };
 
@@ -54,13 +61,16 @@ base.mainController = (function() {
             document.getElementById('logout').onclick = controller.logout;
             window.onhashchange = base.mainController.changeRoute;
             base.mainController.changeRoute();
-            base.rest.getUser().then(function(user) {
+            base.rest.getLoggedInUser().then(function(user) {
                 model.user = user;
                 view.renderUsername();
                 if (user.isNone()) {
                     base.changeLocation('/login/login.html');
                 } else if (!user.isAdmin()) {
                     view.hideAdminLinks();
+                }
+                else if (user.isAdmin()) {
+                    view.hideUserLinks();
                 }
             });
         },
