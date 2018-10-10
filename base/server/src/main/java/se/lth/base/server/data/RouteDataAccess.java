@@ -46,8 +46,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @return Routes object containing routeID and the entered info.
      */
     public Route addRoute(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
-    	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES ((" +
-                 "?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
+    	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES (?,?,?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     	 return new Route(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     }
 
@@ -133,7 +132,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @return True if successful, false if passenger is already a passenger, no free seats available, or if the passenger is also the driver for the route.
      */
     public boolean addPassengerToRoute(int routeID, int passengerID) {
-    List<Route> temp = query("SELECT driverID, freeSeats, passengers, finished FROM Routes" + "WHERE routeID = ?", routeID);
+    List<Route> temp = query("SELECT * FROM Routes WHERE routeID = ?", routeID);
     Route route = temp.get(0);
     String currentPassengers = route.getPassengers();;
     String passengerIDString = Integer.toString(passengerID);
