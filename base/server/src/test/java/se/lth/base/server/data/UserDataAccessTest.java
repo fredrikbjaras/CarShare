@@ -25,7 +25,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
         User test = userDao.addUser("userName", "password", "0700 000 000", false);
         long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 				.queryFirst("SELECT salt FROM user WHERE username = ?", "userName");
-        String passwordHash = test.generatePasswordHash(salt).toString();
+        String passwordHash = userDao.generatePasswordHash(salt,test.getPassword()).toString();
         List<User> users = userDao.getUsers();
         assertTrue(users.stream().anyMatch(u -> u.getName().equals("userName") && u.getPassword().equals(passwordHash) && u.getPhoneNr().equals("0700 000 000") && u.getIsAdmin() == false));
         System.out.println(passwordHash + users.get(2).getPassword());
@@ -34,18 +34,19 @@ public class UserDataAccessTest extends BaseDataAccessTest {
     	@Test
 		public void updateUser() {
 			File pic = new File("");
-			User test1 = userDao.addUser("userName", "password", "000", false);
+			User test1 = userDao.addUser("userName", "password", "0070 000 000", false);
+			String password = test1.getPassword();
 			int id = test1.getUserID();
-			test1 = userDao.updateUser(id, "userNamee", "password", pic, "hej");
-			String passwordHash = test1.getPassword();
+			User test2 = userDao.updateUser(id, "userNamee", "password", "0070 000 000", pic, "hej");
+			long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
+					.queryFirst("SELECT salt FROM user WHERE userID = ?", id);
+	        String passwordHash = userDao.generatePasswordHash(salt,test1.getPassword()).toString();
 			List<User> users = userDao.getUsers();
 			User user = users.get(2);
-			System.out.println(user.getUserID() + user.getDescription() + user.getUserName() + user.getIsAdmin() + user.getPassword());
-			System.out.println(passwordHash);
+			
 			assertTrue(users.stream().anyMatch(u -> u.getUserID() == id && u.getUserName().compareTo("userNamee") == 0
 			&& u.getPassword().equals(passwordHash) &&  u.getIsAdmin() == false));
-	        //u.getPassword().compareTo(passwordHash) == 0 s(passwordHash)
-	        //&& u.getDescription().compareTo("") == 0
+	       
 		}
 		@Test
 		public void getUser() {

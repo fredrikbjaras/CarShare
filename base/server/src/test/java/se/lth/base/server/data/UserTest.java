@@ -9,7 +9,7 @@ import org.junit.Test;
 public class UserTest {
 	
 	File pic = new File("");
-	User test = new User(1, "name", "Password", 00, false, "hello", pic);
+	User test = new User(1, "userName", "Password", "0700 000 000", false, "user", pic);
 
 	@Test
 	public void getID() {

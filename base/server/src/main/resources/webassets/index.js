@@ -14,6 +14,10 @@ base.mainController = (function() {
         'admin': {
             partial: 'admin/user-admin.html',
             controller: base.userAdminController
+        },
+        'searchRoute':{
+        	partial: 'searchRoute/searchRoute.html',
+        	controller: base.searchRouteController
         }
     };
 
@@ -33,7 +37,7 @@ base.mainController = (function() {
             document.querySelectorAll('#main-nav li.admin-only').forEach(li => li.style.display = 'none');
         },
         renderUsername: function() {
-            document.getElementById('username').textContent = model.user.username;
+            document.getElementById('username').textContent = model.user.userName;
         },
         hideUserLinks(){
             document.querySelectorAll('#main-nav li.user-only').forEach(li => li.style.display = 'none');
@@ -64,7 +68,7 @@ base.mainController = (function() {
             base.rest.getLoggedInUser().then(function(user) {
                 model.user = user;
                 view.renderUsername();
-                if (user.isNone()) {
+                if (user.isNone() || user.userName == 'NONEACCOUNT') {
                     base.changeLocation('/login/login.html');
                 } else if (!user.isAdmin()) {
                     view.hideAdminLinks();
