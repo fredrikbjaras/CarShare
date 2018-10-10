@@ -4,7 +4,7 @@
 		style="margin-top: 60px; display: block">
 		<div class="form-group row show-edit">
 			<button id="searchRoute" type="submit"
-				class="ml-auto mr-3 btn btn-secondary">Search routes</button>
+				class="ml-auto mr-3 btn btn-primary">Search routes</button>
 			<!-- <label class="col-md-2 col-form-label" >Search</label> -->
 			<div class="col-md-10">
 				<input type="text" class="form-control" id="driver-id-input"
@@ -28,11 +28,13 @@
 
 </div>
 <h3> A table will be visible with the matching routes, when route is implemented</h3>
+				<!-- Route-tabell -->
+				
 <div id="route-view" class="row">
 	<div id="route-list" class="col-md-3">
 		<div class="list-group">
-			<template id="user-template">
-			<button type="button" class="list-group-item list-group-item-action"></button>
+			<template id="route-template">
+			<button id = "listbutton" type="button" class="list-group-item list-group-item-action"></button>
 			</template>
 		</div>
 	</div>
