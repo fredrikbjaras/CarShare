@@ -75,6 +75,7 @@ base.mainController = (function() {
                 }
                 else if (user.isAdmin()) {
                     view.hideUserLinks();
+                    document.getElementById('user-admin-link').click()
                 }
             });
         },
