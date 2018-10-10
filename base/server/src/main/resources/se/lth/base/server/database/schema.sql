@@ -8,22 +8,23 @@
 --Table one made for Userlogin, user information and role specification
 CREATE TABLE User(userID INT AUTO_INCREMENT NOT NULL,
                   userName VARCHAR_IGNORECASE NOT NULL UNIQUE, --Vet inte om username ska vara casesesitive?
-                  password VARCHAR NOT NULL, --Kommer förmodligen ändras till något annat om vi kör ett hashat lösen typ UUID 
-				  phoneNr INT NOT NULL,
+                  salt BIGINT NOT NULL,
+                  password_hash UUID NOT NULL,
+				  phoneNr VARCHAR NOT NULL,
 				  profilePicture BLOB,
 				  description VARCHAR,
 				  isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
 				  
                   PRIMARY KEY (userID),
                   CHECK (LENGTH(userName) >= 8),
-				  CHECK (LENGTH(userName) <= 16),
-				  CHECK (LENGTH(password) >= 8)
+				  CHECK (LENGTH(userName) <= 16)
 				
 ); 
 
 	--Lägger till en admin med Användarnamn: Admin och lösen: password
-	INSERT INTO User (userID,userName,password,phoneNr,isAdmin) 
-	VALUES (1,'AdminAdmin','password',123456789,TRUE);
+	INSERT INTO User (userID,userName,salt, password_hash,phoneNr,isAdmin) 
+	VALUES (1, 'AdminUser', -2883142073796788660, '8dc0e2ab-4bf1-7671-c0c4-d22ffb55ee59','0',TRUE),
+           (2, 'TestUser', 5336889820313124494, '144141f3-c868-85e8-0243-805ca28cdabd','0',FALSE);
 
 --Tagen mestadels från labben. Gör en chansning tills vi har har specificerat hur vi ska hantera våra sessions.
 CREATE TABLE Session(session_uuid UUID DEFAULT RANDOM_UUID(),

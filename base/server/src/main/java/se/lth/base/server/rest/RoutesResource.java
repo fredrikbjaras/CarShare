@@ -1,20 +1,10 @@
-package se.lth.base.server.rest;
+/*package se.lth.base.server.rest;
 
 import java.sql.Timestamp;
 import java.util.List;
 
 import javax.annotation.security.PermitAll;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.*;
 
 import se.lth.base.server.Config;
 import se.lth.base.server.data.BookingRequestDataAccess;
@@ -44,7 +34,7 @@ public class RoutesResource {
 		this.session = (Session) context.getProperty(Session.class.getSimpleName());
 	}
 
-	@GET
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public boolean addRoute(int routeID, int driverID, int freeSeats, String location, String destination,
@@ -95,7 +85,7 @@ public class RoutesResource {
 	}
 	
 	@Path("filter")
-	@GET
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public List<Route> getRoutes(RouteFilter filter) {
@@ -156,7 +146,7 @@ public class RoutesResource {
 	}
 	
 	@Path("{RouteID}")
-	@PUT
+	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public boolean putRoute(Route routeUpdate) {
@@ -261,4 +251,4 @@ public class RoutesResource {
 
 	}
 
-}
+}*/
