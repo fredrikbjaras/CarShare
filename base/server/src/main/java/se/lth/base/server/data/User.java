@@ -87,29 +87,4 @@ public class User implements Principal {
     public boolean hasPassword() {
         return password != null;
     }
-    
-    private static final int SIZE = 256;
-    private static final int ITERATION_COST = 16;
-    private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
-
-    /**
-     * Hash password using hashing algorithm intended for this purpose.
-     *
-     * @return base64 encoded hash result.
-     */
-    UUID generatePasswordHash(long salt) {
-        try {
-            KeySpec spec = new PBEKeySpec(password.toCharArray(),
-                    ByteBuffer.allocate(8).putLong(salt).array(),
-                    ITERATION_COST, SIZE);
-            SecretKeyFactory f = SecretKeyFactory.getInstance(ALGORITHM);
-            byte[] blob = f.generateSecret(spec).getEncoded();
-            LongBuffer lb = ByteBuffer.wrap(blob).asLongBuffer();
-            return new UUID(lb.get(), lb.get());
-        } catch (NoSuchAlgorithmException ex) {
-            throw new IllegalStateException("Missing algorithm: " + ALGORITHM, ex);
-        } catch (InvalidKeySpecException ex) {
-            throw new IllegalStateException("Invalid SecretKeyFactory", ex);
-        }
-    }
 }
