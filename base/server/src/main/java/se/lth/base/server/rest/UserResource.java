@@ -118,7 +118,6 @@ public class UserResource {
 	//Path Param is not woking out @PathParam("filter")
 	public List<User> getUsers( UserFilter filter) { // filter object could contain String name, int
 																			// phoneNr, RouteID
-
 		if (currentUser().getIsAdmin()) {
 
 			switch (filter.getFilter()) {
@@ -134,8 +133,7 @@ public class UserResource {
 				return routeDao.getUsersByRouteId(filter.getRouteID());
 
 			default:
-				throw new WebApplicationException("Something is wonky with the filter parameters",
-						Response.Status.BAD_REQUEST);
+				return userDao.getUsers();
 
 			}
 		} else {
