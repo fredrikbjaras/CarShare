@@ -13,7 +13,7 @@ base.userpageController = function() {
 
         render: function() {
         	console.log('render');
-        	document.getElementById('set-username').defaultValue = model.userName;
+        	document.getElementsByTagName('h1')[0].innerHTML = "User Profile: " + model.userName;
         	document.getElementById('set-password').defaultValue = '';//model.password;
         	document.getElementById('set-phoneNbr').defaultValue = model.phoneNr;
         	document.getElementById('set-description').defaultValue = model.description;
@@ -28,15 +28,13 @@ base.userpageController = function() {
     var controller = {
         submitChange: function() { //pop up notis att det är ändrad
         	console.log('changing');
-        	//model.username = document.getElementById('set-username').value;
-        	if(document.getElementById('set-password').value != ''){
-        		model.password = document.getElementById('set-password').value;
-    		}
-        	model.phoneNr = document.getElementById('set-phoneNbr').value;
-        	model.description = document.getElementById('set-description').value;
-            //model.password = (model.password === "") ? null : model.password;
+        	var password = document.getElementById('set-password').value;
+        	var phoneNr = document.getElementById('set-phoneNbr').value;
+        	var description = document.getElementById('set-description').value;
+            password = (password === '') ? null : password;
+            console.log("password: '" + password + "'");
 
-        	base.rest.updateUser(model.userID, model.userName, model.password, model.phoneNr, null, model.description);
+        	base.rest.updateUser(model.userID, model.userName, password, phoneNr, null, description);
 
         },
 
