@@ -109,7 +109,7 @@ public class UserResource {
 	// dosen't work yet, Filter class has to be added for the search Algorithm to
 	// work.
 	
-	
+  
 	@Path("filter") // object
 	@POST
 	@PermitAll
@@ -153,6 +153,7 @@ public class UserResource {
 		}
 		
 	}
+	*/
 	 
 	/**
 	 * @param userId
@@ -195,7 +196,8 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public User updateUser(@PathParam("id") int userId, User user) {
-
+		System.out.println("updating");
+		System.out.println(user.getUserName() + ", " + user.getPassword() + ", " + user.getPhoneNr());
 		if (currentUser().getIsAdmin() || userId == currentUser().getUserID()) {
 
 			if (user.hasPassword() && !user.validPassword()) {
@@ -204,7 +206,9 @@ public class UserResource {
 			if (userId == user.getUserID() && user.getRole().getLevel() > user.getRole().getLevel()) {
 				throw new WebApplicationException("Cant't demote yourself", Response.Status.BAD_REQUEST);
 			}
-			return userDao.updateUser(userId, user.getName(), user.getPassword(), user.getProfilePicture(), user.getDescription(), user.getIsAdmin());
+			User temp = userDao.updateUser(userId, user.getName(), user.getPassword(), user.getPhoneNr(), user.getProfilePicture(), user.getDescription());
+			System.out.println(temp.getName() +", " + temp.getPassword() + ", " + temp.getPhoneNr());
+			return temp;
 		}
 
 		else {

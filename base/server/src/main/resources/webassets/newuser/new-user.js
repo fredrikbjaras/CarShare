@@ -6,7 +6,8 @@ base.newUserController = (function() {
             submitEvent.preventDefault;
             var username = document.getElementById('set-username').value;
             var password = document.getElementById('set-password').value;
-            base.rest.addUser(username, password).then(function(user) {
+            var phoneNr = document.getElementById('set-phoneNr').value; 
+            base.rest.addUser(username, password,phoneNr).then(function(user) {
             	console.log("inside add user then");
                 if (user.error) {
                 	console.log("ERROR ADDING USER");
