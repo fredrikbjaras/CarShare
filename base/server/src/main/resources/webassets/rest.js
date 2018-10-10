@@ -19,7 +19,7 @@ base.rest = (function() {
             return this.role.name === 'ADMIN';
         };
         this.isNone = function() {
-            return this.role.name === 'NONE';
+            return this.userID === -1;
         };
     };
 
