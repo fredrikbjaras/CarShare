@@ -70,7 +70,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 */
 	public User updateUser(int userID, String userName, String password, String phoneNr, File profilePicture, String description) {
 		User user = getUser(userID);
-		if (password != "" && password.length() > 7) {
+		if (password != null && password != "" && password.length() > 7) {
 			long salt = Credentials.generateSalt();
 			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?, profilePicture = ?,description = ?, phoneNr = ?"
 					+ "WHERE userID = ?", userName, salt, generatePasswordHash(salt,password), profilePicture, description, phoneNr, userID);
