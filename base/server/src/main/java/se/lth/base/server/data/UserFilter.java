@@ -38,7 +38,7 @@ public class UserFilter {
 		else if (telephoneNom != null) {
 			return 2;
 		}
-		else if(routeID != 0) {
+		else if(routeID != -1) {
 			return 3;
 		}
 		return 0;
