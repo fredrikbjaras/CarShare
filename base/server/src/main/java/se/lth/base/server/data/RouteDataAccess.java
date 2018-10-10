@@ -9,13 +9,14 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class RouteDataAccess extends DataAccess<Route> {
     private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
 
-    private static class RoutesMapper implements Mapper<Route> {
+    private static class RouteMapper implements Mapper<Route> {
         @Override
-        public Route map(ResultSet resultSet) throws SQLException {//<------Fix management of arrays from the database
+        public Route map(ResultSet resultSet) throws SQLException {
         	int routeID = resultSet.getInt("routeID");
         	int driverID = resultSet.getInt("driverID");
         	int freeSeats = resultSet.getInt("freeSeats");
@@ -34,7 +35,7 @@ public class RouteDataAccess extends DataAccess<Route> {
 
     }
     public RouteDataAccess(String driverUrl) {
-        super(driverUrl, new RoutesMapper());
+        super(driverUrl, new RouteMapper());
     }
 
     /**
@@ -44,19 +45,19 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @param driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring and finished.
      * @return Routes object containing routeID and the entered info.
      */
-    public Route addRoutes(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route addRoute(int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	 int routeID = insert("INSERT INTO Routes (driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) VALUES ((" +
                  "?,?,?,?,?,?,?,?,?)", driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     	 return new Route(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     }
 
-    public Route updateRoutes(int routeID, int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route updateRoute(int routeID, int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	execute("UPDATE Routes SET  driverID= ?, freeSeats = ?, location = ?, destination = ?, timeOfDeparture = ?, timeOfArrival = ?, passengers = ?, description = ?, bookingEndTime = ?, recurring = ?, finished = ?" +
                 "WHERE routeID = ?",  driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished, routeID);
         return getRoute(routeID);
     }
 
-    public boolean deleteRoutes(int routeID) {
+    public boolean deleteRoute(int routeID) {
         return execute("DELETE FROM Routes WHERE routeID = ?", routeID) > 0;
     }
     
@@ -85,7 +86,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      */
     public List<User> getUsersByRouteId(int routeId) {
     	Route route = getRoute(routeId);
-    	String[] passList = route.getPassengers().split(","); // separeras på ,??
+    	String[] passList = route.getPassengers().split(";"); 
     	List<User> userList = new ArrayList<User>();
     	userList.add(userDao.getUser(route.getDriverID()));
     	for(String user : passList) {
@@ -122,6 +123,26 @@ public class RouteDataAccess extends DataAccess<Route> {
     public List<Route> getAllRoutesFromArrivalTime(Timestamp arrivalTime) {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
                 "WHERE timeOfArrival = ?", arrivalTime);
+    }
+    
+    
+    /**
+     * Adds a user as passenger to a route and updates the database
+     * @param routeID
+     * @param passengerID
+     * @return True if successful, false if passenger is already a passenger, no free seats available, or if the passenger is also the driver for the route.
+     */
+    public boolean addPassengerToRoute(int routeID, int passengerID) {
+    List<Route> temp = query("SELECT driverID, freeSeats, passengers, finished FROM Routes" + "WHERE routeID = ?", routeID);
+    Route route = temp.get(0);
+    String currentPassengers = route.getPassengers();;
+    String passengerIDString = Integer.toString(passengerID);
+    if (route.getFreeSeats() > 0 && !currentPassengers.contains(passengerIDString) && !route.getFinished()) {
+    		currentPassengers = currentPassengers + passengerIDString + ";";
+    		updateRoute(route.getRouteID(), route.getDriverID(), route.getFreeSeats() - 1, route.getLocation(), route.getDestination(), route.getTimeOfDeparture(), route.getTimeOfArrival(), currentPassengers, route.getDescription(),route.getBookingEndTime(), route.getRecurring(), route.getFinished());
+    		return true;
+    	}
+    return false;
     }
     
 }
