@@ -2,37 +2,27 @@ var base = base || {};
 base.searchRouteController = function() {
 
 	  var model = {
-		        users: [],
-		        roles: [],
-		        roleNames: []
+		        routes: [],
+		        //roles: [],
+		        //roleNames: []
 		    };
 
 		    var view = {
-		        renderPart: function(user) {
-		            var t = document.getElementById('user-template');
-		            view.update(t.content.querySelector('button'), user);
+		    		
+		    	// Följande tre funktioner laddar in tabellen		
+		        renderPart: function(route) {
+		            var t = document.getElementById('route-template');
+		            view.update(t.content.querySelector('button'), route);
 		            var clone = document.importNode(t.content, true);
 		            t.parentElement.appendChild(clone);
 		        },
-		        update: function(liElement, user) {
-		            liElement.textContent = user.username;
+		        update: function(liElement, route) {
+		            liElement.textContent = route.routeID;
 		        },
 		        render: function() {
-		            model.users.forEach(user => view.renderPart(user));
-		            var roleTemplate = document.getElementById('role-template');
-		            model.roles.forEach(function(role) {
-		                var o = roleTemplate.content.querySelector('option');
-		                o.textContent = role.label;
-		                o.value = role.name;
-		                var clone = document.importNode(roleTemplate.content, true);
-		                roleTemplate.parentElement.appendChild(clone);
-		            });
+		            model.users.forEach(user => view.renderPart(route));
 		        },
-		        removeUser: function(user, ix) {
-		            var el = document.getElementById('user-list').querySelectorAll('button')[ix];
-		            el.parentElement.removeChild(el);
-		        },
-
+		        // Gör booking-request synlig när route valts
 		        showForm: function(formId){
 		        	console.log('första hej');
 		            var form = document.getElementById(formId);
@@ -44,20 +34,11 @@ base.searchRouteController = function() {
 		            	console.log('else hej');
 		            }
 		    	},
-
-		        resetEdit: function() {
+		    	// Tror/ den ska anropas när man trycker på en route
+		         selectRoute: function(route, clickedEl) {
+		          /*  // Set appropriate user-view class to either add or edit.BEHÖVS EJ FÖR ROUTE
 		            var userView = document.getElementById('user-view');
-		            var isEdit = userView.classList.contains('edit');
-		            view.editPassword(isEdit);
-		        },
-		        editPassword: function(disabled) {
-		            var pi = document.getElementById('set-password');
-		            pi.disabled = disabled;
-		        },
-		        selectUser: function(user, clickedEl) {
-		            // Set appropriate user-view class to either add or edit.
-		            var userView = document.getElementById('user-view');
-		            view.showForm('user-form');
+		            view.showForm('booking-request-form');
 		            if (user.username === '') {
 		                userView.classList.remove('edit');
 		                userView.classList.add('add');
@@ -66,33 +47,25 @@ base.searchRouteController = function() {
 		                userView.classList.add('edit');
 		                userView.classList.remove('add');
 		                view.editPassword(true);
-		            }
+		            }*/
 
 		            // Set active link the left-hand side menu.
-		            document.getElementById('user-list')
+		            document.getElementById('route-list')
 		                .querySelectorAll('.active')
 		                .forEach(activeEl => activeEl.classList.remove('active'));
 		            clickedEl.classList.add('active');
-
-		            document.getElementById('user-data').querySelector('a').href = '/rest/foo/user/'+user.id;
+		          //Behöver ej hämta user-data
+		          //  document.getElementById('user-data').querySelector('a').href = '/rest/foo/user/'+user.id;
 
 		            // Set defaults of form values. This will allow the HTML reset button to work by default HTML behaviour.
-		            document.getElementById('user-id').defaultValue = user.id;
-		            document.getElementById('set-username').defaultValue = user.username;
-		            document.getElementById('set-password').defaultValue = '';
-		            document.getElementById('set-phoneNr').defaultValue = user.phoneNr; //Kanske phoneNr? Se hur JSON ser ut
-		            document.getElementById('description').defaultValue = user.description;
-
-		            var roleIx = model.roleNames.indexOf(user.role.name);
-		            var options = document.getElementById('set-role').querySelectorAll('option');
-		            options.forEach(o => o.defaultSelected = false);
-		            options[roleIx].defaultSelected = true;
-		            document.getElementById('user-form').reset();
+		            document.getElementById('route-input').defaultValue = route.routeID;
+		            document.getElementById('description-input').defaultValue = '';
+		            document.getElementById('route-form').reset();
 		        }
 		    };
 
 		    var controller = {
-
+		    	// Anropas när man trycker på searchRoute	
 		   		searchRoute: function(){
 		        		var driverID = document.getElementById('driver-id-input').value;
 		        		var origin = document.getElementById('origin-input').value;
@@ -104,76 +77,50 @@ base.searchRouteController = function() {
 		        		return routeFilterObj; 
 		      
 		   		},
-
-		        submitUser: function(submitEvent) {
+		   		// Anropas när man skickar in sin booking-request
+		        submitBookingRequest: function(submitEvent) {
 		            submitEvent.preventDefault;
-		            var password = document.getElementById('set-password').value;
-		            //var username = document.getElementById('set-username').value;
-		            var role = document.getElementById('set-role').value;
-		            var id = document.getElementById('user-id').value;
-		            var phoneNr = document.getElementById('set-phoneNr').value;
-		            var description = document.getElementById('description').value;
-		            password = (password === "") ? null: password;
-		            phoneNr = (phoneNr === "") ? null: phoneNr;
-		            if (id !== '') {
-		                base.rest.updateUser(id, password, phoneNr, role, description).then(function(user) {
-		                    if (user.error) {
-		                        alert(user.message);
-		                    } else {
-		                        var el = document.querySelector('#user-list .active');
-		                        el.onclick = () => view.selectUser(user, el);
-		                        view.update(el, user);
-		                        view.selectUser(user, el);
-		                    }
-		                });
-		            } else {
-		                base.rest.addUser(username, password, phoneNr).then(function(user) {
-		                    if (user.error) {
-		                        alert(user.message);
-		                    } else {
-		                        model.users.push(user);
-		                        view.renderPart(user);
-		                        var el = document.querySelector('#user-list .list-group button:last-of-type');
-		                        el.onclick = () => view.selectUser(user, el);
-		                        view.selectUser(user, el);
-		                    }
-		                });
-		            }
-		            return false;
-		        },
-
-		       
+		            var routeID = route.routeID;
+		            base.rest.getLoggedInUser().then(function(user){
+		            	var currentUser = user; 
+		            });
+		            var fronUserID = user.userID; 
+		            var toUserID = route.driverID;
+		            var description = document.getElementById('description').value;		           
+		                base.rest.addBookingRequest(routeID, currentUserID, toUserID,description);
+		            },	       
+		            
 		        load: function() {
+		           // fixa? Kan man göra en sån här tilldelning?
+		        	var routeObject= document.getElementById('route-search-form').onsubmit =controller.searchRoute;
+		        	document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
+		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
 		           
-		            document.getElementById('route-search-form').onsubmit =controller.searchRoute();
-		            var routeObject = controller.searchRoute();
-		            //base.mainController.view.hideUserLinks(); // Visa bara admin-länkar
 		            Promise.all([
 		                base.rest.getRoutes(routeObject.driverID,routeObject.origin,routeObject.destination,routeObject.departureTime,routeObject.arrivalTime).then(function(routes) {
 		                    model.routes = routes;
 		                    return routes;
-		                }), // Kommentera bort härifrån?
+		                }), 
 		                
 		                
-		                
-		                
+		                //getRoles behövs väl ej?
 		               base.rest.getRoles().then(function(roles) {
 		                    model.roles = roles;
 		                    model.roleNames = roles.map(r => r.name);
 		                    return roles;
 		                })
 		            ]) .then(function(values) {
-		                view.render();
-		                var userEls = document.querySelectorAll('#user-list button');
-		                userEls.forEach(function(el, i) {
-		                    if (i == userEls.length-1) {
-		                        el.onclick = () => view.selectUser({username: '', role: model.roles[0], id: ''}, el);
+		                view.render(); // har lagt till ID på den knappen för att hantera onclick, kan göra att den nedan blir fel. 
+		                var routeEls = document.querySelectorAll('#route-list button');
+		                routeEls.forEach(function(el, i) {
+		                    if (i == routeEls.length-1) { //Skapas en ny route om man är på första platsen? Behöver vi det? 
+		                        el.onclick = () => view.selectRoute({routeID: '', role: model.roles[0], id: ''}, el);
 		                    } else {
-		                        var user = model.users[i]; // Closure on user, not on i
-		                        el.onclick = () => view.selectUser(user, el);
+		                        var route = model.routes[i]; // Closure on route, not on i
+		                        el.onclick = () => view.selectRoute(route, el);
 		                    }
 		                });
-		                userEls[0].click();
+		                routeEls[0].click();
 		            });
 		        }
 		    };
