@@ -14,6 +14,10 @@ base.mainController = (function() {
         'admin': {
             partial: 'admin/user-admin.html',
             controller: base.userAdminController
+        },
+        'searchRoute':{
+        	partial: 'searchRoute/searchRoute.html',
+        	controller: base.searchRouteController
         }
     };
 
