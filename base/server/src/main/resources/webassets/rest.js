@@ -85,7 +85,7 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUsers: function(userName = null, phoneNr = null, routeID = null) {
+        getUsers: function(userName = null, phoneNr = null, routeID = -1) {
             var userFilterObj = { userName: userName, phoneNr: phoneNr, routeID: routeID };
             return baseFetch('/rest/user/filter', {
                 method: 'POST',
