@@ -1,15 +1,17 @@
 package se.lth.base.server.data;
 
+import se.lth.base.server.Config;
 import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.Mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RouteDataAccess extends DataAccess<Route> {
-
+    private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
 
     private static class RoutesMapper implements Mapper<Route> {
         @Override
@@ -48,10 +50,10 @@ public class RouteDataAccess extends DataAccess<Route> {
     	 return new Route(routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished);
     }
 
-    public Route updateRoutes(int routeID, int driverID, int freeSeats, double[] location, double[] destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, int[] passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
+    public Route updateRoutes(int routeID, int driverID, int freeSeats, String location, String destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, String passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	execute("UPDATE Routes SET  driverID= ?, freeSeats = ?, location = ?, destination = ?, timeOfDeparture = ?, timeOfArrival = ?, passengers = ?, description = ?, bookingEndTime = ?, recurring = ?, finished = ?" +
                 "WHERE routeID = ?",  driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished, routeID);
-        return getRoutes(routeID);
+        return getRoute(routeID);
     }
 
     public boolean deleteRoutes(int routeID) {
@@ -63,7 +65,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @param routeID
      * @return Routes-object of specified routeID
      */
-    public Route getRoutes(int routeID) {
+    public Route getRoute(int routeID) {
         return queryFirst("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
                 "WHERE routeID = ?", routeID);
     }
@@ -75,6 +77,24 @@ public class RouteDataAccess extends DataAccess<Route> {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes");
     }
     
+    
+    /**
+     * Returns ALL users of a route, including the driver. 
+     * @param routeId
+     * @return list of users
+     */
+    public List<User> getUsersByRouteId(int routeId) {
+    	Route route = getRoute(routeId);
+    	String[] passList = route.getPassengers().split(","); // separeras på ,??
+    	List<User> userList = new ArrayList<User>();
+    	userList.add(userDao.getUser(route.getDriverID()));
+    	for(String user : passList) {
+    		userList.add(userDao.getUser(Integer.parseInt(user)));
+    	}
+        return userList;
+    }
+    
+    
     /**
      * @param UserID of the driver
      * @return all Routes from a specific user.
@@ -82,6 +102,26 @@ public class RouteDataAccess extends DataAccess<Route> {
     public List<Route> getAllRoutesFromUser(int UserID) {
         return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
                 "WHERE driverID = ?", UserID);
+    }
+    
+    public List<Route> getAllRoutesFromLocation(String location) {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
+                "WHERE location = ?", location);
+    }
+    
+    public List<Route> getAllRoutesFromDestination(String destination) {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
+                "WHERE destination = ?", destination);
+    }
+    
+    public List<Route> getAllRoutesFromDepartureTime(Timestamp departureTime) {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
+                "WHERE timeOfDeparture = ?", departureTime);
+    }
+    
+    public List<Route> getAllRoutesFromArrivalTime(Timestamp arrivalTime) {
+        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes" +
+                "WHERE timeOfArrival = ?", arrivalTime);
     }
     
 }
