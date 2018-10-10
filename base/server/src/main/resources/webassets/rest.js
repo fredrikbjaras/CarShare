@@ -105,8 +105,9 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => objOrError(u, User));
         },
-        updateUser: function(userID, password = null, phoneNr = null, role = null, description = null) {
-            var userObj = {password: password, phoneNr: phoneNr, role: role, description: description}
+        updateUser: function(userID, userName, password = null, phoneNr = null, role = null, description = null) {
+            var userObj = {userName: userName, password: password, phoneNr: phoneNr, role: role, description: description}
+            console.log(userName, password, phoneNr);
             return baseFetch('/rest/user/' + userID, {
                     method: 'PUT',
                     body: JSON.stringify(userObj),

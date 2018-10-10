@@ -109,6 +109,7 @@ public class UserResource {
 	// dosen't work yet, Filter class has to be added for the search Algorithm to
 	// work.
 	
+	/*
 	@Path("{filter}") // object
 	@GET
 	@RolesAllowed(Role.Names.ADMIN)
@@ -149,6 +150,7 @@ public class UserResource {
 					Response.Status.BAD_REQUEST);
 		}
 	}
+	*/
 	 
 	/**
 	 * @param userId
