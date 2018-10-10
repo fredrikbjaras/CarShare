@@ -93,37 +93,15 @@ base.userAdminController = function() {
 
     var controller = {
 
+   		searchUser: function(){
+        		var userName = document.getElementById('user-name-input').value;
+        		var phoneNr = document.getElementById('phone-input').value;
+        		var routeId = document.getElementById('routeId-input').value;
 
-   		search: function(){
-        		var inputParam = document.getElementById('search-form').value;
-        		var userName;
-        		var phoneNr;
-        		var routeId;
-
-        		if(isNaN(searchParam)&& searchParam.String().length> 10){
-        			phoneNr = searchParam;
-        			username = 0;
-        			routeId = 0;
-
-        		}
-        		else if(searchParam.length > 10){
-        			userName = searchParam;
-        			phoneNr = 0;
-        			routeId = 0;
-        		}
-        		else if(searchParam.length > 1){
-        			routeId = searchParam
-        			userName = 0;
-        			phoneNr = 0;
-        		}
-
-        		var filterObject = username + "," + phoneNr + "," + routeId;
-
-
-        		// Hitta ett sätt att anropa Promise.all, kanske göra om den till en funktion? Den ska iaf få searchParam som input till att se anropa getUsers(filterObject)
-
-
-        	},
+        	    var userFilterObj = {userName: userName, phoneNr: phoneNr, routeId: routeId };
+        		return userFilterObj; 
+      
+   		},
 
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
@@ -147,7 +125,7 @@ base.userAdminController = function() {
                     }
                 });
             } else {
-                base.rest.addUser(username, password).then(function(user) {
+                base.rest.addUser(username, password, phoneNr).then(function(user) {
                     if (user.error) {
                         alert(user.message);
                     } else {
@@ -182,10 +160,10 @@ base.userAdminController = function() {
 
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
-
+            var filterObject = controller.searchUser();
             //base.mainController.view.hideUserLinks(); // Visa bara admin-länkar
             Promise.all([
-                base.rest.getUsers().then(function(users) {
+                base.rest.getUsers(filterObject.userName,filterObject.phoneNr,filterObject.routeId).then(function(users) {
                     model.users = users;
                     return users;
                 }),

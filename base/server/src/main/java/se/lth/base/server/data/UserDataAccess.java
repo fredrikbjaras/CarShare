@@ -68,16 +68,17 @@ public class UserDataAccess extends DataAccess<User> {
 	 *             or too short user names. Note: removed param Credentials as it is
 	 *             only user for security.
 	 */
-	public User updateUser(int userID, String userName, String password, File profilePicture, String description,
-			boolean isAdmin) {
+	public User updateUser(int userID, String userName, String password, String phoneNr, File profilePicture, String description) {
 		User user = getUser(userID);
 		if (password != "" && password.length() > 7) {
 			long salt = Credentials.generateSalt();
-			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?,profilePicture = ?,description = ?, isAdmin = ?"
-					+ "WHERE userID = ?", userName, salt, generatePasswordHash(salt, password), profilePicture, description, isAdmin, userID);
+			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?, profilePicture = ?,description = ?, phoneNr = ?"
+					+ "WHERE userID = ?", userName, salt, generatePasswordHash(salt,password), profilePicture, description, phoneNr, userID);
+			System.out.println(password);
+			System.out.println("updating to: " + salt + ", " + generatePasswordHash(salt, password));
 		} else {
-			int test = execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, isAdmin = ?"
-					+ "WHERE userID = ?", userName, profilePicture, description, isAdmin, userID);
+			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ?"
+					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID);
 		}
 		user = getUser(userID);
 		return user;
@@ -94,6 +95,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 */
 	public User getUser(int userID) {
 		return queryFirst("SELECT userID, userName, password_hash, phoneNr, isAdmin FROM User " + "WHERE userID = ?", userID);
+
 	}
 
 	public List<User> getUsersByName(String name) {
@@ -190,6 +192,7 @@ public class UserDataAccess extends DataAccess<User> {
 		long salt = new DataAccess<>(getDriverUrl(), (rs) -> rs.getLong(1))
 				.queryFirst("SELECT salt FROM user WHERE username = ?", credentials.getUsername());
 		UUID hash = credentials.generatePasswordHash(salt);
+		System.out.println("updating to: " + salt + ", " + hash);
 		User user = getUserWithName(credentials.getUsername());
 		UUID pwHash= new DataAccess<>(getDriverUrl(), (rs) -> ((UUID) rs.getObject("password_hash")))
 				.queryFirst("SELECT password_hash FROM user WHERE userID = ?", user.getUserID());

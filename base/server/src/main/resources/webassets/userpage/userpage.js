@@ -12,7 +12,8 @@ base.userpageController = function() {
         },
 
         render: function() {
-        	document.getElementById('set-username').defaultValue = model.username;
+        	console.log('render');
+        	document.getElementById('set-username').defaultValue = model.userName;
         	document.getElementById('set-password').defaultValue = '';//model.password;
         	document.getElementById('set-phoneNbr').defaultValue = model.phoneNr;
         	document.getElementById('set-description').defaultValue = model.description;
@@ -25,14 +26,17 @@ base.userpageController = function() {
     };
 
     var controller = {
-        submitChange: function(submitEvent) { //pop up notis att det är ändrad
+        submitChange: function() { //pop up notis att det är ändrad
+        	console.log('changing');
         	//model.username = document.getElementById('set-username').value;
-        	model.password = document.getElementById('set-password').value;
+        	if(document.getElementById('set-password').value != ''){
+        		model.password = document.getElementById('set-password').value;
+    		}
         	model.phoneNr = document.getElementById('set-phoneNbr').value;
         	model.description = document.getElementById('set-description').value;
-            model.password = (model.password === "") ? null : model.password;
+            //model.password = (model.password === "") ? null : model.password;
 
-        	base.rest.updateUser(model.userID, model.password, model.phoneNr, null, model.description);
+        	base.rest.updateUser(model.userID, model.userName, model.password, model.phoneNr, null, model.description);
 
         },
 
@@ -50,6 +54,7 @@ base.userpageController = function() {
 
         },
         load: function() {
+        	document.getElementById('submit-user').onclick = controller.submitChange;
             base.rest.getLoggedInUser().then(function(user) {
                 model = user;
 

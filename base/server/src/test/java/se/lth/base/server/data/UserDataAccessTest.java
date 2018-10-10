@@ -25,7 +25,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
         User test = userDao.addUser("userName", "password", "0700 000 000", false);
         long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 				.queryFirst("SELECT salt FROM user WHERE username = ?", "userName");
-        String passwordHash = test.generatePasswordHash(salt).toString();
+        String passwordHash = userDao.generatePasswordHash(salt,test.getPassword()).toString();
         List<User> users = userDao.getUsers();
         assertTrue(users.stream().anyMatch(u -> u.getName().equals("userName") && u.getPassword().equals(passwordHash) && u.getPhoneNr().equals("0700 000 000") && u.getIsAdmin() == false));
         System.out.println(passwordHash + users.get(2).getPassword());
@@ -36,10 +36,10 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 			File pic = new File("");
 			User test = userDao.addUser("userName", "password", "000", false);
 			int id = test.getUserID();
-			User test2 = userDao.updateUser(id, "userNamee", "password", pic, "hej", false);
+			User test2 = userDao.updateUser(id, "userNamee", "password", "000", pic, "hej");
 			long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 					.queryFirst("SELECT salt FROM user WHERE userID = ?", id);
-	        String passwordHash = test2.generatePasswordHash(salt).toString();
+	        String passwordHash = userDao.generatePasswordHash(salt,test2.getPassword()).toString();
 			List<User> users = userDao.getUsers();
 			User user = users.get(3);
 			System.out.println(user.getUserID());

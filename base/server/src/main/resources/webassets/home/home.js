@@ -1,4 +1,7 @@
 var base = base || {};
+base.changeLocation = function(url) {
+    window.location.replace(url);
+};
 base.homeController = function() {
     var model = [];
 
@@ -15,6 +18,7 @@ base.homeController = function() {
     var controller = {
 		load: function() {
             view.render();
+          //  document.getElementById('search-route').onclick = base.changeLocation('searchRoute/searchRoute.html')
         }
     };
     return controller;

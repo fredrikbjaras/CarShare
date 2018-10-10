@@ -1,11 +1,15 @@
 <h1>User Admin</h1>
-<div> <!--  Rätt säker på att detta form kan läggas in i tabellen sen, men den syns ju inte nu så blir svårt att testa/ se. Men sen lägger man in en i varje tabell så blir det clean och fint. -->
-     <form class = "form-horizontal" id="search-form" style = "margin-top: 30px; display:block">
+<div> <!--  User-sökning -->
+     <form class = "form-horizontal" id="user-search-form" style = "margin-top: 30px; display:block">
      	 <div class="form-group row show-edit">
-     	  <button id="submit-user" type="submit" class="ml-auto mr-3 btn btn-primary">Search</button>
+     	  <button id="search" type="submit" class="ml-auto mr-3 btn btn-primary">Search users</button>
                <!-- <label class="col-md-2 col-form-label" >Search</label> -->
                 <div class="col-md-10">
-                    <input type="text" class="form-control" id="search-form" placeholder = "Search for username, route-id or phonenumber" >
+                    <input type="text" class="form-control" id="user-name-input" placeholder = "Search for username" >
+                                        <input type="text" class="form-control" id="phone-input" placeholder = "Search for phone number" >
+                                                            <input type="text" class="form-control" id="routeId-input" placeholder = "Search for route-id" >
+                                        
+                    
                 	</div>
                 	
             	</div>
@@ -14,6 +18,30 @@
 			</form>        
        
        </div>
+  
+  
+<div> <!-- Route-sökning -->
+     <form class = "form-horizontal" id="route-search-form" style = "margin-top: 60px; display:block">
+     	 <div class="form-group row show-edit">
+     	  <button id="searchRoute" type="submit" class="ml-auto mr-3 btn btn-secondary">Search routes</button>
+               <!-- <label class="col-md-2 col-form-label" >Search</label> -->
+                <div class="col-md-10">
+                    <input type="text" class="form-control" id="driver-id-input" placeholder = "Search for driver ID" >
+                                        <input type="text" class="form-control" id="origin-input" placeholder = "Search for origin (from map?)" >
+                                                            <input type="text" class="form-control" id="destination-input" placeholder = "Search for destination (from map?)" >
+                                                             <input type="text" class="form-control" id="departure-input" placeholder = "Search for departure-time" >
+                                                              <input type="text" class="form-control" id="arrival-input" placeholder = "Search for arrival-time" >
+                                        
+                    
+                	</div>
+                	
+            	</div>
+
+       
+			</form>        
+       
+       </div>  
+  
         
 <div id="user-view" class="row">
     <div id="user-list" class="col-md-3">
