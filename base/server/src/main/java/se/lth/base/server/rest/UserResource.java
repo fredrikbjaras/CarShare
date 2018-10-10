@@ -27,7 +27,8 @@ public class UserResource {
 	private final User user;
 	private final Session session;
 	private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
-
+	private final RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
+	
 	public UserResource(@Context ContainerRequestContext context) {
 		this.context = context;
 		this.user = (User) context.getProperty(User.class.getSimpleName());
@@ -107,29 +108,48 @@ public class UserResource {
 
 	// dosen't work yet, Filter class has to be added for the search Algorithm to
 	// work.
-	/*
-	 * @Path("{filter}") // object
-	 * 
-	 * @GET
-	 * 
-	 * @RolesAllowed(Role.Names.ADMIN)
-	 * 
-	 * @Produces(MediaType.APPLICATION_JSON + ";charset=utf-8") public List<User>
-	 * getUsers(@PathParam("filter") UserFilter filter) { // filter object could
-	 * contain String name, int // phoneNr, RouteID
-	 * 
-	 * if (user.getIsAdmin()) { UserSearch search = new UserSearch(userDao,
-	 * routeDao, filter); return search.returnSortedList();
-	 * 
-	 * } else { UserSearch search = new UserSearch(userDao, routeDao, filter,
-	 * user.getUserID()); List<User> temp = search.returnSortedList(); if
-	 * (temp.get(0).getUserID() == -1) { throw new
-	 * WebApplicationException("You are not a part of this Route",
-	 * Response.Status.BAD_REQUEST); List<User> emptyUserList = new
-	 * ArrayList<User>(); return emptyUserList; } else { return temp; } }
-	 * 
-	 * }
-	 */
+	
+	@Path("{filter}") // object
+	@GET
+	@RolesAllowed(Role.Names.ADMIN)
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public List<User> getUsers(@PathParam("filter") UserFilter filter) { // filter object could contain String name, int
+																			// phoneNr, RouteID
+
+		if (currentUser().getIsAdmin()) {
+
+			switch (filter.getFilter()) {
+
+			case 1:
+				return userDao.getUsersByName(filter.getUsername());
+
+			case 2:
+				return userDao.getUsersByNumber(filter.getTelephoneNom());
+
+			case 3:
+				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
+				return temp;
+
+			default:
+				throw new WebApplicationException("Something is wonky with the filter parameters",
+						Response.Status.BAD_REQUEST);
+
+			}
+		} else {
+
+			if (filter.getFilter() == 3) {
+				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
+				for (int i = 0; i < temp.size(); i++) {
+					if (temp.get(i).getUserID() == user.getUserID()) {
+						return routeDao.getUsersByRouteId(filter.getRouteID());
+					}
+				}
+			}
+			throw new WebApplicationException("You don't access to retrive information from these Users",
+					Response.Status.BAD_REQUEST);
+		}
+	}
+	 
 	/**
 	 * @param userId
 	 * @return returns the user with the userId
@@ -164,14 +184,15 @@ public class UserResource {
 			}
 		}
 	}
-
+	
 	@Path("{id}")
 	@PermitAll
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public User updateUser(@PathParam("id") int userId, User user) {
-
+		System.out.println("updating");
+		System.out.println(user.getUserName() + ", " + user.getPassword() + ", " + user.getPhoneNr());
 		if (currentUser().getIsAdmin() || userId == currentUser().getUserID()) {
 
 			if (user.hasPassword() && !user.validPassword()) {
@@ -180,7 +201,9 @@ public class UserResource {
 			if (userId == user.getUserID() && user.getRole().getLevel() > user.getRole().getLevel()) {
 				throw new WebApplicationException("Cant't demote yourself", Response.Status.BAD_REQUEST);
 			}
-			return userDao.updateUser(userId, user.getName(), user.getPassword(), user.getProfilePicture(), user.getDescription(), user.getIsAdmin());
+			User temp = userDao.updateUser(userId, user.getName(), user.getPassword(), user.getPhoneNr(), user.getProfilePicture(), user.getDescription());
+			System.out.println(temp.getName() +", " + temp.getPassword() + ", " + temp.getPhoneNr());
+			return temp;
 		}
 
 		else {
