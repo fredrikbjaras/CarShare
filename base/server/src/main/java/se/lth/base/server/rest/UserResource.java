@@ -27,7 +27,8 @@ public class UserResource {
 	private final User user;
 	private final Session session;
 	private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
-
+	private final RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
+	
 	public UserResource(@Context ContainerRequestContext context) {
 		this.context = context;
 		this.user = (User) context.getProperty(User.class.getSimpleName());

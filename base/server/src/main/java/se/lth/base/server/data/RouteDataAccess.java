@@ -1,11 +1,13 @@
 package se.lth.base.server.data;
 
+import se.lth.base.server.Config;
 import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.Mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RouteDataAccess extends DataAccess<Route> {
@@ -51,7 +53,7 @@ public class RouteDataAccess extends DataAccess<Route> {
     public Route updateRoutes(int routeID, int driverID, int freeSeats, double[] location, double[] destination, Timestamp timeOfDeparture, Timestamp timeOfArrival, int[] passengers, String description, Timestamp bookingEndTime, int recurring, boolean finished) {
     	execute("UPDATE Routes SET  driverID= ?, freeSeats = ?, location = ?, destination = ?, timeOfDeparture = ?, timeOfArrival = ?, passengers = ?, description = ?, bookingEndTime = ?, recurring = ?, finished = ?" +
                 "WHERE routeID = ?",  driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished, routeID);
-        return getRoutes(routeID);
+        return getRoute(routeID);
     }
 
     public boolean deleteRoutes(int routeID) {
@@ -63,7 +65,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @param routeID
      * @return Routes-object of specified routeID
      */
-    public Route getRoutes(int routeID) {
+    public Route getRoute(int routeID) {
         return queryFirst("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
                 "WHERE routeID = ?", routeID);
     }

@@ -83,14 +83,14 @@ public class RoutesResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Route getRoute(@PathParam("RouteID") int routeID) {
-		if (routeDao.getRoutes(routeID) == null) {
+		if (routeDao.getRoute(routeID) == null) {
 			if (user.getIsAdmin()) {
 				throw new WebApplicationException("Requirements met but route not found", Response.Status.BAD_REQUEST);
 			}
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
 		//What is the difference between a user call and an admin call?
-		return routeDao.getRoutes(routeID);
+		return routeDao.getRoute(routeID);
 
 	}
 	
@@ -160,7 +160,7 @@ public class RoutesResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public boolean putRoute(Route routeUpdate) {
-		Route oldRoute = routeDao.getRoutes(routeUpdate.getRouteID());
+		Route oldRoute = routeDao.getRoute(routeUpdate.getRouteID());
 		int driverID;
 		int freeSeats;
 		String location;
@@ -247,13 +247,13 @@ public class RoutesResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public boolean deleteRoute(@PathParam("RouteID") int routeID) {
-		if (routeDao.getRoutes(routeID) == null) {
+		if (routeDao.getRoute(routeID) == null) {
 			if (user.getIsAdmin()) {
 				throw new WebApplicationException("Requirements met but route not found", Response.Status.BAD_REQUEST);
 			}
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
-		if (routeDao.getRoutes(routeID).getDriverID() == user.getUserID() || user.getIsAdmin()) {
+		if (routeDao.getRoute(routeID).getDriverID() == user.getUserID() || user.getIsAdmin()) {
 			routeDao.deleteRoutes(routeID);
 			return true;
 		}
