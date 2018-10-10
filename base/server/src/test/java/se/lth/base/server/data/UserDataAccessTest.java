@@ -7,6 +7,7 @@ import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.DataAccessException;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -85,13 +86,24 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 			assertTrue(users.size() > 0);
 }
 			
-			
+			@Test
 			public void getUsersByRouteId() {
 				User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
 				User test2 = userDao.addUser("userNamee", "password", "0700 000 001", false);
+				User test3 = userDao.addUser("userNameee", "password", "0700 000 002", false);
 				RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
 				
-			
+				Route route = routeDao.addRoute(test1.getUserID(), 2, "Hit", "Dit", new Timestamp(1), new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
+				routeDao.addPassengerToRoute(route.getRouteID(), test2.getUserID());
+				routeDao.addPassengerToRoute(route.getRouteID(), test3.getUserID());
+				List<User> users = routeDao.getUsersByRouteId(route.getRouteID());
+				int counter = 0;
+				for(User user: users) {
+					if(user.getUserID() == test2.getUserID() ||user.getUserID() == test3.getUserID()) {
+						counter++;
+					}
+				}
+				assertTrue(counter == 2);
 			}
 			
 			
