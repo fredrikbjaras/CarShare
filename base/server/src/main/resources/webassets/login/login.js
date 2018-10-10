@@ -16,21 +16,19 @@ base.loginController = (function() {
                 controller.loginUser();
                 return false;
             };
-            base.rest.getUser().then(function(user) {
-
-
+            base.rest.getLoggedInUser().then(function(user) {
                 if (!user.isNone()) {
                     base.changeLocation('/');
                 }
             });
         },
         loginUser: function() {
-            var username = document.getElementById('username').value; 
+            var username = document.getElementById('username').value;
             var password = document.getElementById('password').value;
             var remember = document.getElementById('remember').checked;
             base.rest.login(username, password, remember)
                 .then(function(response) {
-           
+
                     if (response.ok) {
                         base.changeLocation('/');
                     } else {
