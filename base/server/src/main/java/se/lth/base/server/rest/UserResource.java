@@ -92,7 +92,7 @@ public class UserResource {
 	 */
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@RolesAllowed(Role.Names.ADMIN)
+	@PermitAll
 	public User addUser(User user) {
 		try {
 			if (userDao.getUserWithName(user.getName()).getUserName() == user.getName()) {
@@ -109,12 +109,14 @@ public class UserResource {
 	// dosen't work yet, Filter class has to be added for the search Algorithm to
 	// work.
 	
-	/*
-	@Path("{filter}") // object
-	@GET
-	@RolesAllowed(Role.Names.ADMIN)
+  
+	@Path("filter") // object
+	@POST
+	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public List<User> getUsers(@PathParam("filter") UserFilter filter) { // filter object could contain String name, int
+	//@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	//Path Param is not woking out @PathParam("filter")
+	public List<User> getUsers( UserFilter filter) { // filter object could contain String name, int
 																			// phoneNr, RouteID
 
 		if (currentUser().getIsAdmin()) {
@@ -128,8 +130,8 @@ public class UserResource {
 				return userDao.getUsersByNumber(filter.getTelephoneNom());
 
 			case 3:
-				List<User> temp = routeDao.getUsersByRouteId(filter.getRouteID());
-				return temp;
+			
+				return routeDao.getUsersByRouteId(filter.getRouteID());
 
 			default:
 				throw new WebApplicationException("Something is wonky with the filter parameters",
@@ -149,8 +151,8 @@ public class UserResource {
 			throw new WebApplicationException("You don't access to retrive information from these Users",
 					Response.Status.BAD_REQUEST);
 		}
+		
 	}
-	*/
 	 
 	/**
 	 * @param userId
