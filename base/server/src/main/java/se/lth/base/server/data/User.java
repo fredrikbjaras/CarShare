@@ -15,7 +15,7 @@ import javax.crypto.spec.PBEKeySpec;
 import se.lth.base.server.data.Role;
 public class User implements Principal {
 
-    public static User NONE = new User(0, "NONEACCOUNT", "password","123456789",false);
+    public static User NONE = new User(-1, "NONEACCOUNT", "password","123456789",false);
 
     private final int userID;
     private final String userName;
