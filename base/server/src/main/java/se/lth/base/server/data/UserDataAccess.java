@@ -5,11 +5,19 @@ import se.lth.base.server.database.DataAccessException;
 import se.lth.base.server.database.ErrorType;
 import se.lth.base.server.database.Mapper;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.LongBuffer;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 
 /* @author Jonathan Jakobsson
 * @see DataAccess
@@ -45,7 +53,7 @@ public class UserDataAccess extends DataAccess<User> {
 				1, UUID.randomUUID(), phoneNr, isAdmin);
 		User temp = new User(userId, userName, password, phoneNr, isAdmin);
 		execute("UPDATE User SET  password_hash = ?, salt = ?"
-				+ "WHERE userID = ?", temp.generatePasswordHash(salt), salt, userId);
+				+ "WHERE userID = ?", generatePasswordHash(salt, temp.getPassword()), salt, userId);
 		return temp;
 	}
 
@@ -66,7 +74,7 @@ public class UserDataAccess extends DataAccess<User> {
 		if (password != "" && password.length() > 7) {
 			long salt = Credentials.generateSalt();
 			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?,profilePicture = ?,description = ?, isAdmin = ?"
-					+ "WHERE userID = ?", userName, salt, user.generatePasswordHash(salt), profilePicture, description, isAdmin, userID);
+					+ "WHERE userID = ?", userName, salt, generatePasswordHash(salt, password), profilePicture, description, isAdmin, userID);
 		} else {
 			int test = execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, isAdmin = ?"
 					+ "WHERE userID = ?", userName, profilePicture, description, isAdmin, userID);
@@ -197,5 +205,30 @@ public class UserDataAccess extends DataAccess<User> {
 		return execute("SELECT * FROM routes WHERE  userID = ? INTERSECT SELECT * FROM routes WHERE  userID = ?",
 				userID1, userID2) > 0;
 	}
+	
+	private static final int SIZE = 256;
+    private static final int ITERATION_COST = 16;
+    private static final String ALGORITHM = "PBKDF2WithHmacSHA1";
+
+    /**
+     * Hash password using hashing algorithm intended for this purpose.
+     *
+     * @return base64 encoded hash result.
+     */
+    UUID generatePasswordHash(long salt, String password) {
+        try {
+            KeySpec spec = new PBEKeySpec(password.toCharArray(),
+                    ByteBuffer.allocate(8).putLong(salt).array(),
+                    ITERATION_COST, SIZE);
+            SecretKeyFactory f = SecretKeyFactory.getInstance(ALGORITHM);
+            byte[] blob = f.generateSecret(spec).getEncoded();
+            LongBuffer lb = ByteBuffer.wrap(blob).asLongBuffer();
+            return new UUID(lb.get(), lb.get());
+        } catch (NoSuchAlgorithmException ex) {
+            throw new IllegalStateException("Missing algorithm: " + ALGORITHM, ex);
+        } catch (InvalidKeySpecException ex) {
+            throw new IllegalStateException("Invalid SecretKeyFactory", ex);
+        }
+    }
 
 }
