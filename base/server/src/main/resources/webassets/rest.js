@@ -133,7 +133,7 @@ base.rest = (function() {
                 .then(roles => roles.map(r => new Role(r)));
         },
         addRoute: function(driverID, location, destination, timeOfDeparture, timeOfArrival, freeSeats, description = null, bookingEndTime) {
-        	var routeObj = {driverID: driverID, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival, 
+        	var routeObj = {driverID: driverID, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival,
         			freeSeats: freeSeats, description: description, bookingEndTime: bookingEndTime};
         	return baseFetch('/rest/route', {
         		method: 'POST',
@@ -141,7 +141,6 @@ base.rest = (function() {
         		headers: jsonHeader})
         		.then(response => response.json())
         		.then(r => objOrError(r, Route));
-        	});
         },
         getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
         	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
