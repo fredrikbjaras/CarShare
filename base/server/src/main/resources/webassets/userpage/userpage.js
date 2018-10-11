@@ -58,4 +58,3 @@ base.userpageController = function() {
     };
     return controller;
 };
-
