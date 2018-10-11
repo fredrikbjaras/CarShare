@@ -7,6 +7,7 @@ import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.DataAccessException;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,57 +33,81 @@ public class UserDataAccessTest extends BaseDataAccessTest {
         
     }
     	@Test
-		public void updateUser( ) {
+		public void updateUser() {
 			File pic = new File("");
-			User test = userDao.addUser("userName", "password", "000", false);
-			int id = test.getUserID();
-			User test2 = userDao.updateUser(id, "userNamee", "password", "000", pic, "hej");
+			User test1 = userDao.addUser("userName", "password", "0070 000 000", false);
+			String password = test1.getPassword();
+			int id = test1.getUserID();
+			User test2 = userDao.updateUser(id, "userNamee", "password", "0070 000 000", pic, "hej");
 			long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 					.queryFirst("SELECT salt FROM user WHERE userID = ?", id);
-	        String passwordHash = userDao.generatePasswordHash(salt,test2.getPassword()).toString();
+	        String passwordHash = userDao.generatePasswordHash(salt,test1.getPassword()).toString();
 			List<User> users = userDao.getUsers();
-			User user = users.get(3);
-			System.out.println(user.getUserID());
-			System.out.println(passwordHash);
-			assertTrue(users.stream().anyMatch(u -> u.getUserID() == 3 && u.getUserName().compareTo("userNamee") == 0
+			User user = users.get(2);
+			
+			assertTrue(users.stream().anyMatch(u -> u.getUserID() == id && u.getUserName().compareTo("userNamee") == 0
 			&& u.getPassword().equals(passwordHash) &&  u.getIsAdmin() == false));
-	        //u.getPassword().compareTo(passwordHash) == 0 s(passwordHash)
-	        //&& u.getDescription().compareTo("") == 0
+	       
 		}
 		@Test
 		public void getUser() {
-			User test1 = userDao.addUser("name", "password", "00", false);
-			int id = test1.getUserID();
+			User test = userDao.addUser("userName", "password", "0700 000 000", false);
+			int id = test.getUserID();
 			User test2 = userDao.getUser(id);
-			assertEquals(test1, test2);
+			
+			assertTrue(test.getUserName().compareTo(test2.getUserName()) == 0);
 		
 		}
 		
 		@Test
 		public void getUserWithName() {
-			User test1 = userDao.addUser("name", "password", "00", false);
+			User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
 			String name = test1.getName();
 			User test2 = userDao.getUserWithName(name);
-			assertEquals(test1, test2);
+			assertTrue(test1.getUserName().compareTo(test2.getUserName()) == 0);
 		
 		}
 		
 		@Test
 		public void deleteUser() {
-			User test1 = userDao.addUser("name", "password", "00", false);
-			userDao.deleteUser(test1.getUserID());
-			List<User> users = userDao.getUsers();
-			assertTrue(users.isEmpty());
+			User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
+			assertTrue(userDao.deleteUser(test1.getUserID()));
+			
+			
 
 }
 		@Test
 		public void getUserList() {
-			User test1 = userDao.addUser("name1", "password1", "00", false);
-			User test2 = userDao.addUser("name2", "password2", "01", false);
-			User test3 = userDao.addUser("name3", "password3", "02", false);
+			User test1 = userDao.addUser("userName1", "password1", "00", false);
+			User test2 = userDao.addUser("userName2", "password2", "01", false);
+			User test3 = userDao.addUser("userName3", "password3", "02", false);
 			List<User> users = userDao.getUsers();
-			assertTrue(users.contains(test1) && users.contains(test2) && users.contains(test3));
+			System.out.println(users.size());
+			assertTrue(users.size() > 0);
 }
+			
+			@Test
+			public void getUsersByRouteId() {
+				User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
+				User test2 = userDao.addUser("userNamee", "password", "0700 000 001", false);
+				User test3 = userDao.addUser("userNameee", "password", "0700 000 002", false);
+				RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
+				
+				Route route = routeDao.addRoute(test1.getUserID(), 2, "Hit", "Dit", new Timestamp(1), new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
+				routeDao.addPassengerToRoute(route.getRouteID(), test2.getUserID());
+				routeDao.addPassengerToRoute(route.getRouteID(), test3.getUserID());
+				List<User> users = routeDao.getUsersByRouteId(route.getRouteID());
+				int counter = 0;
+				for(User user: users) {
+					if(user.getUserID() == test2.getUserID() ||user.getUserID() == test3.getUserID()) {
+						counter++;
+					}
+				}
+				assertTrue(counter == 2);
+			}
+			
+			
+			
 }
 //    @Test(expected = DataAccessException.class)
 //    public void addDuplicatedUser() {

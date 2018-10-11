@@ -49,8 +49,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 */
 	public User addUser(String userName, String password, String phoneNr, boolean isAdmin) {
 		long salt = Credentials.generateSalt();
-		int userId = insert("INSERT INTO User (userName,salt,password_hash,phoneNr,isAdmin) VALUES (" + "?,?,?,?,?)", userName,
-				1, UUID.randomUUID(), phoneNr, isAdmin);
+		int userId = insert("INSERT INTO User (userName,salt,password_hash,phoneNr,isAdmin) VALUES (?,?,?,?,?)", userName, 1, UUID.randomUUID(), phoneNr, isAdmin);
 		User temp = new User(userId, userName, password, phoneNr, isAdmin);
 		execute("UPDATE User SET  password_hash = ?, salt = ?"
 				+ "WHERE userID = ?", generatePasswordHash(salt, temp.getPassword()), salt, userId);
