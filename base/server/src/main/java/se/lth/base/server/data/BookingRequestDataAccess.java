@@ -18,7 +18,8 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
             		resultSet.getInt("routeID"),
             		resultSet.getInt("fromUserID"),
             		resultSet.getInt("toUserID"),
-            		resultSet.getBoolean("accepted"));
+            		resultSet.getBoolean("accepted"),
+            		resultSet.getString("reason"));		//<---- Heter reason i SQL-tabellen because SQL-syntax stuff
         }
 
     }
@@ -33,20 +34,20 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @param routeID, fromUserID, toUserID,  and accepted.
      * @return BookingRequests object containing bookingReqID and the entered info.
      */
-    public BookingRequest addBookingRequests(int routeID, int fromUserID, int toUserID, boolean accepted) {
-    	 int bookingReqID = insert("INSERT INTO BookingRequests (routeID, fromUserID, toUserID, accepted) VALUES (" +
-                 "?,?,?,?)",  routeID, fromUserID, toUserID, accepted);
-    	 return new BookingRequest(bookingReqID, routeID, fromUserID, toUserID, accepted);
+    public BookingRequest addBookingRequests(int routeID, int fromUserID, int toUserID, boolean accepted, String comment) {
+    	 int bookingReqID = insert("INSERT INTO BookingRequests (routeID, fromUserID, toUserID, accepted, reason) VALUES (" +
+                 "?,?,?,?,?)",  routeID, fromUserID, toUserID, accepted, comment);
+    	 return new BookingRequest(bookingReqID, routeID, fromUserID, toUserID, accepted, comment);
     }
 
-    public BookingRequest updateBookingRequests(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
-    	execute("UPDATE BookingRequests SET  routeID= ?, fromUserID = ?,toUserID = ?, accepted = ?" +
-                "WHERE bookingReqID = ?",  routeID, fromUserID, toUserID, accepted, bookingReqID);
+    public BookingRequest updateBookingRequests(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted, String comment) {
+    	execute("UPDATE BookingRequests SET  routeID= ?, fromUserID = ?,toUserID = ?, accepted = ?, reason = ?" +
+                "WHERE bookingReqID = ?",  routeID, fromUserID, toUserID, accepted, comment, bookingReqID);
         return getBookingRequests(bookingReqID);
     }
 
     public BookingRequest getBookingRequests(int bookingReqID) {
-        return queryFirst("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return queryFirst("SELECT * FROM BookingRequests " +
                 "WHERE bookingReqID = ?", bookingReqID);
     }
 
@@ -58,7 +59,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @return all BookingRequests in the system.
      */
     public List<BookingRequest> getAllBookingRequests() {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests");
+        return query("SELECT * FROM BookingRequests");
     }
     
     /**
@@ -66,7 +67,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @param UserID
      */
     public List<BookingRequest> getBookingRequestsFromUser(int fromUserID) {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return query("SELECT * FROM BookingRequests " +
                 "WHERE fromUserID = ?", fromUserID);
     }
     
@@ -75,8 +76,13 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @param UserID 
      */
     public List<BookingRequest> getBookingRequestsToUser(int toUserID) {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return query("SELECT * FROM BookingRequests " +
                 "WHERE toUserID = ?", toUserID);
+    }
+    
+    public List<BookingRequest> getBookingRequestsByRoute(int routeID) {
+        return query("SELECT * FROM BookingRequests " +
+                "WHERE routeID = ?", routeID);
     }
 }
 
