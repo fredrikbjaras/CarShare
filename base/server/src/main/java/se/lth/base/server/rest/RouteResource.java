@@ -79,8 +79,9 @@ public class RouteResource {
 		if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
 				case 1:
-					 List<User> driver = userDao.getUsersByName(filter.getDriverUserName());
-					return routeDao.getAllRoutesFromUser(driver.get(0).getUserID());
+					User driver = userDao.getUserWithName(filter.getDriverUserName());
+					List<Route> routes = routeDao.getAllRoutesFromUser(driver.getUserID());
+					return routes;
 				case 2:
 					return routeDao.getAllRoutesFromLocation(filter.getLocation());
 				case 3:
@@ -100,12 +101,9 @@ public class RouteResource {
 			
 			switch (filter.getFilter()) {
 			case 1: //Man ska väl inte kunna söka efter en annan driver?
-				if (user.getUserName().equals(filter.getDriverUserName()) ) {
-					List<User> driver = userDao.getUsersByName(filter.getDriverUserName());
-					return routeDao.getAllRoutesFromUser(driver.get(0).getUserID());
-				} else {
-					throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-				}
+				User driver = userDao.getUserWithName(filter.getDriverUserName());
+				List<Route> routes = routeDao.getAllRoutesFromUser(driver.getUserID());
+				return routes;
 			case 2:
 				return routeDao.getAllRoutesFromLocation(filter.getLocation());
 			case 3:
