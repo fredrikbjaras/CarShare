@@ -16,7 +16,7 @@ public class Route {
 
 	public int getRouteID() {
 		return routeID;
-	}		public int getDriverID() {		return driverID;	}		public int getFreeSeats() {		return freeSeats;	}		public String getLocation() {		return location;	}		public String getDestination() {		return destination;	}		public Timestamp getTimeOfDeparture() {		return timeOfDeparture;	}		public Timestamp getTimeOfArrival() {		return timeOfArrival;	}		public String getPassengers() {		return passengers;	}		public String getDescription() {		return description;	}		public Timestamp getBookingEndTime() {		return bookingEndTime;	}			//Kanske borde heta isRecurring() istället?	public int getRecurring() {		return recurring;	}			// isFinished()?	public boolean getFinished() {		return finished;	}	
+	}		public int getDriverID() {		return driverID;	}		public int getFreeSeats() {		return freeSeats;	}		public String getLocation() {		return location;	}		public String getDestination() {		return destination;	}		public Timestamp getTimeOfDeparture() {		return timeOfDeparture;	}		public Timestamp getTimeOfArrival() {		return timeOfArrival;	}		public String getPassengers() {		return passengers;	}		public String getDescription() {		return description;	}		public Timestamp getBookingEndTime() {		return bookingEndTime;	}			//Kanske borde heta isRecurring() istället?	public int getRecurring() {		return recurring;	}			// isFinished()?	public boolean getFinished() {		return finished;	}		public void changeFreeSeats(int number) {		freeSeats = number;	}
 
     //Methods
 }

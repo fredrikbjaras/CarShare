@@ -36,7 +36,7 @@ CREATE TABLE Session(session_uuid UUID DEFAULT RANDOM_UUID(),
                      FOREIGN KEY(userID) REFERENCES User(userID) ON DELETE CASCADE);
 
 -- Table used to store active routes
-CREATE TABLE Routes(routeId INT AUTO_INCREMENT NOT NULL,
+CREATE TABLE Routes(routeID INT AUTO_INCREMENT NOT NULL,
 					driverID INT NOT NULL,
 					freeSeats INT NOT NULL,
 					location VARCHAR NOT NULL,
@@ -44,6 +44,8 @@ CREATE TABLE Routes(routeId INT AUTO_INCREMENT NOT NULL,
 					timeOfDeparture TIMESTAMP NOT NULL,
 					timeOfArrival TIMESTAMP NOT NULL,
 					passengers VARCHAR NOT NULL, 
+					description VARCHAR NOT NULL,
+					bookingEndTime TIMESTAMP NOT NULL,
 					recurring ENUM ('no', 'daily', 'weekly', 'monthly') DEFAULT ('no'),
 					finished BOOLEAN NOT NULL,
 
