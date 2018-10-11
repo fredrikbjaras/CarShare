@@ -7,7 +7,7 @@ public class BookingRequest {
 	private int fromUserID;
 	private int toUserID;
 	private boolean accepted;
-	private String comment;
+	private String comment;			//<---- Heter reason i SQL-tabellen because SQL-syntax stuff
 	
     public BookingRequest(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted, String comment) {
     this.bookingReqID = bookingReqID;
@@ -16,15 +16,6 @@ public class BookingRequest {
     this.toUserID = toUserID;
     this.accepted = accepted;
     this.comment = comment;
-    }
-    
-    // Constructor without comment
-    public BookingRequest(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
-    this.bookingReqID = bookingReqID;
-    this.routeID = routeID;
-    this.fromUserID = fromUserID;
-    this.toUserID = toUserID;
-    this.accepted = accepted;
     }
     
     public int getBookingReqID() {
