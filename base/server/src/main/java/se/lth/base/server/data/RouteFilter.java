@@ -4,23 +4,23 @@ import java.sql.Timestamp;
 
 public class RouteFilter {
 	
-		private final int driverID;
+		private final String driverUserName;
 		private final String location;
 		private final String destination;
 		private final Timestamp departureTime;
 		private final Timestamp arrivalTime;
 	
-		public RouteFilter(int driverID, String location, String destination,String departureTime, String arrivalTime) {
+		public RouteFilter(String driverUserName, String location, String destination,String departureTime, String arrivalTime) {
 			
-			this.driverID = driverID;
+			this.driverUserName = driverUserName;
 			this.location = location;
 			this.destination = destination;
 			this.departureTime = Timestamp.valueOf(departureTime);
 			this.arrivalTime = Timestamp.valueOf(arrivalTime);
 		}
 		
-		public int getdriverID() {
-			return driverID;
+		public String getDriverUserName() {
+			return driverUserName;
 		}
 		
 		public String getLocation() {
@@ -47,7 +47,7 @@ public class RouteFilter {
 	 * 0 if nothing
 	 */
 	public int getFilter() {
-		if(driverID != 0) {// could be a empty String
+		if(driverUserName != null && !driverUserName.equals("")) {// could be a empty String
 			return 1; 
 		}
 		else if (location != null) {
