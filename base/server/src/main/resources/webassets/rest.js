@@ -132,7 +132,7 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(roles => roles.map(r => new Role(r)));
         },
-        addRoute: function(driverID, location, destination, timeOfDeparture, timeOfArrival, freeSeats, description = null, bookingEndTime) {
+        addRoute: function(driverID, location, destination, timeOfDeparture, timeOfArrival, freeSeats, description, bookingEndTime) {
         	var routeObj = {driverID: driverID, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival,
         			freeSeats: freeSeats, description: description, bookingEndTime: bookingEndTime};
         	return baseFetch('/rest/route', {
@@ -178,6 +178,3 @@ base.rest = (function() {
     };
 
 })();
-
-
-
