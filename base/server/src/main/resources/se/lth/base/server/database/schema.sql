@@ -11,7 +11,7 @@ CREATE TABLE User(userID INT AUTO_INCREMENT NOT NULL,
                   salt BIGINT NOT NULL,
                   password_hash UUID NOT NULL,
 				  phoneNr VARCHAR NOT NULL,
-				  profilePicture BLOB,
+				  profilePicture VARCHAR,
 				  description VARCHAR,
 				  isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
 				  

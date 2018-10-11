@@ -34,7 +34,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @return BookingRequests object containing bookingReqID and the entered info.
      */
     public BookingRequest addBookingRequests(int routeID, int fromUserID, int toUserID, boolean accepted) {
-    	 int bookingReqID = insert("INSERT INTO BookingRequests (routeID, fromUserID, toUserID, accepted) VALUES ((" +
+    	 int bookingReqID = insert("INSERT INTO BookingRequests (routeID, fromUserID, toUserID, accepted) VALUES (" +
                  "?,?,?,?)",  routeID, fromUserID, toUserID, accepted);
     	 return new BookingRequest(bookingReqID, routeID, fromUserID, toUserID, accepted);
     }

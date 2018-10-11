@@ -95,7 +95,7 @@ public class UserResource {
 	@PermitAll
 	public User addUser(User user) {
 		try {
-			if (userDao.getUserWithName(user.getName()).getUserName() == user.getName()) {
+			if (userDao.getUserWithName(user.getName()).getUserName().equals(user.getName())) {
 				throw new WebApplicationException("Username is taken", Response.Status.BAD_REQUEST);
 			}
 		} catch (DataAccessException e) {
@@ -103,7 +103,7 @@ public class UserResource {
 				throw new WebApplicationException("Password too short", Response.Status.BAD_REQUEST);
 			}
 		}
-		return userDao.addUser(user.getUserName(), user.getPassword(), user.getPhoneNr(), user.getIsAdmin());
+		return userDao.addUser(user.getUserName(), user.getPassword(), user.getPhoneNr(), user.getIsAdmin(), "", "");
 	}
 
 	// dosen't work yet, Filter class has to be added for the search Algorithm to

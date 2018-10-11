@@ -1,0 +1,71 @@
+<h1>Add new route</h1>
+<div class="col-md-9">
+    <form class="form-inline">
+        <label class="sr-only" for="set-origin">origin</label>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+                <div class="input-group-text">Origin</div>
+            </div>
+            <input type="text" class="form-control" id="set-origin" placeholder="">
+        </div>
+
+        <label class="sr-only" for="set-dest">dest</label>
+        <div class="input-group mb-2 mr-sm-2">
+            <div class="input-group-prepend">
+                <div class="input-group-text">Destination</div>
+            </div>
+            <input type="text" class="form-control" id="set-dest" placeholder="">
+        </div>
+    </form>
+    <div id="new-route-view" class="row">
+        <div class="col-md-9">
+            <form id="user-form">
+                <label class="radio-inline"><input type="radio" name="optradio" checked>Departure Time</label>
+                <label class="radio-inline"><input type="radio" name="optradio">Arrival Time</label>
+            </form>
+        </div>
+    </div>
+
+    <form class="form-inline">
+        <select class="custom-select my-1 mr-sm-2" id="month">
+            <option selected>Month...</option>
+            <option value="1">00</option>
+            <option value="2">01</option>
+            <option value="3">02</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="day">
+            <option selected>Day...</option>
+            <option value="1">00</option>
+            <option value="2">01</option>
+            <option value="3">02</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="hour">
+            <option selected>Hour...</option>
+            <option value="1">00</option>
+            <option value="2">01</option>
+            <option value="3">02</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="min">
+            <option selected>Minute...</option>
+            <option value="1">00</option>
+            <option value="2">05</option>
+            <option value="3">10</option>
+        </select>
+    </form>
+
+    <div class="form-group row">
+        <form class="form-inline">
+            <label class="col-md-2 col-form-label" for="passengers">Passengers</label>
+            <div class="btn-group" id="passengers">
+                <button class="btn btn-primary btn-sm">-</button>
+                <button class="btn btn-primary" disabled placeholder="0"></button>
+                <button class="btn btn-primary btn-sm">+</button>
+            </div>
+        </form>
+    </div>
+
+    <form class="form-inline">
+        <button id="submit-user" type="submit" class="ml-auto mr-3 btn btn-primary">Submit</button>
+        <button id="reset-user" type="reset" class="mr-auto btn btn-secondary">Reset</button>
+    </form>
+</div>

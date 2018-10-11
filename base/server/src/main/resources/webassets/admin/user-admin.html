@@ -5,9 +5,9 @@
      	  <button id="search" type="submit" class="ml-auto mr-3 btn btn-primary">Search users</button>
                <!-- <label class="col-md-2 col-form-label" >Search</label> -->
                 <div class="col-md-10">
-                    <input type="text" class="form-control" id="user-name-input" placeholder = "Search for username" >
-                                        <input type="text" class="form-control" id="phone-input" placeholder = "Search for phone number" >
-                                                            <input type="text" class="form-control" id="routeId-input" placeholder = "Search for route-id" >
+                    <input type="text" class="form-control" id="user-name-input" placeholder = "Search for username"  default = "">
+                                        <input type="text" class="form-control" id="phone-input" placeholder = "Search for phone number"  default = "">
+                                                            <input type="text" class="form-control" id="routeId-input" placeholder = "Search for route-id" default = "" >
                                         
                     
                 	</div>
@@ -20,7 +20,7 @@
        </div>
   
   
-<div> <!-- Route-sökning -->
+<div> <!-- Route-sökning, klistra in det som finns i newRoute när den är klar! -->
      <form class = "form-horizontal" id="route-search-form" style = "margin-top: 60px; display:block">
      	 <div class="form-group row show-edit">
      	  <button id="searchRoute" type="submit" class="ml-auto mr-3 btn btn-secondary">Search routes</button>
@@ -87,19 +87,6 @@
         </div>
     </div>
     
-    	<div id="flagReport-list" class="col-md-3">
-        <div class="list-group">
-            <template id="user-template">
-                <button type="button" class="list-group-item list-group-item-action"></button>
-            </template>
-        </div>
-        <div class="list-group mt-3">
-            <button type="button" id="new-flagReport" class="list-group-item list-group-item-action list-group-item-success">
-                Add New Flag report
-            </button>
-        </div>
-    </div>
-    
     <div class="col-md-9">
         <form id="user-form" style = "margin-top: 50px; display:none">
             <div class="form-group row show-edit">
@@ -141,6 +128,8 @@
                             <small id="edit-password-help" class="form-text text-muted">Minimum 8 characters.
                             </small>
                         </div>
+                        
+                        
                         <div class="show-edit col-md-2">
                             <button id="change-password" class="w-100 btn btn-secondary">Change</button>
                         </div>
