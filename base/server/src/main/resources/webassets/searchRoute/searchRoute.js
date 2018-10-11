@@ -8,8 +8,8 @@ base.searchRouteController = function() {
 		    };
 
 		    var view = {
-		    		
-		    	// Följande tre funktioner laddar in tabellen		
+
+		    	// Följande tre funktioner laddar in tabellen
 		        renderPart: function(route) {
 		            var t = document.getElementById('route-template');
 		            view.update(t.content.querySelector('button'), route);
@@ -65,44 +65,44 @@ base.searchRouteController = function() {
 		    };
 
 		    var controller = {
-		    	// Anropas när man trycker på searchRoute	
+		    	// Anropas när man trycker på searchRoute
 		   		searchRoute: function(){
-		        		var driverID = document.getElementById('driver-id-input').value;
+		        		var driverName = document.getElementById('driver-name-input').value;
 		        		var origin = document.getElementById('origin-input').value;
 		        		var destination = document.getElementById('destination-input').value;
 		        		var departureTime = document.getElementById('departure-input').value;
 		        		var arrivalTime = document.getElementById('arrival-input').value;
 
-		        	    var routeFilterObj = {driverID: driverID, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
-		        		return routeFilterObj; 
-		      
+		        	    var routeFilterObj = {driverName: driverName, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
+		        		return routeFilterObj;
+
 		   		},
 		   		// Anropas när man skickar in sin booking-request
 		        submitBookingRequest: function(submitEvent) {
 		            submitEvent.preventDefault;
 		            var routeID = route.routeID;
 		            base.rest.getLoggedInUser().then(function(user){
-		            	var currentUser = user; 
+		            	var currentUser = user;
 		            });
-		            var fronUserID = user.userID; 
+		            var fronUserID = user.userID;
 		            var toUserID = route.driverID;
-		            var description = document.getElementById('description').value;		           
+		            var description = document.getElementById('description').value;
 		                base.rest.addBookingRequest(routeID, currentUserID, toUserID,description);
-		            },	       
-		            
+		            },
+
 		        load: function() {
 		           // fixa? Kan man göra en sån här tilldelning?
 		        	var routeObject= document.getElementById('route-search-form').onsubmit =controller.searchRoute;
 		        	document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
 		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
-		           
+
 		            Promise.all([
 		                base.rest.getRoutes(routeObject.driverID,routeObject.origin,routeObject.destination,routeObject.departureTime,routeObject.arrivalTime).then(function(routes) {
 		                    model.routes = routes;
 		                    return routes;
-		                }), 
-		                
-		                
+		                }),
+
+
 		                //getRoles behövs väl ej?
 		               base.rest.getRoles().then(function(roles) {
 		                    model.roles = roles;
@@ -110,10 +110,10 @@ base.searchRouteController = function() {
 		                    return roles;
 		                })
 		            ]) .then(function(values) {
-		                view.render(); // har lagt till ID på den knappen för att hantera onclick, kan göra att den nedan blir fel. 
+		                view.render(); // har lagt till ID på den knappen för att hantera onclick, kan göra att den nedan blir fel.
 		                var routeEls = document.querySelectorAll('#route-list button');
 		                routeEls.forEach(function(el, i) {
-		                    if (i == routeEls.length-1) { //Skapas en ny route om man är på första platsen? Behöver vi det? 
+		                    if (i == routeEls.length-1) { //Skapas en ny route om man är på första platsen? Behöver vi det?
 		                        el.onclick = () => view.selectRoute({routeID: '', role: model.roles[0], id: ''}, el);
 		                    } else {
 		                        var route = model.routes[i]; // Closure on route, not on i

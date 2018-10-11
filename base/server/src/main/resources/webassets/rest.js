@@ -86,6 +86,9 @@ base.rest = (function() {
                 .then(u => new User(u));
         },
         getUsers: function(userName = null, phoneNr = null, routeID = -1) {
+            userName = (userName === '') ? null : userName;
+            phoneNr = (phoneNr === '') ? null : phoneNr;
+            routeID = (routeID === '') ? null : routeID;
             var userFilterObj = { userName: userName, phoneNr: phoneNr, routeID: routeID };
             return baseFetch('/rest/user/filter', {
                 method: 'POST',
@@ -96,7 +99,9 @@ base.rest = (function() {
                 .then(users => users.map(u => new User(u)));
         },
 
-        addUser: function(userName, password, phoneNr = null, role = null) {
+        addUser: function(userName, password, phoneNr, role = null) {
+        	console.log("rest.js:addUser('" + userName + "', '" + password + "', '" + phoneNr + "', '" + role + "')");
+            role = (role === '') ? null : role;
             var shortUserObj = {userName: userName, password: password, phoneNr: phoneNr, role: role}
             return baseFetch('/rest/user', {
                     method: 'POST',
@@ -106,6 +111,10 @@ base.rest = (function() {
                 .then(u => objOrError(u, User));
         },
         updateUser: function(userID, userName, password = null, phoneNr = null, role = null, description = null) {
+        	password = (password === '') ? null : password;
+        	phoneNr = (phoneNr === '') ? null : phoneNr;
+            role = (role === '') ? null : role;
+            description = (description === '') ? null : description;
             var userObj = {userName: userName, password: password, phoneNr: phoneNr, role: role, description: description}
             console.log(userName, password, phoneNr);
             return baseFetch('/rest/user/' + userID, {

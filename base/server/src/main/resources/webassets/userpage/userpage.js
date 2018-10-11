@@ -31,11 +31,7 @@ base.userpageController = function() {
         	var password = document.getElementById('set-password').value;
         	var phoneNr = document.getElementById('set-phoneNbr').value;
         	var description = document.getElementById('set-description').value;
-            password = (password === '') ? null : password;
-            console.log("password: '" + password + "'");
-
         	base.rest.updateUser(model.userID, model.userName, password, phoneNr, null, description);
-
         },
 
         resetEdit: function(resetEvent){
@@ -55,7 +51,6 @@ base.userpageController = function() {
         	document.getElementById('submit-user').onclick = controller.submitChange;
             base.rest.getLoggedInUser().then(function(user) {
                 model = user;
-
                 view.render();
             });
         }
