@@ -124,7 +124,9 @@ public class DataAccess<T> {
             case ErrorCode.DUPLICATE_KEY_1:
                 return new DataAccessException("Resource already exists", cause, ErrorType.DUPLICATE);
             case ErrorCode.CHECK_CONSTRAINT_VIOLATED_1:
-                return new DataAccessException("Resource constraints violated", cause, ErrorType.DATA_QUALITY);
+                DataAccessException dae = new DataAccessException("Resource constraints violated", cause, ErrorType.DATA_QUALITY);
+                dae.printStackTrace();
+                return dae;
             default:
                 return new DataAccessException(cause, ErrorType.UNKNOWN);
         }
