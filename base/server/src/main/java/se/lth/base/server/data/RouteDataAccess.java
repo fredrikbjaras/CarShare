@@ -66,7 +66,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @return Routes-object of specified routeID
      */
     public Route getRoute(int routeID) {
-        return queryFirst("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+        return queryFirst("SELECT * FROM Routes " +
                 "WHERE routeID = ?", routeID);
     }
 
@@ -74,7 +74,7 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @return all Routes in the database.
      */
     public List<Route> getAllRoutes() {
-        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes");
+        return query("SELECT * FROM Routes");
     }
     
     
@@ -100,27 +100,27 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @return all Routes from a specific user.
      */
     public List<Route> getAllRoutesFromUser(int UserID) {
-        return query("SELECT (routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished) FROM Routes " +
+        return query("SELECT * FROM Routes " +
                 "WHERE driverID = ?", UserID);
     }
     
     public List<Route> getAllRoutesFromLocation(String location) {
-        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+        return query("SELECT * FROM Routes " +
                 "WHERE location = ?", location);
     }
     
     public List<Route> getAllRoutesFromDestination(String destination) {
-        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+        return query("SELECT * FROM Routes " +
                 "WHERE destination = ?", destination);
     }
     
     public List<Route> getAllRoutesFromDepartureTime(Timestamp departureTime) {
-        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+        return query("SELECT * FROM Routes " +
                 "WHERE timeOfDeparture = ?", departureTime); 
     }
     
     public List<Route> getAllRoutesFromArrivalTime(Timestamp arrivalTime) {
-        return query("SELECT routeID, driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, finished FROM Routes " +
+        return query("SELECT * FROM Routes " +
                 "WHERE timeOfArrival = ?", arrivalTime);
     }
     

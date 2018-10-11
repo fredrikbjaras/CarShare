@@ -1,16 +1,7 @@
 package se.lth.base.server.data;
 
-import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
-import java.util.UUID;
 
-import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.PBEKeySpec;
 
 import se.lth.base.server.data.Role;
 public class User implements Principal {
@@ -21,7 +12,7 @@ public class User implements Principal {
     private final String userName;
     private final String password;
     private final String phoneNr;
-    private File profilePicture;
+    private String profilePicture;
     private String description = "";
     private final Role role;
     //add more declarations
@@ -36,7 +27,7 @@ public class User implements Principal {
         else
         	role = Role.USER;
     }
-    public User(int userID, String userName, String password,String phoneNr,boolean isAdmin,String description,File profilePicture) {
+    public User(int userID, String userName, String password, String phoneNr, boolean isAdmin, String description, String profilePicture) {
         this.userID = userID;
         this.userName = userName;
         this.password = password;
@@ -53,27 +44,37 @@ public class User implements Principal {
     public int getUserID() {
         return userID;
     }
+    
     public String getPassword() {
-    	return password;
+    		return password;
     }
+    
     public String getUserName() {
-    	return userName;
+    		return userName;
     }
+    
     public String getPhoneNr() {
-    	return phoneNr;
+    		return phoneNr;
     }
+    
     public boolean getIsAdmin() {
-    	if (role == Role.ADMIN) return true;
-    	else return false;
+    		if (role == Role.ADMIN) {
+    			return true;
+    		} else {
+    			return false;
+    		}
     }
+    
     public String getDescription(){
-    	return description;
+    		return description;
     }
-    public File getProfilePicture() {
-    	return profilePicture;
+    
+    public String getProfilePicture() {
+    		return profilePicture;
     }
+    
     public Role getRole() {
-    	return role;
+    		return role;
     }
 	
     public String getName() {
