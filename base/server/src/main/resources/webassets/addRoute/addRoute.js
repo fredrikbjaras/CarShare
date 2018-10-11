@@ -32,25 +32,25 @@ base.addRouteController = function() {
         	model.origin = document.getElementById('set-origin').value;
         	model.destination = document.getElementById('set-dest').value;
             model.description = document.getElementById('set-description').value;
-            arrivalTime = ""
+            arrivalTime = "2018-"
             month = document.getElementById('month')
-            arrivalTime = month.options[month.selectedIndex].text + ";";
+            arrivalTime += month.options[month.selectedIndex].text + "-";
             day = document.getElementById('day')
-            arrivalTime += day.options[day.selectedIndex].text + ";";
+            arrivalTime += day.options[day.selectedIndex].text + " ";
             hour = document.getElementById('hour')
-            arrivalTime += hour.options[hour.selectedIndex].text + ";";
+            arrivalTime += hour.options[hour.selectedIndex].text + ":";
             minute = document.getElementById('min')
-            arrivalTime += minute.options[minute.selectedIndex].text + ";";
+            arrivalTime += minute.options[minute.selectedIndex].text + ":00";
 
-            departureTime = ""
+            departureTime = "2018-"
             month = document.getElementById('month2')
-            departureTime = month.options[month.selectedIndex].text + ";";
+            departureTime += month.options[month.selectedIndex].text + "-";
             day = document.getElementById('day2')
-            departureTime += day.options[day.selectedIndex].text + ";";
+            departureTime += day.options[day.selectedIndex].text + " ";
             hour = document.getElementById('hour2')
-            departureTime += hour.options[hour.selectedIndex].text + ";";
+            departureTime += hour.options[hour.selectedIndex].text + ":";
             minute = document.getElementById('min2')
-            departureTime += minute.options[minute.selectedIndex].text + ";";
+            departureTime += minute.options[minute.selectedIndex].text + ":00";
 
             limit = document.getElementById('limit')
             limitTime = limit.options[limit.selectedIndex].text + ";";
@@ -68,9 +68,9 @@ base.addRouteController = function() {
                 } else {
                 	alert("Route added");
                 }
+            });
             view.render();
         },
-
         plusPass: function() {
             model.passengers += 1;
             document.getElementById('nr').textContent = model.passengers;
