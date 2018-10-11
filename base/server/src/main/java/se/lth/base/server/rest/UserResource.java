@@ -103,7 +103,7 @@ public class UserResource {
 				throw new WebApplicationException("Password too short", Response.Status.BAD_REQUEST);
 			}
 		}
-		return userDao.addUser(user.getUserName(), user.getPassword(), user.getPhoneNr(), user.getIsAdmin());
+		return userDao.addUser(user.getUserName(), user.getPassword(), user.getPhoneNr(), user.getIsAdmin(), "", "");
 	}
 
 	// dosen't work yet, Filter class has to be added for the search Algorithm to

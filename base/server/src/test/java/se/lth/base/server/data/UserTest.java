@@ -9,7 +9,7 @@ import org.junit.Test;
 public class UserTest {
 	
 	File pic = new File("");
-	User test = new User(1, "userName", "Password", "0700 000 000", false, "user", pic);
+	User test = new User(1, "userName", "Password", "0700 000 000", false, "", "");
 
 	@Test
 	public void getID() {
@@ -23,12 +23,12 @@ public class UserTest {
 	
 	@Test
 	public void getName() {
-		assertEquals("name", test.getName());
+		assertEquals("userName", test.getName());
 	}
 	
 	@Test
 	public void getPhoneNumber() {
-		assertEquals(00, test.getPhoneNr());
+		assertEquals("0700 000 000", test.getPhoneNr());
 	}
 	
 	@Test
@@ -38,16 +38,12 @@ public class UserTest {
 
 	@Test
 	public void getDescription() {
-		assertEquals("hello", test.getDescription());
+		assertEquals("", test.getDescription());
 	}
 	
 	@Test
 	public void getProfilePicture() {
-		assertEquals(pic, test.getProfilePicture());
+		assertEquals("", test.getProfilePicture());
 	}
 	
-	@Test
-	public void getRole() {
-		assertEquals(Role.USER, test.getRole());
-	}
 }

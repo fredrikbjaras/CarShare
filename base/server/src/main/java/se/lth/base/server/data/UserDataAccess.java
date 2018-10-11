@@ -4,7 +4,6 @@ import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.DataAccessException;
 import se.lth.base.server.database.ErrorType;
 import se.lth.base.server.database.Mapper;
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.LongBuffer;
 import java.security.NoSuchAlgorithmException;
@@ -27,8 +26,13 @@ public class UserDataAccess extends DataAccess<User> {
 	private static class UserMapper implements Mapper<User> {
 		@Override
 		public User map(ResultSet resultSet) throws SQLException {
-			return new User(resultSet.getInt("userID"), resultSet.getString("userName"), resultSet.getObject("password_hash").toString(),
-					resultSet.getString("phoneNr"), resultSet.getBoolean("isAdmin"));
+			return new User(resultSet.getInt("userID"),
+					resultSet.getString("userName"), 
+					resultSet.getObject("password_hash").toString(),
+					resultSet.getString("phoneNr"), 
+					resultSet.getBoolean("isAdmin"),
+					resultSet.getString("description"),
+					resultSet.getString("profilePicture"));
 		}
 	}
 
@@ -47,9 +51,9 @@ public class UserDataAccess extends DataAccess<User> {
 	 *             names. Note: removed param Credentials as it is only user for
 	 *             security.
 	 */
-	public User addUser(String userName, String password, String phoneNr, boolean isAdmin) {
+	public User addUser(String userName, String password, String phoneNr, boolean isAdmin, String description, String profilePicture) {
 		long salt = Credentials.generateSalt();
-		int userId = insert("INSERT INTO User (userName,salt,password_hash,phoneNr,isAdmin) VALUES (?,?,?,?,?)", userName, 1, UUID.randomUUID(), phoneNr, isAdmin);
+		int userId = insert("INSERT INTO User (userName,salt,password_hash,phoneNr,isAdmin, description, profilePicture) VALUES (?,?,?,?,?,?,?)", userName, 1, UUID.randomUUID(), phoneNr, isAdmin, "", "");
 		User temp = new User(userId, userName, password, phoneNr, isAdmin);
 		execute("UPDATE User SET  password_hash = ?, salt = ?"
 				+ "WHERE userID = ?", generatePasswordHash(salt, temp.getPassword()), salt, userId);
@@ -67,7 +71,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 *             or too short user names. Note: removed param Credentials as it is
 	 *             only user for security.
 	 */
-	public User updateUser(int userID, String userName, String password, String phoneNr, File profilePicture, String description) {
+	public User updateUser(int userID, String userName, String password, String phoneNr, String profilePicture, String description) {
 		User user = getUser(userID);
 		if (password != null && password != "" && password.length() > 7) {
 			long salt = Credentials.generateSalt();
@@ -76,8 +80,8 @@ public class UserDataAccess extends DataAccess<User> {
 			System.out.println(password);
 			System.out.println("updating to: " + salt + ", " + generatePasswordHash(salt, password));
 		} else {
-			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ?"
-					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID);
+			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ?, description = ?, profilePicture = ?"
+					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID, profilePicture);
 		}
 		user = getUser(userID);
 		return user;
@@ -93,7 +97,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 * 
 	 */
 	public User getUser(int userID) {
-		return queryFirst("SELECT userID, userName, password_hash, phoneNr, isAdmin FROM User " + "WHERE userID = ?", userID);
+		return queryFirst("SELECT * FROM User " + "WHERE userID = ?", userID);
 
 	}
 
@@ -122,7 +126,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 * 
 	 */
 	public User getUserWithName(String userName) {
-		return queryFirst("SELECT userID, userName, password_hash,phoneNr,isAdmin FROM User " + "WHERE userName = ?",
+		return queryFirst("SELECT * FROM User " + "WHERE userName = ?",
 				userName);
 	}
 
@@ -143,7 +147,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 * @return all users in the system.
 	 */
 	public List<User> getUsers() {
-		return query("SELECT userID, userName, password_hash,phoneNr,isAdmin,description,profilePicture FROM User");
+		return query("SELECT * FROM User");
 	}
 
 	/**
@@ -157,7 +161,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 */
 	public Session getSession(UUID sessionId) {
 		User user = queryFirst(
-				"SELECT User.userID, userName, User.isAdmin, User.password_hash, User.phoneNr FROM user, Session " + "WHERE Session.isAdmin = User.isAdmin "
+				"SELECT User.userID, userName, User.isAdmin, User.password_hash, User.phoneNr , User.profilePicture, User.description FROM user, Session " + "WHERE Session.isAdmin = User.isAdmin "
 						+ "    AND Session.userID = User.userID " + "    AND Session.session_uuid = ?",
 				sessionId);
 		execute("UPDATE session SET last_seen = CURRENT_TIMESTAMP() " + "WHERE session_uuid = ?", sessionId);

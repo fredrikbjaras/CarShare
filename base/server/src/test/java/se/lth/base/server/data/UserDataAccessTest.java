@@ -1,8 +1,10 @@
 package se.lth.base.server.data;
 
+import org.junit.Before;
 import org.junit.Test;
 import se.lth.base.server.Config;
 import se.lth.base.server.database.BaseDataAccessTest;
+import se.lth.base.server.database.CreateSchema;
 import se.lth.base.server.database.DataAccess;
 import se.lth.base.server.database.DataAccessException;
 
@@ -21,9 +23,18 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 
     private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
 
+    
+	// Reset database to avoid issues with existing users
+	@Before
+	public void setUp() {
+		CreateSchema reset = new CreateSchema(Config.instance().getDatabaseDriver());
+		reset.dropAll();
+		reset.createSchema();
+	}
+	
     @Test
     public void addNewUser() {
-        User test = userDao.addUser("userName", "password", "0700 000 000", false);
+        User test = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
         long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 				.queryFirst("SELECT salt FROM user WHERE username = ?", "userName");
         String passwordHash = userDao.generatePasswordHash(salt,test.getPassword()).toString();
@@ -34,16 +45,13 @@ public class UserDataAccessTest extends BaseDataAccessTest {
     }
     	@Test
 		public void updateUser() {
-			File pic = new File("");
-			User test1 = userDao.addUser("userName", "password", "0070 000 000", false);
-			String password = test1.getPassword();
+			User test1 = userDao.addUser("userName", "password", "0070 000 000", false, "", "");
 			int id = test1.getUserID();
-			User test2 = userDao.updateUser(id, "userNamee", "password", "0070 000 000", pic, "hej");
+			userDao.updateUser(id, "userNamee", "password", "0070 000 000", "", "hej");
 			long salt = new DataAccess<>(userDao.getDriverUrl(), (rs) -> rs.getLong(1))
 					.queryFirst("SELECT salt FROM user WHERE userID = ?", id);
 	        String passwordHash = userDao.generatePasswordHash(salt,test1.getPassword()).toString();
 			List<User> users = userDao.getUsers();
-			User user = users.get(2);
 			
 			assertTrue(users.stream().anyMatch(u -> u.getUserID() == id && u.getUserName().compareTo("userNamee") == 0
 			&& u.getPassword().equals(passwordHash) &&  u.getIsAdmin() == false));
@@ -51,7 +59,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 		}
 		@Test
 		public void getUser() {
-			User test = userDao.addUser("userName", "password", "0700 000 000", false);
+			User test = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
 			int id = test.getUserID();
 			User test2 = userDao.getUser(id);
 			
@@ -61,7 +69,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 		
 		@Test
 		public void getUserWithName() {
-			User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
+			User test1 = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
 			String name = test1.getName();
 			User test2 = userDao.getUserWithName(name);
 			assertTrue(test1.getUserName().compareTo(test2.getUserName()) == 0);
@@ -70,7 +78,7 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 		
 		@Test
 		public void deleteUser() {
-			User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
+			User test1 = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
 			assertTrue(userDao.deleteUser(test1.getUserID()));
 			
 			
@@ -78,9 +86,9 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 }
 		@Test
 		public void getUserList() {
-			User test1 = userDao.addUser("userName1", "password1", "00", false);
-			User test2 = userDao.addUser("userName2", "password2", "01", false);
-			User test3 = userDao.addUser("userName3", "password3", "02", false);
+			User test1 = userDao.addUser("userName1", "password1", "00", false, "", "");
+			User test2 = userDao.addUser("userName2", "password2", "01", false, "", "");
+			User test3 = userDao.addUser("userName3", "password3", "02", false, "", "");
 			List<User> users = userDao.getUsers();
 			System.out.println(users.size());
 			assertTrue(users.size() > 0);
@@ -88,9 +96,9 @@ public class UserDataAccessTest extends BaseDataAccessTest {
 			
 			@Test
 			public void getUsersByRouteId() {
-				User test1 = userDao.addUser("userName", "password", "0700 000 000", false);
-				User test2 = userDao.addUser("userNamee", "password", "0700 000 001", false);
-				User test3 = userDao.addUser("userNameee", "password", "0700 000 002", false);
+				User test1 = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
+				User test2 = userDao.addUser("userNamee", "password", "0700 000 001", false, "", "");
+				User test3 = userDao.addUser("userNameee", "password", "0700 000 002", false, "", "");
 				RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
 				
 				Route route = routeDao.addRoute(test1.getUserID(), 2, "Hit", "Dit", new Timestamp(1), new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
