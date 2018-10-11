@@ -4,6 +4,7 @@ base.newUserController = (function() {
 
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
+            console.log("entered submitUser");
             var username = document.getElementById('set-username').value;
             var password = document.getElementById('set-password').value;
             var phoneNr = document.getElementById('set-phoneNr').value; 
