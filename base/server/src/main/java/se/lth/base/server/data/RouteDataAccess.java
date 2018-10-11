@@ -114,14 +114,14 @@ public class RouteDataAccess extends DataAccess<Route> {
                 "WHERE destination = ?", destination);
     }
     
-    public List<Route> getAllRoutesFromDepartureTime(Timestamp departureTime) {
+    public List<Route> getAllRoutesFromDepartureTime(Timestamp fromDepartureTime, Timestamp toDepartureTime) {
         return query("SELECT * FROM Routes " +
-                "WHERE timeOfDeparture = ?", departureTime); 
+                "WHERE timeOfDeparture > ? AND timeOfDeparture < ?", fromDepartureTime, toDepartureTime); 
     }
     
-    public List<Route> getAllRoutesFromArrivalTime(Timestamp arrivalTime) {
+    public List<Route> getAllRoutesFromArrivalTime(Timestamp fromArrivalTime, Timestamp toArrivalTime) {
         return query("SELECT * FROM Routes " +
-                "WHERE timeOfArrival = ?", arrivalTime);
+                "WHERE timeOfArrival > ? AND timeOfArrival < ?", fromArrivalTime, toArrivalTime);
     }
     
     

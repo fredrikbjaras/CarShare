@@ -87,10 +87,14 @@ public class RouteResource {
 					return routeDao.getAllRoutesFromDestination(filter.getDestination());
 			
 				case 4:
-					return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime());
+					Timestamp tempDepTime = filter.getDepartureTime();
+					tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
+					return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 				
 				case 5:
-					return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime());
+					Timestamp tempArrTime = filter.getDepartureTime();
+					tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
+					return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);
 				
 				default:
 					return routeDao.getAllRoutes();
@@ -112,10 +116,14 @@ public class RouteResource {
 				return routeDao.getAllRoutesFromDestination(filter.getDestination());
 		
 			case 4:
-				return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime());
+				Timestamp tempDepTime = filter.getDepartureTime();
+				tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
+				return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 			
 			case 5:
-				return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime());
+				Timestamp tempArrTime = filter.getDepartureTime();
+				tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
+				return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);
 			
 			default:
 				throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
