@@ -18,6 +18,10 @@ base.mainController = (function() {
         'searchRoute':{
         	partial: 'searchRoute/searchRoute.html',
         	controller: base.searchRouteController
+        },
+        'addRoute':{
+        	partial: 'addRoute/addRoute.html',
+        	controller: base.newRouteController
         }
     };
 

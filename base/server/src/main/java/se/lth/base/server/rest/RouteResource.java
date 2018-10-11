@@ -1,10 +1,12 @@
-/*package se.lth.base.server.rest;
-
+package se.lth.base.server.rest;
 import java.sql.Timestamp;
 import java.util.List;
-
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.*;
+import javax.ws.rs.container.ContainerRequestContext;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import se.lth.base.server.Config;
 import se.lth.base.server.data.BookingRequestDataAccess;
@@ -14,10 +16,8 @@ import se.lth.base.server.data.RouteFilter;
 import se.lth.base.server.data.Session;
 import se.lth.base.server.data.User;
 import se.lth.base.server.data.UserDataAccess;
-
 @Path("route")
-public class RoutesResource {
-
+public class RouteResource {
 	private final ContainerRequestContext context;
 	private final User user;
 	// private final Route route;
@@ -26,48 +26,38 @@ public class RoutesResource {
 	private final RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
 	private final BookingRequestDataAccess bookDao = new BookingRequestDataAccess(
 			Config.instance().getDatabaseDriver());
-
-	public RoutesResource(@Context ContainerRequestContext context) {
+	public RouteResource(@Context ContainerRequestContext context) {
 		this.context = context;
 		this.user = (User) context.getProperty(User.class.getSimpleName());
 		// this.route = (Routes) context.getProperty(User.class.getSimpleName());
 		this.session = (Session) context.getProperty(Session.class.getSimpleName());
 	}
-
 	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public boolean addRoute(int routeID, int driverID, int freeSeats, String location, String destination,
-			String timeOfDeparture, String timeOfArrival, String passengers, String description, String bookingEndTime,
-			int recurring, boolean finished) {
-
-		Timestamp timeStampOfDeparture = Timestamp.valueOf(timeOfDeparture);
-		Timestamp timeStampOfArrival = Timestamp.valueOf(timeOfArrival);
-		Timestamp timeStampBookingEndTime = Timestamp.valueOf(bookingEndTime);
-
-		if (user.getIsAdmin() || user.getUserID() == driverID) {
-
-			List<Route> tempList = routeDao.getAllRoutesFromUser(driverID);
+	public boolean addRoute(Route route) {
+		Timestamp timeStampOfDeparture = route.getTimeOfDeparture();
+		Timestamp timeStampOfArrival = route.getTimeOfArrival();
+		Timestamp timeStampBookingEndTime = route.getBookingEndTime();
+		if (user.getIsAdmin() || user.getUserID() == route.getDriverID()) {
+			List<Route> tempList = routeDao.getAllRoutesFromUser(route.getDriverID());
 			for (int i = 0; i < tempList.size(); i++) {
 				// checks if the driver already has a route on that specific time.
 				if ((tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture)
 						&& tempList.get(i).getTimeOfDeparture().after(timeStampOfArrival))
 						|| (tempList.get(i).getTimeOfArrival().after(timeStampOfDeparture)
 								&& tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture))) {
-
 					throw new WebApplicationException("This user already has a route during the specified timeframe",
 							Response.Status.BAD_REQUEST);
 				}
-
 			}
-			routeDao.addRoutes(driverID, freeSeats, location, destination, timeStampOfDeparture, timeStampOfArrival, passengers,
-					description, timeStampBookingEndTime, recurring, finished);
+			routeDao.addRoute(route.getDriverID(), route.getFreeSeats(), route.getLocation(), route.getDestination(), timeStampOfDeparture, timeStampOfArrival, route.getPassengers(),
+					route.getDescription(), timeStampBookingEndTime, route.getRecurring(), route.getFinished());
 			return true;
 		}
 		throw new WebApplicationException("You can't create a route where someone else is the driver",
 				Response.Status.BAD_REQUEST);
 	}
-
 	@Path("{RouteID}")
 	@GET
 	@PermitAll
@@ -79,6 +69,7 @@ public class RoutesResource {
 		} else {
 			return routeDao.getRoute(routeID);
 		}
+	}
 	
 	@Path("filter")
 	@POST
@@ -86,15 +77,12 @@ public class RoutesResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public List<Route> getRoutes(RouteFilter filter) {
 		if (user.getIsAdmin()) {
-
 			switch (filter.getFilter()) {
-
 				case 1:
-					return routeDao.getAllRoutesFromUser(filter.getdriverID());
-
+					 List<User> driver = userDao.getUsersByName(filter.getDriverUserName());
+					return routeDao.getAllRoutesFromUser(driver.get(0).getUserID());
 				case 2:
 					return routeDao.getAllRoutesFromLocation(filter.getLocation());
-
 				case 3:
 					return routeDao.getAllRoutesFromDestination(filter.getDestination());
 			
@@ -107,22 +95,19 @@ public class RoutesResource {
 				default:
 					return routeDao.getAllRoutes();
 				//	throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
-
 			}
 		} else {
 			
 			switch (filter.getFilter()) {
-
 			case 1: //Man ska väl inte kunna söka efter en annan driver?
-				if (user.getUserID() == filter.getdriverID() ) {
-					return routeDao.getAllRoutesFromUser(filter.getdriverID());
+				if (user.getUserName().equals(filter.getDriverUserName()) ) {
+					List<User> driver = userDao.getUsersByName(filter.getDriverUserName());
+					return routeDao.getAllRoutesFromUser(driver.get(0).getUserID());
 				} else {
 					throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 				}
-
 			case 2:
 				return routeDao.getAllRoutesFromLocation(filter.getLocation());
-
 			case 3:
 				return routeDao.getAllRoutesFromDestination(filter.getDestination());
 		
@@ -134,11 +119,8 @@ public class RoutesResource {
 			
 			default:
 				throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-
 		}
-
 	}
-
 	}
 	
 	@Path("{RouteID}")
@@ -210,22 +192,21 @@ public class RoutesResource {
 		}
 			
 		if (user.getIsAdmin()) {
-			routeDao.updateRoutes(routeUpdate.getRouteID(), driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, routeUpdate.getFinished());
+			routeDao.updateRoute(routeUpdate.getRouteID(), driverID, freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, routeUpdate.getFinished());
 			return true;
 		}
 		if (routeUpdate.getDriverID() == user.getUserID()) {
-			routeDao.updateRoutes(routeUpdate.getRouteID(), oldRoute.getDriverID(), freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, routeUpdate.getFinished());
+			routeDao.updateRoute(routeUpdate.getRouteID(), oldRoute.getDriverID(), freeSeats, location, destination, timeOfDeparture, timeOfArrival, passengers, description, bookingEndTime, recurring, routeUpdate.getFinished());
 			return true;
 		}
 		List<User> usersOnRoute = routeDao.getUsersByRouteId(routeUpdate.getRouteID());
 		for (User userOnRoute: usersOnRoute) {
 			if(userOnRoute.getUserID() == user.getUserID()) {
-				routeDao.updateRoutes(routeUpdate.getRouteID(), oldRoute.getDriverID(), freeSeats, oldRoute.getLocation(), oldRoute.getDestination(), oldRoute.getTimeOfDeparture(), oldRoute.getTimeOfArrival(), passengers, oldRoute.getDescription(), oldRoute.getBookingEndTime(), oldRoute.getRecurring(), oldRoute.getFinished());
+				routeDao.updateRoute(routeUpdate.getRouteID(), oldRoute.getDriverID(), freeSeats, oldRoute.getLocation(), oldRoute.getDestination(), oldRoute.getTimeOfDeparture(), oldRoute.getTimeOfArrival(), passengers, oldRoute.getDescription(), oldRoute.getBookingEndTime(), oldRoute.getRecurring(), oldRoute.getFinished());
 				return true;
 			}
 		}
 		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-
 	}
 	
 	@Path("{RouteID}")
@@ -240,11 +221,9 @@ public class RoutesResource {
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
 		if (routeDao.getRoute(routeID).getDriverID() == user.getUserID() || user.getIsAdmin()) {
-			routeDao.deleteRoutes(routeID);
+			routeDao.deleteRoute(routeID);
 			return true;
 		}
 		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-
 	}
-
-}*/
+}

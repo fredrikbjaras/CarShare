@@ -95,7 +95,7 @@ public class UserResource {
 	@PermitAll
 	public User addUser(User user) {
 		try {
-			if (userDao.getUserWithName(user.getName()).getUserName() == user.getName()) {
+			if (userDao.getUserWithName(user.getName()).getUserName().equals(user.getName())) {
 				throw new WebApplicationException("Username is taken", Response.Status.BAD_REQUEST);
 			}
 		} catch (DataAccessException e) {

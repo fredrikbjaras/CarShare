@@ -77,7 +77,7 @@ base.userAdminController = function() {
             document.getElementById('user-data').querySelector('a').href = '/rest/foo/user/'+user.id;
 
             // Set defaults of form values. This will allow the HTML reset button to work by default HTML behaviour.
-            document.getElementById('user-id').defaultValue = user.id;
+            document.getElementById('user-id').defaultValue = user.userID;
             document.getElementById('set-username').defaultValue = user.username;
             document.getElementById('set-password').defaultValue = '';
             document.getElementById('set-phoneNr').defaultValue = user.phoneNr; //Kanske phoneNr? Se hur JSON ser ut
@@ -97,7 +97,6 @@ base.userAdminController = function() {
         		var userName = document.getElementById('user-name-input').value;
         		var phoneNr = document.getElementById('phone-input').value;
         		var routeId = document.getElementById('routeId-input').value;
-
         	    var userFilterObj = {userName: userName, phoneNr: phoneNr, routeId: routeId };
         		return userFilterObj; 
       
@@ -106,7 +105,7 @@ base.userAdminController = function() {
         submitUser: function(submitEvent) {
             submitEvent.preventDefault;
             var password = document.getElementById('set-password').value;
-            //var username = document.getElementById('set-username').value;
+            var username = document.getElementById('set-username').value;
             var role = document.getElementById('set-role').value;
             var id = document.getElementById('user-id').value;
             var phoneNr = document.getElementById('set-phoneNr').value;
@@ -161,18 +160,23 @@ base.userAdminController = function() {
             document.querySelector('#reset-user').onclick = view.resetEdit;
             document.querySelector('#delete-user').onclick = controller.deleteUser;
             var filterObject = controller.searchUser();
+            console.log(filterObject.userName + ", "+ filterObject.phoneNr + " ,"+ ", " + filterObject.routeId);
+            console.log('Nedanför filter-Object');
             //base.mainController.view.hideUserLinks(); // Visa bara admin-länkar
             Promise.all([
-                base.rest.getUsers(filterObject.userName,filterObject.phoneNr,filterObject.routeId).then(function(users) {
+                base.rest.getUsers(filterObject.userName,filterObject.phoneNr,filterObject.routeId).then(function(users)
+            	{
                     model.users = users;
+                    console.log('Nedanför users');
                     return users;
                 }),
                 base.rest.getRoles().then(function(roles) {
                     model.roles = roles;
+                    console.log('Nedanför roles');
                     model.roleNames = roles.map(r => r.name);
                     return roles;
                 })
-            ]).then(function(values) {
+            ]).then(function(values) { // Går ej vidare  om den inte klarar båda ovan, och den klarar ej getUsers
                 view.render();
                 var userEls = document.querySelectorAll('#user-list button');
                 userEls.forEach(function(el, i) {
