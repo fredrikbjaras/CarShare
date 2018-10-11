@@ -95,19 +95,16 @@ public class UserDataAccess extends DataAccess<User> {
 	 * 
 	 */
 	public User getUser(int userID) {
-		return queryFirst("SELECT * FROM User " + "WHERE userID = ?", userID);
+		return queryFirst("SELECT * FROM User WHERE userID = ?", userID);
 
 	}
 
 	public List<User> getUsersByName(String name) {
-		return query("SELECT userID, username, role FROM user, user_role "
-				+ "WHERE user.role_id = user_role.role_id AND username LIKE ?%", name);
+		return query("SELECT * FROM user WHERE userName = ?", name);
 	}
 
 	public List<User> getUsersByNumber(String number) {
-		return query("SELECT userID, username, role FROM user, user_role "
-				+ "WHERE user.role_id = user_role.role_id AND number = ?", number); // Alltid singular? Namn på number i
-																					// db?
+		return query("SELECT * FROM user WHERE phoneNr = ?", number); 
 	}
 
 	public List<User> getUsersByRouteId(String routeId) {
