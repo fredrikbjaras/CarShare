@@ -79,5 +79,10 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
         return query("SELECT * FROM BookingRequests " +
                 "WHERE toUserID = ?", toUserID);
     }
+    
+    public List<BookingRequest> getBookingRequestsByRoute(int routeID) {
+        return query("SELECT * FROM BookingRequests " +
+                "WHERE routeID = ?", routeID);
+    }
 }
 
