@@ -81,7 +81,7 @@ public class UserDataAccess extends DataAccess<User> {
 			System.out.println("updating to: " + salt + ", " + generatePasswordHash(salt, password));
 		} else {
 			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ?, description = ?, profilePicture = ?"
-					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID, description, profilePicture);
+					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID, profilePicture);
 		}
 		user = getUser(userID);
 		return user;

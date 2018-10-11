@@ -31,7 +31,7 @@ public class BookingRequestDataAcessTest {
 		Route route = routeDao.addRoute(test1.getUserID(), 1000, "", "There", new Timestamp(1),new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
 		BookingRequest request = bookDao.addBookingRequests(route.getRouteID(), test2.getUserID(), test1.getUserID(), true);
 		List<BookingRequest> requests = bookDao.getAllBookingRequests();
-		assertTrue(requests.stream().anyMatch(b -> b.getRouteID() == route.getDriverID() && b.getFromUserID() == test2.getUserID() && b.getToUserID() == test1.getUserID() && b.getAccepted() == true));
+		assertTrue(requests.stream().anyMatch(b -> b.getRouteID() == route.getRouteID() && b.getFromUserID() == test2.getUserID() && b.getToUserID() == test1.getUserID() && b.getAccepted() == true));
         
 	}
 	
@@ -42,6 +42,7 @@ public class BookingRequestDataAcessTest {
 		Route route = routeDao.addRoute(test1.getUserID(), 1000, "", "There", new Timestamp(1),new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
 		BookingRequest request = bookDao.addBookingRequests(route.getRouteID(), test2.getUserID(), test1.getUserID(), false);
 		bookDao.updateBookingRequests(request.getBookingReqID(), route.getRouteID(), test2.getUserID(), test1.getUserID(), true);
+		request = bookDao.getBookingRequests(request.getBookingReqID());
 		assertTrue(request.getAccepted());
 	}
 	
