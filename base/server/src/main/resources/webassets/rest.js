@@ -132,6 +132,27 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(roles => roles.map(r => new Role(r)));
         },
+        addRoute: function(driverID, location, destination, timeOfDeparture, timeOfArrival, freeSeats, description = null, bookingEndTime) {
+        	var routeObj = {driverID: driverID, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival, 
+        			freeSeats: freeSeats, description: description, bookingEndTime: bookingEndTime};
+        	return baseFetch('/rest/route', {
+        		method: 'POST',
+        		body: JSON.stringify(routeObj),
+        		headers: jsonHeader})
+        		.then(response => response.json())
+        		.then(r => objOrError(r, Route));
+        	});
+        },
+        getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
+        	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
+        	return baseFetch('rest/route/filter', {
+        		method: 'POST',
+        		body: JSON.stringify(routeFilterObj),
+        		headers: jsonHeaders
+        	})
+        	.then(response => response.json())
+        	.then(routes => routes.map(r => new Route(r)));
+        },
         getFoos: function(userID) {
             var postfix = "";
             if (typeof userID !== "undefined") postfix = "/user/" + userID;

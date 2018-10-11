@@ -6,7 +6,7 @@
             <div class="input-group-prepend">
                 <div class="input-group-text">Origin</div>
             </div>
-            <input type="text" class="form-control" id="set-origin" placeholder="">
+            <input type="text" class="form-control" id="set-origin">
         </div>
 
         <label class="sr-only" for="set-dest">dest</label>
@@ -14,54 +14,230 @@
             <div class="input-group-prepend">
                 <div class="input-group-text">Destination</div>
             </div>
-            <input type="text" class="form-control" id="set-dest" placeholder="">
+            <input type="text" class="form-control" id="set-dest">
         </div>
-    </form>
-    <div id="new-route-view" class="row">
-        <div class="col-md-9">
-            <form id="user-form">
-                <label class="radio-inline"><input type="radio" name="optradio" checked>Departure Time</label>
-                <label class="radio-inline"><input type="radio" name="optradio">Arrival Time</label>
-            </form>
-        </div>
-    </div>
+
 
     <form class="form-inline">
+        <label for="month" class="col-sm-2 col-form-label">Departure Time</label>
         <select class="custom-select my-1 mr-sm-2" id="month">
             <option selected>Month...</option>
-            <option value="1">00</option>
-            <option value="2">01</option>
-            <option value="3">02</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
         </select>
         <select class="custom-select my-1 mr-sm-2" id="day">
             <option selected>Day...</option>
-            <option value="1">00</option>
-            <option value="2">01</option>
-            <option value="3">02</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
         </select>
         <select class="custom-select my-1 mr-sm-2" id="hour">
             <option selected>Hour...</option>
-            <option value="1">00</option>
-            <option value="2">01</option>
-            <option value="3">02</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
         </select>
         <select class="custom-select my-1 mr-sm-2" id="min">
             <option selected>Minute...</option>
             <option value="1">00</option>
             <option value="2">05</option>
             <option value="3">10</option>
+            <option value="4">15</option>
+            <option value="5">20</option>
+            <option value="6">25</option>
+            <option value="7">30</option>
+            <option value="8">35</option>
+            <option value="9">40</option>
+            <option value="10">45</option>
+            <option value="11">50</option>
+            <option value="12">55</option>
         </select>
     </form>
 
-    <div class="form-group row">
-        <form class="form-inline">
-            <label class="col-md-2 col-form-label" for="passengers">Passengers</label>
-            <div class="btn-group" id="passengers">
-                <button class="btn btn-primary btn-sm">-</button>
-                <button class="btn btn-primary" disabled placeholder="0"></button>
-                <button class="btn btn-primary btn-sm">+</button>
-            </div>
-        </form>
+    <form class="form-inline">
+        <label for="month2" class="col-sm-2 col-form-label">Arrival Time</label>
+        <select class="custom-select my-1 mr-sm-2" id="month2">
+            <option selected>Month...</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="day2">
+            <option selected>Day...</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="hour2">
+            <option selected>Hour...</option>
+            <option value="1">01</option>
+            <option value="2">02</option>
+            <option value="3">03</option>
+            <option value="4">04</option>
+            <option value="5">05</option>
+            <option value="6">06</option>
+            <option value="7">07</option>
+            <option value="8">08</option>
+            <option value="9">09</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+        </select>
+        <select class="custom-select my-1 mr-sm-2" id="min2">
+            <option selected>Minute...</option>
+            <option value="1">00</option>
+            <option value="2">05</option>
+            <option value="3">10</option>
+            <option value="4">15</option>
+            <option value="5">20</option>
+            <option value="6">25</option>
+            <option value="7">30</option>
+            <option value="8">35</option>
+            <option value="9">40</option>
+            <option value="10">45</option>
+            <option value="11">50</option>
+            <option value="12">55</option>
+        </select>
+    </form>
+
+    <form class="form-inline">
+        <label for="limit" class="col-sm-2 col-form-label">Allow new passengers until X minutes before</label>
+        <select class="custom-select my-1 mr-sm-2" id="limit">
+            <option selected>Minutes...</option>
+            <option value="1">00</option>
+            <option value="2">10</option>
+            <option value="3">20</option>
+            <option value="4">30</option>
+            <option value="5">40</option>
+            <option value="6">50</option>
+            <option value="7">60</option>
+            <option value="8">70</option>
+            <option value="9">80</option>
+            <option value="10">90</option>
+            <option value="11">100</option>
+            <option value="12">110</option>
+            <option value="13">120</option>
+        </select>
+    </form>
+
+    <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+        <label class="col-md-2 col-form-label">Passengers</label>
+        <div class="btn-group" id="passengers">
+            <button class="btn btn-primary btn-sm" id="dwn">-</button>
+            <button class="btn btn-primary" disabled id="nr">0</button>
+            <button class="btn btn-primary btn-sm" id="up">+</button>
+        </div>
+    </div>
+
+    <label class="col-md-2 col-form-label" for="set-description">Description</label>
+    <div class="col-md-10">
+        <textarea class="form-control" rows="5" id="set-description"></textarea>
     </div>
 
     <form class="form-inline">

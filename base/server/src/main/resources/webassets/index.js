@@ -21,7 +21,7 @@ base.mainController = (function() {
         },
         'addRoute':{
         	partial: 'addRoute/addRoute.html',
-        	controller: base.newRouteController
+        	controller: base.addRouteController
         }
     };
 
