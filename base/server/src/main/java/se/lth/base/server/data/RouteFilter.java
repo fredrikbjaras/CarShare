@@ -7,16 +7,16 @@ public class RouteFilter {
 		private final String driverUserName;
 		private final String location;
 		private final String destination;
-		private final Timestamp departureTime;
-		private final Timestamp arrivalTime;
+		private final String departureTime;
+		private final String arrivalTime;
 	
 		public RouteFilter(String driverUserName, String location, String destination,String departureTime, String arrivalTime) {
 			
 			this.driverUserName = driverUserName;
 			this.location = location;
 			this.destination = destination;
-			this.departureTime = Timestamp.valueOf(departureTime);
-			this.arrivalTime = Timestamp.valueOf(arrivalTime);
+			this.departureTime = departureTime;
+			this.arrivalTime = arrivalTime;
 		}
 		
 		public String getDriverUserName() {
@@ -32,10 +32,10 @@ public class RouteFilter {
 		}
 		
 		public Timestamp getDepartureTime() {
-			return departureTime;
+			return Timestamp.valueOf(departureTime);
 		}
 		public Timestamp getArrivalTime() {
-			return arrivalTime;
+			return Timestamp.valueOf(arrivalTime);
 		}
 
 	/*
