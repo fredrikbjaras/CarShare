@@ -46,7 +46,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
     }
 
     public BookingRequest getBookingRequests(int bookingReqID) {
-        return queryFirst("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return queryFirst("SELECT * FROM BookingRequests " +
                 "WHERE bookingReqID = ?", bookingReqID);
     }
 
@@ -58,7 +58,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @return all BookingRequests in the system.
      */
     public List<BookingRequest> getAllBookingRequests() {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests");
+        return query("SELECT * FROM BookingRequests");
     }
     
     /**
@@ -66,7 +66,7 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @param UserID
      */
     public List<BookingRequest> getBookingRequestsFromUser(int fromUserID) {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return query("SELECT * FROM BookingRequests " +
                 "WHERE fromUserID = ?", fromUserID);
     }
     
@@ -75,8 +75,13 @@ public class BookingRequestDataAccess extends DataAccess<BookingRequest> {
      * @param UserID 
      */
     public List<BookingRequest> getBookingRequestsToUser(int toUserID) {
-        return query("SELECT bookingReqID, routeID, fromUserID, toUserID, accepted FROM BookingRequests " +
+        return query("SELECT * FROM BookingRequests " +
                 "WHERE toUserID = ?", toUserID);
+    }
+    
+    public List<BookingRequest> getBookingRequestsByRoute(int routeID) {
+        return query("SELECT * FROM BookingRequests " +
+                "WHERE routeID = ?", routeID);
     }
 }
 
