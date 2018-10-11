@@ -74,15 +74,11 @@ public class RoutesResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public Route getRoute(@PathParam("RouteID") int routeID) {
 		if (routeDao.getRoute(routeID) == null) {
-			if (user.getIsAdmin()) {
-				throw new WebApplicationException("Requirements met but route not found", Response.Status.BAD_REQUEST);
-			}
-			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
+			
+			throw new WebApplicationException("Route not found", Response.Status.BAD_REQUEST);
+		} else {
+			return routeDao.getRoute(routeID);
 		}
-		//What is the difference between a user call and an admin call?
-		return routeDao.getRoute(routeID);
-
-	}
 	
 	@Path("filter")
 	@POST
