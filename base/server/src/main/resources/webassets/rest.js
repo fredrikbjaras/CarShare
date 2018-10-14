@@ -80,8 +80,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUser: function(userId) {
-            return baseFetch('/rest/user/' + userId) // tagit bort + id
+        getUser: function(userID) {
+            return baseFetch('/rest/user/' + userID) // tagit bort + id
                 .then(response => response.json())
                 .then(u => new User(u));
         },
