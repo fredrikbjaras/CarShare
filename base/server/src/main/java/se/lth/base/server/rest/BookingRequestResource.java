@@ -57,6 +57,11 @@ public class BookingRequestResource {
 			}
 		}
 		
+		Timestamp current = new Timestamp(System.currentTimeMillis());
+		if(current.after(route.getBookingEndTime())) {
+			throw new WebApplicationException("You cannot make a booking request this close to departure. ",
+					Response.Status.BAD_REQUEST);
+		}
 		
 		List<BookingRequest> requestsMade = bookDao.getBookingRequestsFromUser(fromUser.getUserID());
 		for(BookingRequest br : requestsMade) {

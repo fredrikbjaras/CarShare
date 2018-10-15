@@ -53,7 +53,7 @@ public class RouteTest {
 	
 	@Test
 	public void getBookingEndTime() {
-		assertEquals(new Timestamp(3).toString(), route.getBookingEndTime().toString());
+		assertTrue(new Timestamp(3).toString().equals(route.getBookingEndTime().toString()));
 	}
 	
 	@Test
