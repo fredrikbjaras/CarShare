@@ -9,10 +9,10 @@ base.homeController = function() {
 
     var view = {
         render: function() {
-        	model.forEach(d => view.renderPart(d));
+        model.forEach(d => view.renderPart(d)); 
         },
         renderReq: function(){
-                	reqModel.forEach(d => view.renderRequest(d));
+        reqModel.forEach(d => view.renderPart(d));
         },
         renderPart: function(route){
         		var t = view.template();   
@@ -82,8 +82,8 @@ base.homeController = function() {
 	                view.render()
 	            }); 
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
-	           	reqModel = bookingRequests;
-	            	view.renderReq()
+	            	reqModel = bookingRequests;
+	            	view.renderReq();
 	            }); 
 	            			      
             });

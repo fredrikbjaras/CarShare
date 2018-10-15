@@ -83,16 +83,20 @@ public class RouteResource {
 					List<Route> routes = routeDao.getAllRoutesFromUser(driver.getUserID());
 					return routes;
 				case 2:
-					return routeDao.getAllRoutesFromLocation(filter.getLocation());
+					User passenger = userDao.getUserWithName(filter.getPassengerUserName());
+					List<Route> routes2 = routeDao.getRoutesWithPassenger(passenger.getUserID());
+					return routes2;
 				case 3:
+					return routeDao.getAllRoutesFromLocation(filter.getLocation());
+				case 4:
 					return routeDao.getAllRoutesFromDestination(filter.getDestination());
 			
-				case 4:
+				case 5:
 					Timestamp tempDepTime = filter.getDepartureTime();
 					tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
 					return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 				
-				case 5:
+				case 6:
 					Timestamp tempArrTime = filter.getArrivalTime();
 					tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
 					return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);
@@ -109,16 +113,20 @@ public class RouteResource {
 				List<Route> routes = routeDao.getAllRoutesFromUser(driver.getUserID());
 				return routes;
 			case 2:
-				return routeDao.getAllRoutesFromLocation(filter.getLocation());
+				User passenger = userDao.getUserWithName(filter.getPassengerUserName());
+				List<Route> routes2 = routeDao.getRoutesWithPassenger(passenger.getUserID());
+				return routes2;
 			case 3:
+				return routeDao.getAllRoutesFromLocation(filter.getLocation());
+			case 4:
 				return routeDao.getAllRoutesFromDestination(filter.getDestination());
 		
-			case 4:
+			case 5:
 				Timestamp tempDepTime = filter.getDepartureTime();
 				tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
 				return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 			
-			case 5:
+			case 6:
 				Timestamp tempArrTime = filter.getArrivalTime();
 				tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
 				return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);

@@ -2,23 +2,23 @@ package se.lth.base.server.data;
 
 public class UserFilter {
 	
-	private final String username;
-	private final String telephoneNom;
+	private final String userName;
+	private final String phoneNr;
 	private final int routeID;
 	
 	public UserFilter(String username, String telephoneNom, int routeID) {
 		
-		this.username = username;
-		this.telephoneNom = telephoneNom;
+		this.userName = username;
+		this.phoneNr = telephoneNom;
 		this.routeID = routeID;
 	}
 	
 	public String getUsername() {
-		return username;
+		return userName;
 	}
 	
 	public String getTelephoneNom() {
-		return telephoneNom;
+		return phoneNr;
 	}
 
 	public int getRouteID() {
@@ -32,10 +32,10 @@ public class UserFilter {
 	 * 0 if nothing
 	 */
 	public int getFilter() {
-		if(username != null) {// could be a empty String
+		if(userName != null) {// could be a empty String
 			return 1; 
 		}
-		else if (telephoneNom != null) {
+		else if (phoneNr != null) {
 			return 2;
 		}
 		else if(routeID != -1) {
