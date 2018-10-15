@@ -87,7 +87,7 @@ base.searchRouteController = function() {
 	        		var destination = document.getElementById('destination-input').value;
 	        		var departureTime = document.getElementById('departure-input').value;
 	        		var arrivalTime = document.getElementById('arrival-input').value;
-	        		base.rest.getRoutes(driverName, null,origin, destination, departureTime, arrivalTime).then(function(routes) {
+	        		base.rest.getRoutes(driverName, origin, destination, departureTime, arrivalTime).then(function(routes) {
 	        			console.log("Inside getRoutes REST call")
 	        			routes.forEach(route => console.log("route: " + route));
 	        			model.routes = routes;
