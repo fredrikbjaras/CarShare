@@ -28,7 +28,7 @@ base.rest = (function() {
     };
 
     var BookingRequest = function(json) {
-        //TODO
+        Object.assign(this, json);
     };
 
     var FlagReport = function(json) {
@@ -150,6 +150,15 @@ base.rest = (function() {
             		headers: jsonHeader})
             	.then(response => response.json())
             	.then(routes => routes.map(r => new Route(r)));
+        },
+        getRequests: function(toUserID = null,fromUserID = null,routeID = null,accepted = null) {
+        var requestFilterObj = { routeID: routeID,fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
+        	return baseFetch('rest/booking-request/filter', {
+            		method: 'POST',
+            		body: JSON.stringify(requestFilterObj),
+            		headers: jsonHeader})
+            	.then(response => response.json())
+            	.then(requests => requests.map(r => new BookingRequest(r)));
         },
         getFoos: function(userID) {
             var postfix = "";

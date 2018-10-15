@@ -74,7 +74,7 @@ public class BookingRequestResource {
 		
 		//success
 		bookDao.addBookingRequests(route.getRouteID(), fromUser.getUserID(),
-				toUser.getUserID(), request.getAccepted(), request.getComment());
+				toUser.getUserID(), request.getAccepted());
 		return true;
 	}
 	@Path("{BookingRequestID}")
@@ -94,18 +94,18 @@ public class BookingRequestResource {
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
 	public List<BookingRequest> getRequests(BookingRequestFilter filter) {
-		if (user.getIsAdmin()) {
+			List<BookingRequest> requests;
 			switch (filter.getFilter()) {
 				case 1: 
-					return bookDao.getBookingRequestsByRoute(filter.getRouteID());	
+					requests = bookDao.getBookingRequestsByRoute(filter.getRouteID());	
 				case 2:
-					return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
+					requests = bookDao.getBookingRequestsFromUser(filter.getFromUserID());
 				case 3:
-					return bookDao.getBookingRequestsToUser(filter.getToUserID());
+					requests = bookDao.getBookingRequestsToUser(filter.getToUserID());
 				default:
-					return bookDao.getAllBookingRequests();
-			}
-		} if (user.getIsAdmin()) {
+					requests = bookDao.getAllBookingRequests();
+			return requests;
+		}/* if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
 			case 1: 
 				return bookDao.getBookingRequestsByRoute(filter.getRouteID());
@@ -116,8 +116,7 @@ public class BookingRequestResource {
 			default:
 				throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
 			}
-		} 	
-		throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
+		} 	*/
 	}
 	
 	/*
@@ -136,7 +135,7 @@ public class BookingRequestResource {
 			throw new WebApplicationException("Unable to edit others' requests. ", Response.Status.BAD_REQUEST);
 		}
 		bookDao.updateBookingRequests(oldRequest.getBookingReqID(), oldRequest.getRouteID(), 
-				oldRequest.getFromUserID(), oldRequest.getToUserID(), oldRequest.getAccepted(), requestUpdate.getComment());
+				oldRequest.getFromUserID(), oldRequest.getToUserID(), oldRequest.getAccepted());
 		return true; 
 	}
 	

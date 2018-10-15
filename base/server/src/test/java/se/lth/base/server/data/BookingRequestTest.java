@@ -6,7 +6,7 @@ import org.junit.Test;
 
 public class BookingRequestTest {
 	
-	BookingRequest request = new BookingRequest(1, 2, 3, 4, false, "My comment");
+	BookingRequest request = new BookingRequest(1, 2, 3, 4, false);
 
 	@Test
 	public void getBookingReqID() {
@@ -31,11 +31,6 @@ public class BookingRequestTest {
 	@Test
 	public void getAccepted() {
 		assertFalse(request.getAccepted());
-	}
-	
-	@Test
-	public void getComment() {
-		assertEquals("My comment", request.getComment() );
 	}
 	
 	
