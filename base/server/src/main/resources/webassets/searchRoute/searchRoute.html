@@ -1,5 +1,5 @@
+<!-- Route-sökning -->
 <div>
-	<!-- Route-sökning -->
 	<form class="form-horizontal" id="route-search-form"
 		style="margin-top: 60px; display: block">
 		<div class="form-group row show-edit">
@@ -17,27 +17,21 @@
 					placeholder="Departure time"> <input
 					type="text" class="form-control" id="arrival-input"
 					placeholder="Arrival-time">
-
-
 			</div>
-
 		</div>
-
-
 	</form>
-
 </div>
-<h3> A table will be visible with the matching routes</h3>
-				<!-- Route-tabell -->
 
-<div class="mt-5" id="route-table">
+<!-- Route-tabell -->
+<div class="mt-5" id="route-table" style="display: none">
 	<table class="table" style= "background: white">
 		<thead>
 			<tr>
 				<th scope= "col">Driver</th>
 				<th>Origin</th>
 				<th>Destination</th>
-				<th>Time</th>
+				<th>Departure</th>
+				<th>Arrival</th>
 				<th>Free seats</th>
 			</tr>
 		</thead>
@@ -49,26 +43,16 @@
 					<td></td>
 					<td></td>
 					<td></td>
+					<td></td>
 				</tr>
 			</template>
 		</tbody>
 	</table>
 </div>
 
-<!--
-<div id="route-view" class="row">
-	<div id="route-list" class="col-md-3">
-		<div class="list-group">
-			<template id="_route-template">
-			<button id = "listbutton" type="button" class="list-group-item list-group-item-action"></button>
-			</template>
-		</div>
-	</div>
-</div>
--->
 
+<!-- Booking-request -->
 <div>
-	<!-- Booking-request -->
 	<form class="form-horizontal" id="booking-request-form"
 		style="margin-top: 60px; display: block">
 		<div class="form-group row show-edit">
@@ -82,10 +66,7 @@
 					placeholder="Comments to the driver">
 			</div>
 		</div>
-
-
 	</form>
-
 </div>
 
 

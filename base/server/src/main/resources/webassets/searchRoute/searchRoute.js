@@ -13,17 +13,22 @@ base.searchRouteController = function() {
 		        renderPart: function(route) {
 		        	console.log("renderPart()");
 		            var t = document.getElementById('route-template');
-		            view.update(t.content.querySelector('button'), route);
+		            view.update(t.content.querySelector('tr'), route);
 		            var clone = document.importNode(t.content, true);
 		            t.parentElement.appendChild(clone);
 		        },
-		        update: function(liElement, route) {
+		        update: function(trElement, route) {
 		        	console.log("update()");
-		            liElement.textContent = route.routeID;
+		        	var tds = trElement.children;
+		        	tds[0].innerHTML = route.driverID;
+		        	tds[1].innerHTML = route.location;
+		        	tds[2].innerHTML = route.destination;
+		        	tds[3].innerHTML = route.timeOfDeparture;
+		        	tds[4].innerHTML = route.timeOfArrival;
+		        	tds[5].innerHTML = route.freeSeats;
 		        },
 		        render: function() {
 		        	console.log("render()");
-		        	console.log(model.routes);
 		            model.routes.forEach(route => view.renderPart(route));
 		        },
 		        // Gör booking-request synlig när route valts
@@ -38,10 +43,14 @@ base.searchRouteController = function() {
 		            	console.log('else hej');
 		            }
 		    	},
-		    	// Tror/ den ska anropas när man trycker på en route
-		         selectRoute: function(route, clickedEl) {
-		         console.log("selectRoute()");
-		          /*  // Set appropriate user-view class to either add or edit.BEHÖVS EJ FÖR ROUTE
+		    	showRoutesTable: function() {
+		    		var routeTable = document.getElementById('route-table');
+		    		routeTable.style.display = 'block'
+		    	},
+		    	// Tror den ska anropas när man trycker på en route
+		        selectRoute: function(route, clickedEl) {
+		        	console.log("selectRoute()");
+		        	/*  // Set appropriate user-view class to either add or edit.BEHÖVS EJ FÖR ROUTE
 		            var userView = document.getElementById('user-view');
 		            view.showForm('booking-request-form');
 		            if (user.username === '') {
@@ -78,8 +87,13 @@ base.searchRouteController = function() {
 	        		var destination = document.getElementById('destination-input').value;
 	        		var departureTime = document.getElementById('departure-input').value;
 	        		var arrivalTime = document.getElementById('arrival-input').value;
-	        	    var routeFilterObj = {driverName: driverName, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
-	        		return routeFilterObj;
+	        		base.rest.getRoutes(driverName, origin, destination, departureTime, arrivalTime).then(function(routes) {
+	        			console.log("Inside getRoutes REST call")
+	        			routes.forEach(route => console.log("route: " + route));
+	        			model.routes = routes;
+	        			view.showRoutesTable();
+	        			view.render();
+	        		});
 
 		   		},
 		   		// Anropas när man skickar in sin booking-request
@@ -96,39 +110,10 @@ base.searchRouteController = function() {
 		            },
 
 		        load: function() {
-		           // fixa? Kan man göra en sån här tilldelning?
+		        	console.log("load()");
 		        	var routeObject= document.getElementById('route-search-form').onsubmit = controller.searchRoute;
-		        	//document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
 		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
 
-		            
-		            Promise.all([
-		                base.rest.getRoutes().then(function(routes) {
-		                    model.routes = routes;
-		                    view.render();
-		                }),
-
-
-		                //getRoles behövs väl ej?
-		               base.rest.getRoles().then(function(roles) {
-		                    model.roles = roles;
-		                    model.roleNames = roles.map(r => r.name);
-		                    return roles;
-		                })
-		            ]) .then(function(values) {
-		                view.render(); // har lagt till ID på den knappen för att hantera onclick, kan göra att den nedan blir fel.
-		                var routeEls = document.querySelectorAll('#route-list button');
-		                routeEls.forEach(function(el, i) {
-		                    if (i == routeEls.length-1) { //Skapas en ny route om man är på första platsen? Behöver vi det?
-		                        el.onclick = () => view.selectRoute({routeID: '', role: model.roles[0], id: ''}, el);
-		                    } else {
-		                        var route = model.routes[i]; // Closure on route, not on i
-		                        el.onclick = () => view.selectRoute(route, el);
-		                    }
-		                });
-		                routeEls[0].click();
-		            });
-		            
 		        }
 		    };
 
