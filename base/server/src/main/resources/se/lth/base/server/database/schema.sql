@@ -54,8 +54,8 @@ CREATE TABLE Routes(routeID INT AUTO_INCREMENT NOT NULL,
 					FOREIGN KEY(driverID) REFERENCES User(userID)
 					);
 
---INSERT INTO Routes(routeID,driverID,freeSeats, location,destination,timeOfDeparture,timeOfArrival, passengers,description,bookingEndTime,recurring,finished) 
---	VALUES (1, '2', 2, 'Här','Där', '0', '8','','','4','0',FALSE);
+INSERT INTO Routes(routeID,driverID,freeSeats, location,destination,timeOfDeparture,timeOfArrival, passengers,description,bookingEndTime,recurring,finished) 
+	VALUES (1, 1000000001, 2, 'Här','Där', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),'','',CURRENT_TIMESTAMP(),'no',FALSE);
 
 --Table used to store reports/flags 
 CREATE TABLE FlagReports(flagReportID INT AUTO_INCREMENT NOT NULL,
@@ -86,5 +86,5 @@ CREATE TABLE BookingRequests(bookingReqID INT AUTO_INCREMENT,
 								
 );
 
---INSERT INTO BookingRequests(bookingReqID, routeID, fromUserID, toUserID, accepted)
---VALUES (1, 1, 1000000001, 1000000002, FALSE);
+INSERT INTO BookingRequests(bookingReqID, routeID, fromUserID, toUserID, accepted)
+VALUES (1, 1, 1000000002, 1000000001, FALSE);
