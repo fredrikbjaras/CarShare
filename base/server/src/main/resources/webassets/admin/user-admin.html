@@ -1,5 +1,32 @@
 <h1>User Admin</h1>
-<div> <!--  User-sökning -->
+
+ <div class="mt-5">
+		<h5>All users</h5>
+		<table class="table" style="background: white" id = "user-table">
+			<thead>
+				<tr>
+					<th scope="col">Username</th>
+					<th>Role</th>
+					<th>Phonenumber</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<template id="allUsers-template">
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>		
+				</tr>
+				</template>
+			</tbody>
+		</table>
+	</div>
+ 
+ 
+ 
+ 
+ <div> <!--  User-sökning -->
      <form class = "form-horizontal" id="user-search-form" style = "margin-top: 30px; display:block">
      	 <div class="form-group row show-edit">
      	  <button id="search" type="submit" class="ml-auto mr-3 btn btn-primary">Search users</button>
@@ -18,7 +45,36 @@
 			</form>        
        
        </div>
-  
+  <div class="mt-5">
+		<h5>All routes</h5>
+		<table class="table" style="background: white" id = "route-table">
+			<thead>
+				<tr>
+					<th scope="col">Passengers</th>
+					<th>Origin</th>
+					<th>Destination</th>
+					<th>Departure-time</th>
+					<th>Arrival-time</th>	
+					<th>Free seats</th>		
+					<th></th>
+				</tr>
+			</thead>
+			<template id="allRoutes-template">
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>	
+					<td></td>
+					<td></td>
+					<td></td>		
+				</tr>
+				</template>	
+			<tbody id ="route-tbody">
+			
+			</tbody>
+		</table>
+	</div>
+ 
   
 <div> <!-- Route-sökning, klistra in det som finns i newRoute när den är klar! -->
      <form class = "form-horizontal" id="route-search-form" style = "margin-top: 60px; display:block">
@@ -26,9 +82,9 @@
      	  <button id="searchRoute" type="submit" class="ml-auto mr-3 btn btn-secondary">Search routes</button>
                <!-- <label class="col-md-2 col-form-label" >Search</label> -->
                 <div class="col-md-10">
-                    <input type="text" class="form-control" id="driver-id-input" placeholder = "Search for driver ID" >
-                                        <input type="text" class="form-control" id="origin-input" placeholder = "Search for origin (from map?)" >
-                                                            <input type="text" class="form-control" id="destination-input" placeholder = "Search for destination (from map?)" >
+                    <input type="text" class="form-control" id="driver-name-input" placeholder = "Search for driver name" >
+                                        <input type="text" class="form-control" id="origin-input" placeholder = "Search for origin" >
+                                                            <input type="text" class="form-control" id="destination-input" placeholder = "Search for destination" >
                                                              <input type="text" class="form-control" id="departure-input" placeholder = "Search for departure-time" >
                                                               <input type="text" class="form-control" id="arrival-input" placeholder = "Search for arrival-time" >
                                         
@@ -42,131 +98,4 @@
        
        </div>  
   
-        
-<div id="user-view" class="row">
-    <div id="user-list" class="col-md-3">
-        <div class="list-group">
-            <template id="user-template">
-                <button type="button" class="list-group-item list-group-item-action"></button>
-            </template>
-        </div>
-        <div class="list-group mt-3">
-            <button type="button" id="new-user" class = "list-group-item list-group-item-action list-group-item-success" >
-                Add New User
-            </button>
-            
-            
-            
-        </div>
-   
-    </div>
-    
-	<div id="route-list" class="col-md-3">
-        <div class="list-group">
-            <template id="user-template">
-                <button type="button" class="list-group-item list-group-item-action"></button>
-            </template>
-        </div>
-        <div class="list-group mt-3">
-            <button type="button" id="new-route" class="list-group-item list-group-item-action list-group-item-success">
-                Add New Route
-            </button>
-        </div>
-    </div>
-    
-    	<div id="bookingRequest-list" class="col-md-3">
-        <div class="list-group">
-            <template id="user-template">
-                <button type="button" class="list-group-item list-group-item-action"></button>
-            </template>
-        </div>
-        <div class="list-group mt-3">
-            <button type="button" id="new-bookingRequest" class="list-group-item list-group-item-action list-group-item-success">
-                 Add New Booking req
-            </button>
-        </div>
-    </div>
-    
-    <div class="col-md-9">
-        <form id="user-form" style = "margin-top: 50px; display:none">
-            <div class="form-group row show-edit">
-                <label class="col-md-2 col-form-label" for="user-id">Id</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" id="user-id" disabled>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="set-username">Username</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" id="set-username" placeholder="Enter username" required
-                           pattern=".{4,}">
-                    <small id="edit-username-help" class="form-text text-muted">Minimum 4 characters.
-                    </small>
-                </div>
-            </div>
-                 <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="set-phoneNr">Phone number</label>
-                <div class="col-md-10">
-                    <input type="text" class="form-control" id="set-phoneNr" placeholder="Enter Phone number">
-                </div>
-            </div>
-            <div class="form-group row">
-				<label class="col-md-2 col-form-label" for="description">Description</label>
-				<div class="col-md-10">
-					<textarea class="form-control" rows="5" id="description" placeholder = "Enter description here"></textarea>
-				</div>
-			</div>
-            
-            
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="set-password">Password</label>
-                <div class="col-md-10">
-                    <div class="row">
-                        <div class="col">
-                            <input type="password" class="form-control" id="set-password" placeholder="Password"
-                                   required pattern=".{8,}">
-                            <small id="edit-password-help" class="form-text text-muted">Minimum 8 characters.
-                            </small>
-                        </div>
-                        
-                        
-                        <div class="show-edit col-md-2">
-                            <button id="change-password" class="w-100 btn btn-secondary">Change</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group row">
-                <label class="col-md-2 col-form-label" for="set-role">Select role</label>
-                <div class="col-md-10">
-                    <select class="form-control" id="set-role">
-                        <template id="role-template">
-                            <option></option>
-                        </template>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="offset-md-2 col">
-                    <div class="row">
-                        <div class="col-md">
-                            <button id="submit-user" type="submit" class="ml-auto mr-3 btn btn-primary">Submit</button>
-                            <button id="reset-user" type="reset" class="mr-auto btn btn-secondary">Reset</button>
-                        </div>
-                        <div class="col-md-2 show-edit">
-                            <button id="delete-user" type="button" class="w-100 btn btn-danger">Delete</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form> 
-       
-        
-        <div class="show-edit mt-5">
-            <h3>Users Foos</h3>
-            <div id="user-data">
-                <a target="_blank">JSON</a>
-            </div>
-        </div>
-    </div>
-</div>
+ 
