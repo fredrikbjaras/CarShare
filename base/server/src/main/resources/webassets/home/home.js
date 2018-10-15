@@ -9,8 +9,10 @@ base.homeController = function() {
 
     var view = {
         render: function() {
-        	model.forEach(d => view.renderPart(d)); 
-        	reqModel.forEach(d => view.renderRequest(d));
+        	model.forEach(d => view.renderPart(d));
+        },
+        renderReq: function(){
+                	reqModel.forEach(d => view.renderRequest(d));
         },
         renderPart: function(route){
         		var t = view.template();   
@@ -39,9 +41,19 @@ base.homeController = function() {
              //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         }, 
         reqUpdate: function(trElement,request) {
-        	var tds = trElement.children;
-        	console.log(request);
-			tds[0].textContect = request.fromUserID
+                		var tds = trElement.children;
+        	//get user
+        	var fromUser = view.getUser(request.fromUserID);
+        	console.log(fromUser);
+        	//get Route
+        		//var route = base.rest.getRoute(request.routeID)
+        		//console.log(route);
+        		
+			tds[0].textContent = request.fromUserID;
+			
+			tds[1].textContent = "TBA";
+			tds[2].textContent = "TBA";
+			tds[3].textContent = "TBA";
         
         
         },
@@ -50,6 +62,11 @@ base.homeController = function() {
         },
         reqTemplate: function(){
         	return document.getElementById('bookingRequest-template');
+        },
+        getUser: function(id){
+                	base.rest.getUser(id).then(function(usr){
+					return usr;
+				});
         }
     };
 
@@ -62,11 +79,11 @@ base.homeController = function() {
                 currentUser = user;		// Hämtar user
 				base.rest.getRoutes(currentUser.userName).then(function(routes) { // Hämtar sen route när man har usern
 	                model = routes;
-	                view.render();
+	                view.render()
 	            }); 
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
-	            	reqModel = bookingRequests;
-	            	view.render()
+	           	reqModel = bookingRequests;
+	            	view.renderReq()
 	            }); 
 	            			      
             });
