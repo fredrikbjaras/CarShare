@@ -75,10 +75,10 @@ public class UserDataAccess extends DataAccess<User> {
 		User user = getUser(userID);
 		if (password != null && password != "" && password.length() > 7) {
 			long salt = Credentials.generateSalt();
-			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?, profilePicture = ?,description = ?, phoneNr = ?"
+			execute("UPDATE User SET  userName= ?, salt = ?,password_hash = ?, profilePicture = ?,description = ?, phoneNr = ? "
 					+ "WHERE userID = ?", userName, salt, generatePasswordHash(salt,password), profilePicture, description, phoneNr, userID);
 		} else {
-			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ?"
+			execute("UPDATE User SET userName = ?, profilePicture = ?, description = ?, phoneNr = ? "
 					+ "WHERE userID = ?", userName, profilePicture, description, phoneNr, userID);
 		}
 		user = getUser(userID);
