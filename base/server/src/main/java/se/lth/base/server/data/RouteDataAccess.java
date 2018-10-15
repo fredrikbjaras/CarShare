@@ -116,12 +116,12 @@ public class RouteDataAccess extends DataAccess<Route> {
     
     public List<Route> getAllRoutesFromDepartureTime(Timestamp fromDepartureTime, Timestamp toDepartureTime) {
         return query("SELECT * FROM Routes " +
-                "WHERE timeOfDeparture > ? AND timeOfDeparture < ?", fromDepartureTime, toDepartureTime); 
+                "WHERE timeOfDeparture >= ? AND timeOfDeparture <= ?", fromDepartureTime, toDepartureTime); 
     }
     
     public List<Route> getAllRoutesFromArrivalTime(Timestamp fromArrivalTime, Timestamp toArrivalTime) {
         return query("SELECT * FROM Routes " +
-                "WHERE timeOfArrival > ? AND timeOfArrival < ?", fromArrivalTime, toArrivalTime);
+                "WHERE timeOfArrival >= ? AND timeOfArrival <= ?", fromArrivalTime, toArrivalTime);
     }
     
     

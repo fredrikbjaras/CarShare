@@ -91,7 +91,7 @@ public class BookingRequestResource {
 		if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
 				case 1: 
-					return bookDao.getBookingRequestByRoute(filter.getRouteID());
+					return bookDao.getBookingRequestsByRoute(filter.getRouteID());
 				case 2:
 					return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
 				case 3:
@@ -102,7 +102,7 @@ public class BookingRequestResource {
 		} if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
 			case 1: 
-				return bookDao.getBookingRequestByRoute(filter.getRouteID());
+				return bookDao.getBookingRequestsByRoute(filter.getRouteID());
 			case 2:
 				return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
 			case 3:
@@ -110,7 +110,8 @@ public class BookingRequestResource {
 			default:
 				throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
 			}
-		} 		
+		}
+		return null;
 	}
 	
 	/*
