@@ -134,9 +134,9 @@ public class RouteDataAccess extends DataAccess<Route> {
     public boolean addPassengerToRoute(int routeID, int passengerID) {
     List<Route> temp = query("SELECT * FROM Routes WHERE routeID = ?", routeID);
     Route route = temp.get(0);
-    String currentPassengers = route.getPassengers();;
+    String currentPassengers = route.getPassengers();
     String passengerIDString = Integer.toString(passengerID);
-    if (route.getFreeSeats() > 0 && !currentPassengers.contains(passengerIDString) && !route.getFinished()) {
+    if (route.getFreeSeats() > 0 && !currentPassengers.contains(passengerIDString+";") && !route.getFinished()) {
     		currentPassengers = currentPassengers + passengerIDString + ";";
     		updateRoute(route.getRouteID(), route.getDriverID(), route.getFreeSeats() - 1, route.getLocation(), route.getDestination(), route.getTimeOfDeparture(), route.getTimeOfArrival(), currentPassengers, route.getDescription(),route.getBookingEndTime(), route.getRecurring(), route.getFinished());
     		return true;
