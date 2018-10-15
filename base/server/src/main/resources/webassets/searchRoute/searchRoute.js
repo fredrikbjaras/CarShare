@@ -78,11 +78,6 @@ base.searchRouteController = function() {
 	        		var destination = document.getElementById('destination-input').value;
 	        		var departureTime = document.getElementById('departure-input').value;
 	        		var arrivalTime = document.getElementById('arrival-input').value;
-	        		base.rest.getRoutes(driverName, origin, destination, departureTime, arrivalTime).then(function(routes) {
-	        			model.routes = routes;
-	        		});
-	        		view.render();
-
 	        	    var routeFilterObj = {driverName: driverName, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
 	        		return routeFilterObj;
 
@@ -106,11 +101,11 @@ base.searchRouteController = function() {
 		        	//document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
 		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
 
-		            /*
+		            
 		            Promise.all([
-		                base.rest.getRoutes(routeObject.driverID,routeObject.origin,routeObject.destination,routeObject.departureTime,routeObject.arrivalTime).then(function(routes) {
+		                base.rest.getRoutes().then(function(routes) {
 		                    model.routes = routes;
-		                    return routes;
+		                    view.render();
 		                }),
 
 
@@ -133,7 +128,7 @@ base.searchRouteController = function() {
 		                });
 		                routeEls[0].click();
 		            });
-		            */
+		            
 		        }
 		    };
 

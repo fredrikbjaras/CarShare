@@ -34,6 +34,7 @@ public class BookingRequestResource {
 	private final RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
 	private final BookingRequestDataAccess bookDao = new BookingRequestDataAccess(
 			Config.instance().getDatabaseDriver());
+	
 	public BookingRequestResource(@Context ContainerRequestContext context) {
 		this.context = context;
 		this.user = (User) context.getProperty(User.class.getSimpleName());
@@ -45,7 +46,7 @@ public class BookingRequestResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public boolean addRequest(BookingRequest request) { 
 		Route route = routeDao.getRoute(request.getRouteID());
-		String[] passengers = route.getPassengers().split(",");
+		String[] passengers = route.getPassengers().split(";");
 		User fromUser = userDao.getUser(request.getFromUserID());
 		User toUser = userDao.getUser(request.getToUserID());
 		
@@ -56,6 +57,11 @@ public class BookingRequestResource {
 			}
 		}
 		
+		Timestamp current = new Timestamp(System.currentTimeMillis());
+		if(current.after(route.getBookingEndTime())) {
+			throw new WebApplicationException("You cannot make a booking request this close to departure. ",
+					Response.Status.BAD_REQUEST);
+		}
 		
 		List<BookingRequest> requestsMade = bookDao.getBookingRequestsFromUser(fromUser.getUserID());
 		for(BookingRequest br : requestsMade) {
@@ -91,7 +97,7 @@ public class BookingRequestResource {
 		if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
 				case 1: 
-					return bookDao.getBookingRequestsByRoute(filter.getRouteID());
+					return bookDao.getBookingRequestsByRoute(filter.getRouteID());	
 				case 2:
 					return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
 				case 3:
@@ -110,8 +116,8 @@ public class BookingRequestResource {
 			default:
 				throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
 			}
-		}
-		return null;
+		} 	
+		throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
 	}
 	
 	/*
@@ -143,7 +149,7 @@ public class BookingRequestResource {
 		
 		if (bookDao.getBookingRequests(requestID) == null) {
 			if (user.getIsAdmin()) {
-				throw new WebApplicationException("Requirements met but route not found", Response.Status.BAD_REQUEST);
+				throw new WebApplicationException("Request not found", Response.Status.BAD_REQUEST);
 			}
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
@@ -153,4 +159,32 @@ public class BookingRequestResource {
 		}
 		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 	}
+	
+	@Path("{RequestID}")
+	@POST
+	@PermitAll
+	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
+	public boolean acceptRequest(@PathParam("RequestID") int requestID) {
+		BookingRequest br = bookDao.getBookingRequests(requestID);
+		
+		if (br == null) {
+			throw new WebApplicationException("Request not found", Response.Status.BAD_REQUEST);
+		}
+		if (br.getAccepted()) {
+			throw new WebApplicationException("User already accepted", Response.Status.BAD_REQUEST);
+		}
+		
+		if (bookDao.getBookingRequests(requestID).getFromUserID() == user.getUserID() || user.getIsAdmin()) {
+			//bookDao.updateBookingRequests(br.getBookingReqID(), br.getRouteID(), br.getFromUserID(), br.getToUserID(),
+				//	true, br.getComment());
+			if(routeDao.addPassengerToRoute(br.getRouteID(), br.getFromUserID())) {
+				return true;
+			}
+			throw new WebApplicationException("Failed to add passenger", Response.Status.BAD_REQUEST);
+		}
+		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
+	}
 }
+
+
+

@@ -133,10 +133,12 @@ public class RouteDataAccessTest {
 		User test1= userDao.addUser("userName11", "password", "0700 000 000", false, "", "");
 		
 		Timestamp time = new Timestamp(100);
+		Timestamp tempDepTime = time;
+		tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
 		Route route1 = routeDao.addRoute(test1.getUserID(), 2, "", "",  time,  new Timestamp(2), "", "",  new Timestamp(3), 0, false);
 		Route route2 = routeDao.addRoute(test1.getUserID(), 2, "", "",  time,  new Timestamp(20), "", "",  new Timestamp(30), 0, false);
 		Route route3 = routeDao.addRoute(test1.getUserID(), 2, "", "",  time,  new Timestamp(21), "", "",  new Timestamp(31), 0, false);
-		List<Route> routes = routeDao.getAllRoutesFromDepartureTime(time, time);
+		List<Route> routes = routeDao.getAllRoutesFromDepartureTime(time, tempDepTime);
 		int counter = 0;
 		for (Route route : routes) {
 			if (route.getTimeOfDeparture().compareTo(time) == 0) {
@@ -152,10 +154,12 @@ public class RouteDataAccessTest {
 		User test1= userDao.addUser("userName12", "password", "0700 000 000", false, "", "");
 	
 		Timestamp time = new Timestamp(110);
+		Timestamp tempDepTime = time;
+		tempDepTime.setTime(tempDepTime.getTime()+3600*1000);
 		Route route1 = routeDao.addRoute(test1.getUserID(), 2, "", "", new Timestamp(1) ,  time, "", "",  new Timestamp(3), 0, false);
 		Route route2 = routeDao.addRoute(test1.getUserID(), 2, "", "",  new Timestamp(1),  time, "", "",  new Timestamp(30), 0, false);
 		Route route3 = routeDao.addRoute(test1.getUserID(), 2, "", "",  new Timestamp(1),  time, "", "",  new Timestamp(31), 0, false);
-		List<Route> routes = routeDao.getAllRoutesFromArrivalTime(time, time);
+		List<Route> routes = routeDao.getAllRoutesFromArrivalTime(time, tempDepTime);
 		int counter = 0;
 		for (Route route : routes) {
 			if (route.getTimeOfArrival().compareTo(time) == 0) {
