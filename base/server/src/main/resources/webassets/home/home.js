@@ -12,7 +12,7 @@ base.homeController = function() {
         model.forEach(d => view.renderPart(d)); 
         },
         renderReq: function(){
-        reqModel.forEach(d => view.renderPart(d));
+        reqModel.forEach(d => view.renderRequest(d));
         },
         renderPart: function(route){
         		var t = view.template();   
