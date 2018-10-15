@@ -142,8 +142,8 @@ base.rest = (function() {
         		.then(response => response.json())
         		.then(r => objOrError(r, Route));
         },
-        getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
-        	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
+        getRoutes: function(driverUserName = null, passengerUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
+        	var routeFilterObj = { driverUserName: driverUserName, passengerUserName: passengerUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
         	return baseFetch('rest/route/filter', {
             		method: 'POST',
             		body: JSON.stringify(routeFilterObj),
