@@ -178,7 +178,19 @@ public class RouteDataAccessTest {
 		assertTrue(routeDao.addPassengerToRoute(route.getRouteID(), test2.getUserID()));
 	}
 	
+	@Test
+	public void testGetAllRoutesFromUser() {
+		User test1 = userDao.addUser("userName", "password", "0700 000 000", false, "", "");
+		User test2 = userDao.addUser("userNamee", "password", "0700 000 001", false, "", "");
+		RouteDataAccess routeDao = new RouteDataAccess(Config.instance().getDatabaseDriver());
+		Route route = routeDao.addRoute(test1.getUserID(), 2, "Hit", "Dit", new Timestamp(1), new Timestamp(2), "", "Ride", new Timestamp(3), 0, false);
+		routeDao.addPassengerToRoute(route.getRouteID(), test2.getUserID());
+		List<Route> result = routeDao.getRoutesWithPassenger(test2.getUserID());
+		for(Route listRoute: result){
+			System.out.println(listRoute.getPassengers());
+		}
 	}
+}
 	
 	
 	
