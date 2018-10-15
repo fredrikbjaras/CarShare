@@ -84,7 +84,7 @@ public class RouteResource {
 					return routes;
 				case 2:
 					User passenger = userDao.getUserWithName(filter.getPassengerUserName());
-					List<Route> routes2 = routeDao.getAllRoutesFromUser(passenger.getUserID());
+					List<Route> routes2 = routeDao.getRoutesWithPassenger(passenger.getUserID());
 					return routes2;
 				case 3:
 					return routeDao.getAllRoutesFromLocation(filter.getLocation());
@@ -114,7 +114,7 @@ public class RouteResource {
 				return routes;
 			case 2:
 				User passenger = userDao.getUserWithName(filter.getPassengerUserName());
-				List<Route> routes2 = routeDao.getAllRoutesFromUser(passenger.getUserID());
+				List<Route> routes2 = routeDao.getRoutesWithPassenger(passenger.getUserID());
 				return routes2;
 			case 3:
 				return routeDao.getAllRoutesFromLocation(filter.getLocation());
