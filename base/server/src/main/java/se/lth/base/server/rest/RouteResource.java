@@ -93,7 +93,7 @@ public class RouteResource {
 					return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 				
 				case 5:
-					Timestamp tempArrTime = filter.getDepartureTime();
+					Timestamp tempArrTime = filter.getArrivalTime();
 					tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
 					return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);
 				
@@ -119,7 +119,7 @@ public class RouteResource {
 				return routeDao.getAllRoutesFromDepartureTime(filter.getDepartureTime(), tempDepTime);
 			
 			case 5:
-				Timestamp tempArrTime = filter.getDepartureTime();
+				Timestamp tempArrTime = filter.getArrivalTime();
 				tempArrTime.setTime(tempArrTime.getTime()+3600*1000);
 				return routeDao.getAllRoutesFromArrivalTime(filter.getArrivalTime(),tempArrTime);
 			
