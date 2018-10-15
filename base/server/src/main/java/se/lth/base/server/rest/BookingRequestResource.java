@@ -177,7 +177,8 @@ public class BookingRequestResource {
 			}
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
-		if (bookDao.getBookingRequests(requestID).getFromUserID() == user.getUserID() || user.getIsAdmin()) {
+		if (bookDao.getBookingRequests(requestID).getFromUserID() == user.getUserID() || user.getIsAdmin()
+				||bookDao.getBookingRequests(requestID).getToUserID() == user.getUserID()) {
 			bookDao.deleteBookingRequests(requestID);
 			return true;
 		}

@@ -165,6 +165,9 @@ base.rest = (function() {
             	.then(response => response.json())
             	.then(requests => requests.map(r => new BookingRequest(r)));
         },
+		deleteRequest: function(requestID) {
+            return baseFetch('/rest/booking-request/' + requestID, {method: 'DELETE'});
+        },
         getFoos: function(userID) {
             var postfix = "";
             if (typeof userID !== "undefined") postfix = "/user/" + userID;

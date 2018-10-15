@@ -18,9 +18,10 @@ base.homeController = function() {
 			//view.renderRequest(reqes[i]);
 			var fromUser = reqes[i].fromUserID;
 			var routeID = reqes[i].routeID;
+			var req = reqes[i]
 			base.rest.getUser(fromUser).then(function(user) {
 				base.rest.getRoute(routeID).then(function(route) {
-				view.renderRequest(user,route);
+				view.renderRequest(req,user,route);
 				});
 			});
 			}
@@ -32,7 +33,7 @@ base.homeController = function() {
                 t.parentElement.appendChild(clone);
 
         },
-        renderRequest: function(user,route){
+        renderRequest: function(req,user,route){
        			var t = view.reqTemplate();   
         		view.reqUpdate(t.content.querySelector('tr'), user,route);
         		var clone = document.importNode(t.content, true);
@@ -44,10 +45,26 @@ base.homeController = function() {
 				buttons[0].onclick = function(event){
 					//IMPLEMENT ACCEPT BOOKREQ HERE
 					console.log("Accept");
+					
+					//Add Passenger
+					
+					//Remove request and, if successfull, row in table
+					base.rest.deleteRequest(req.bookingReqID).then(function(deleted){
+						if(deleted.ok==true){
+							trElement.parentElement.removeChild(trElement);
+						}
+					});
 				};
 				buttons[1].onclick = function(event){
 					//IMPLEMENT DENY BOOKREQ HERE
 					console.log("Deny");
+					
+					//Remove request and, if successfull, row in table
+					base.rest.deleteRequest(req.bookingReqID).then(function(deleted){
+						if(deleted.ok==true){
+							trElement.parentElement.removeChild(trElement);
+						}
+					});
 				};
         },
         update: function(trElement, route) {
@@ -64,11 +81,9 @@ base.homeController = function() {
              //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         }, 
         reqUpdate: function(trElement,user,route) {
-                		var tds = trElement.children;
-        	
-        		
-			tds[0].textContent = user.userName;
 			
+            var tds = trElement.children;
+			tds[0].textContent = user.userName;
 			tds[1].textContent = route.destination;
 			tds[2].textContent = route.timeOfDeparture;
 			tds[3].textContent = route.bookingEndTimeModifier;
