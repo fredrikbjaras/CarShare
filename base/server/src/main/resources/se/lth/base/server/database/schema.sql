@@ -23,8 +23,9 @@ CREATE TABLE User(userID INT AUTO_INCREMENT NOT NULL,
 
 	--Lägger till en admin med Användarnamn: Admin och lösen: password
 	INSERT INTO User (userID,userName,salt, password_hash,phoneNr,isAdmin) 
-	VALUES (1, 'AdminUser', -2883142073796788660, '8dc0e2ab-4bf1-7671-c0c4-d22ffb55ee59','0',TRUE),
-           (2, 'TestUser', 5336889820313124494, '144141f3-c868-85e8-0243-805ca28cdabd','0',FALSE);
+	VALUES (1000000000, 'AdminUser', -2883142073796788660, '8dc0e2ab-4bf1-7671-c0c4-d22ffb55ee59','0',TRUE),
+           (1000000001, 'TestUser', 5336889820313124494, '144141f3-c868-85e8-0243-805ca28cdabd','0',FALSE),
+           (1000000002, 'TestUser2', '-2139185227452823400', '79ce2b6d-e279-5a0b-426a-a33d659a4934', '123', FALSE);
 
 --Tagen mestadels från labben. Gör en chansning tills vi har har specificerat hur vi ska hantera våra sessions.
 CREATE TABLE Session(session_uuid UUID DEFAULT RANDOM_UUID(),
@@ -84,3 +85,6 @@ CREATE TABLE BookingRequests(bookingReqID INT AUTO_INCREMENT,
 								FOREIGN KEY(toUserID) REFERENCES User(userID) ON DELETE CASCADE
 								
 );
+
+--INSERT INTO BookingRequests(bookingReqID, routeID, fromUserID, toUserID, accepted)
+--VALUES (1, 1, 1000000001, 1000000002, FALSE);

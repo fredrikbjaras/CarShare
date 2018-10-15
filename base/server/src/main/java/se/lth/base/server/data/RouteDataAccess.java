@@ -144,5 +144,10 @@ public class RouteDataAccess extends DataAccess<Route> {
     return false;
     }
     
+    public List<Route> getRoutesWithPassenger(int userID){
+    	return query("SELECT * FROM Routes " +
+                "WHERE passengers LIKE '%' + ? + '%", userID); 
+    }
+    
 }
 
