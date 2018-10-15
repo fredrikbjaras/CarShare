@@ -50,23 +50,18 @@ base.userAdminController = function() {
 
         },
 /*
-        showForm: function(formId){
-        	console.log('första hej');
-            var form = document.getElementById(formId);
-            if (form.style.display == 'block') {
-            	form.style.display = 'none';
-            	console.log('if hej');
-            } else {
-            	form.style.display = 'block';
-            	console.log('else hej');
-            }
-    	},*/
+ * showForm: function(formId){ console.log('första hej'); var form =
+ * document.getElementById(formId); if (form.style.display == 'block') {
+ * form.style.display = 'none'; console.log('if hej'); } else {
+ * form.style.display = 'block'; console.log('else hej'); } },
+ */
 
      
 
            
-            // Set defaults of form values. This will allow the HTML reset button to work by default HTML behaviour.
-         //  }
+            // Set defaults of form values. This will allow the HTML reset
+			// button to work by default HTML behaviour.
+         // }
     };
 
     var controller = {
@@ -75,13 +70,27 @@ base.userAdminController = function() {
    			var userName = document.getElementById('user-name-input').value;
     		var phoneNr = document.getElementById('phone-input').value;
     		var routeId = document.getElementById('routeId-input').value;
-    	    
-			base.rest.getUsers(userName,phoneNr,routeId).then(function(users){
+    		var table = document.getElementById('user-table');
+    		var tbody = table.childNodes[3];
+    		while (tbody.childNodes.length > 2) {
+    		    tbody.removeChild(tbody.childNodes[2]);
+    		}  
+    		if(userName == "" && phoneNr == "" && routeId == ""){
+    			
+    			var table = document.getElementById('route-table');
+	    		console.dir(table);
+	    		var tbody = table.childNodes[3];
+	    		while (tbody.childNodes.length > 2) {
+	    		    tbody.removeChild(tbody.childNodes[2]);
+	    		}  
+    			controller.load();
+    		}
+    		else{	base.rest.getUsers(userName,phoneNr,routeId).then(function(users){
 				model.users = [];
 				model.users = users;
 				view.render(); 
 			});
-				
+    		}
 			},
 			 
 		 routeSearchSubmit: function(){
@@ -90,20 +99,36 @@ base.userAdminController = function() {
 	    		var destination = document.getElementById('destination-input').value;
 	    		var departureTime = document.getElementById('departure-input').value;
 	    		var arrivalTime = document.getElementById('arrival-input').value;
-	    		//document.getElementById('route-tbody').innerHTML = '';
 	    		
+	    		var table = document.getElementById('route-table');
+	    		var tbody = table.childNodes[3];
+	    		while (tbody.childNodes.length > 2) {
+	    		    tbody.removeChild(tbody.childNodes[2]);
+	    		}  
 	    		
-	    		base.rest.getRoutes(driverName, origin, destination, departureTime, arrivalTime).then(function(routes){
+	    		if (driverName == "" && origin == "" && destination == "" && departureTime == "" && arrivalTime == ""){	
+	    			var table = document.getElementById('user-table');
+	        		var tbody = table.childNodes[3];
+	        		while (tbody.childNodes.length > 2) {
+	        		    tbody.removeChild(tbody.childNodes[2]);
+	        		} 	
+	    			controller.load();
+	    		}
+	    		else	{
+	    		base.rest.getRoutes(driverName, null,origin, destination, departureTime, arrivalTime).then(function(routes){
 					model.routes = routes;
 					view.renderRoute(); 
+					console.log('förbi routes');
 				});
+	    		}
 			 },
    		
    		load: function() {
-            
+   			var table = document.getElementById('route-table');
+    		console.dir(table);
    			document.getElementById('user-search-form').onsubmit = controller.userSearchSubmit;
    			document.getElementById('route-search-form').onsubmit = controller.routeSearchSubmit;
-  		
+   			
    			base.rest.getUsers().then(function(users) { 
                 model.users = users;
                 view.render();
