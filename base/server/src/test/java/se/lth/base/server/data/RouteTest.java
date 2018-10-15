@@ -7,8 +7,8 @@ import java.sql.Timestamp;
 import org.junit.Test;
 
 public class RouteTest {
-	
-	Route route = new Route(1, 2, 3, "Här", "Där", new Timestamp(1), new Timestamp(2), "passengers", "description", new Timestamp(3), 0, false) ;
+	Timestamp time = new Timestamp(3);
+	Route route = new Route(1, 2, 3, "Här", "Där", new Timestamp(1), new Timestamp(2), "passengers", "description", time, 0, false) ;
 	
 	@Test
 	public void getRouteId() {
@@ -53,7 +53,10 @@ public class RouteTest {
 	
 	@Test
 	public void getBookingEndTime() {
-		assertTrue(new Timestamp(3).toString().equals(route.getBookingEndTime().toString()));
+		time.setNanos(0);
+		Timestamp time2 = route.getBookingEndTime();
+		time2.setNanos(0);
+		assertEquals(time.toString(), time2.toString());
 	}
 	
 	@Test

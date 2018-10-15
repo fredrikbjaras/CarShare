@@ -11,16 +11,20 @@ base.searchRouteController = function() {
 
 		    	// Följande tre funktioner laddar in tabellen
 		        renderPart: function(route) {
+		        	console.log("renderPart()");
 		            var t = document.getElementById('route-template');
 		            view.update(t.content.querySelector('button'), route);
 		            var clone = document.importNode(t.content, true);
 		            t.parentElement.appendChild(clone);
 		        },
 		        update: function(liElement, route) {
+		        	console.log("update()");
 		            liElement.textContent = route.routeID;
 		        },
 		        render: function() {
-		            model.users.forEach(user => view.renderPart(route));
+		        	console.log("render()");
+		        	console.log(model.routes);
+		            model.routes.forEach(route => view.renderPart(route));
 		        },
 		        // Gör booking-request synlig när route valts
 		        showForm: function(formId){
@@ -36,6 +40,7 @@ base.searchRouteController = function() {
 		    	},
 		    	// Tror/ den ska anropas när man trycker på en route
 		         selectRoute: function(route, clickedEl) {
+		         console.log("selectRoute()");
 		          /*  // Set appropriate user-view class to either add or edit.BEHÖVS EJ FÖR ROUTE
 		            var userView = document.getElementById('user-view');
 		            view.showForm('booking-request-form');
@@ -67,14 +72,14 @@ base.searchRouteController = function() {
 		    var controller = {
 		    	// Anropas när man trycker på searchRoute
 		   		searchRoute: function(){
-		        		var driverName = document.getElementById('driver-name-input').value;
-		        		var origin = document.getElementById('origin-input').value;
-		        		var destination = document.getElementById('destination-input').value;
-		        		var departureTime = document.getElementById('departure-input').value;
-		        		var arrivalTime = document.getElementById('arrival-input').value;
-
-		        	    var routeFilterObj = {driverName: driverName, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
-		        		return routeFilterObj;
+		   			console.log("searchRoute()");
+	        		var driverName = document.getElementById('driver-name-input').value;
+	        		var origin = document.getElementById('origin-input').value;
+	        		var destination = document.getElementById('destination-input').value;
+	        		var departureTime = document.getElementById('departure-input').value;
+	        		var arrivalTime = document.getElementById('arrival-input').value;
+	        	    var routeFilterObj = {driverName: driverName, origin: origin, destination: destination, departureTime: departureTime, arrivalTime: arrivalTime };
+	        		return routeFilterObj;
 
 		   		},
 		   		// Anropas när man skickar in sin booking-request
@@ -92,14 +97,15 @@ base.searchRouteController = function() {
 
 		        load: function() {
 		           // fixa? Kan man göra en sån här tilldelning?
-		        	var routeObject= document.getElementById('route-search-form').onsubmit =controller.searchRoute;
-		        	document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
+		        	var routeObject= document.getElementById('route-search-form').onsubmit = controller.searchRoute;
+		        	//document.getElementById('listbutton').onclick = (event) => view.showForm('booking-request-form');
 		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
 
+		            
 		            Promise.all([
-		                base.rest.getRoutes(routeObject.driverID,routeObject.origin,routeObject.destination,routeObject.departureTime,routeObject.arrivalTime).then(function(routes) {
+		                base.rest.getRoutes().then(function(routes) {
 		                    model.routes = routes;
-		                    return routes;
+		                    view.render();
 		                }),
 
 
@@ -122,6 +128,7 @@ base.searchRouteController = function() {
 		                });
 		                routeEls[0].click();
 		            });
+		            
 		        }
 		    };
 

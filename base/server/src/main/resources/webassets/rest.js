@@ -23,8 +23,8 @@ base.rest = (function() {
         };
     };
 
-    var Route = function(json) { // hejHej
-        //TODO
+    var Route = function(json) { 
+        Object.assign(this, json);
     };
 
     var BookingRequest = function(json) {
@@ -80,8 +80,8 @@ base.rest = (function() {
                 .then(response => response.json())
                 .then(u => new User(u));
         },
-        getUser: function(userId) {
-            return baseFetch('/rest/user/' + userId) // tagit bort + id
+        getUser: function(userID) {
+            return baseFetch('/rest/user/' + userID) // tagit bort + id
                 .then(response => response.json())
                 .then(u => new User(u));
         },

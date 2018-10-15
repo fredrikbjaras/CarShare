@@ -27,19 +27,45 @@
 	</form>
 
 </div>
-<h3> A table will be visible with the matching routes, when route is implemented</h3>
+<h3> A table will be visible with the matching routes</h3>
 				<!-- Route-tabell -->
 
+<div class="mt-5" id="route-table">
+	<table class="table" style= "background: white">
+		<thead>
+			<tr>
+				<th scope= "col">Driver</th>
+				<th>Origin</th>
+				<th>Destination</th>
+				<th>Time</th>
+				<th>Free seats</th>
+			</tr>
+		</thead>
+		<tbody>
+			<template id="route-template">
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</template>
+		</tbody>
+	</table>
+</div>
+
+<!--
 <div id="route-view" class="row">
 	<div id="route-list" class="col-md-3">
 		<div class="list-group">
-			<template id="route-template">
+			<template id="_route-template">
 			<button id = "listbutton" type="button" class="list-group-item list-group-item-action"></button>
 			</template>
 		</div>
 	</div>
 </div>
-
+-->
 
 <div>
 	<!-- Booking-request -->
