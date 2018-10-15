@@ -5,6 +5,8 @@ base.changeLocation = function(url) {
 base.homeController = function() {
     var model = [];
 	var currentUser = 8; 
+	var reqModel = [];
+	var joinedModel = [];
 
     var view = {
         render: function() {
@@ -12,10 +14,10 @@ base.homeController = function() {
         },
         renderReq: function(reqes){
 			
-        //reqes.forEach(d => view.renderRequest(d));
+        // reqes.forEach(d => view.renderRequest(d));
 		var i;
 		for(i = 0;i<reqes.length;i++){
-			//view.renderRequest(reqes[i]);
+			// view.renderRequest(reqes[i]);
 			var fromUser = reqes[i].fromUserID;
 			var routeID = reqes[i].routeID;
 			base.rest.getUser(fromUser).then(function(user) {
@@ -25,6 +27,12 @@ base.homeController = function() {
 			});
 			}
         },
+        
+        renderJoined: function(){
+        joinedModel.forEach(d => view.renderJoined(d));	
+
+        },
+        
         renderPart: function(route){
         		var t = view.template();   
         		view.update(t.content.querySelector('tr'), route);
@@ -42,26 +50,35 @@ base.homeController = function() {
 				var buttons = trElement.querySelectorAll('button');
 				
 				buttons[0].onclick = function(event){
-					//IMPLEMENT ACCEPT BOOKREQ HERE
+					// IMPLEMENT ACCEPT BOOKREQ HERE
 					console.log("Accept");
 				};
 				buttons[1].onclick = function(event){
-					//IMPLEMENT DENY BOOKREQ HERE
+					// IMPLEMENT DENY BOOKREQ HERE
 					console.log("Deny");
 				};
         },
+        
+        renderJoined: function(joined){
+   			var t = view.joinedTemplate();   
+    		view.joinedUpdate(t.content.querySelector('tr'), joined);
+    		var clone = document.importNode(t.content, true);
+            t.parentElement.appendChild(clone);
+    },
+    
+    
         update: function(trElement, route) {
         	 var tds = trElement.children;
-        	 //console.log(route);
         	 tds[0].textContent = route.location;
         	 tds[1].textContent = route.destination;
-        	 //console.log(route.freeSeats);
+        	 // console.log(route.freeSeats);
         	 tds[2].textContent = route.freeSeats;
         	 tds[3].textContent = route.timeOfDeparture;
         	 tds[4].textContent = route.timeOfArrival;
 
             
-             //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
+             // tds[3].textContent = e.toLocaleDateString() + ' ' +
+				// e.toLocaleTimeString();
         }, 
         reqUpdate: function(trElement,user,route) {
                 		var tds = trElement.children;
@@ -75,11 +92,26 @@ base.homeController = function() {
         
         
         },
+        
+        joinedUpdate: function(trElement, joined) {
+   	 
+        	var tds = trElement.children;
+        	tds[0].textContent = joined.location;
+        	tds[1].textContent = joined.destination;
+        	tds[2].textContent = joined.freeSeats;
+        	tds[3].textContent = joined.timeOfDeparture;
+        	tds[4].textContent = joined.timeOfArrival;
+        },
+        
+        
         template: function(){
         	return document.getElementById('createdRoutes-template');
         },
         reqTemplate: function(){
         	return document.getElementById('bookingRequest-template');
+        },
+        joinedTemplate: function(){
+        	return document.getElementById('joineddRoutes-template');
         },
         getUser: function(id){
                 	base.rest.getUser(id).then(function(usr){
@@ -93,23 +125,40 @@ base.homeController = function() {
     var controller = {
 		load: function() {
 			base.rest.getLoggedInUser().then(function(user) {
-				//console.log(user);
+				// console.log(user);
                 currentUser = user;		// Hämtar user
-				base.rest.getRoutes(currentUser.userName).then(function(routes) { // Hämtar sen route när man har usern
+				base.rest.getRoutes(currentUser.userName).then(function(routes) { // Hämtar
+																					// sen
+																					// route
+																					// när
+																					// man
+																					// har
+																					// usern
 	                model = routes;
 	                view.render()
 	            }); 
+
+	           base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
+	            	reqModel = bookingRequests;
+	            	view.renderReq();
+	            });
+	            /*
+				 * base.rest.getRoutes(null,currentUser.userName).then(function(joined) {
+				 * joinedModel = joined; view.renderJoined(); });
+				 */
+	            
+	   
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
 	            	view.renderReq(bookingRequests);
 	            }); 
-	            			      
-            });
+	            			                  });
 
 		},
 		
     };
     return controller;
 };
+
 
 
 
