@@ -142,6 +142,11 @@ base.rest = (function() {
         		.then(response => response.json())
         		.then(r => objOrError(r, Route));
         },
+		getRoute: function(routeID) {
+            return baseFetch('/rest/route/' + routeID) // tagit bort + id
+                .then(response => response.json())
+                .then(r => new Route(r));
+        },
         getRoutes: function(driverUserName = null, passengerUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
         	var routeFilterObj = { driverUserName: driverUserName, passengerUserName: passengerUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
         	return baseFetch('rest/route/filter', {

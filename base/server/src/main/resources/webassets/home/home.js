@@ -5,14 +5,25 @@ base.changeLocation = function(url) {
 base.homeController = function() {
     var model = [];
 	var currentUser = 8; 
-	var reqModel = [];
 
     var view = {
         render: function() {
         model.forEach(d => view.renderPart(d)); 
         },
-        renderReq: function(){
-        reqModel.forEach(d => view.renderRequest(d));
+        renderReq: function(reqes){
+			
+        //reqes.forEach(d => view.renderRequest(d));
+		var i;
+		for(i = 0;i<reqes.length;i++){
+			//view.renderRequest(reqes[i]);
+			var fromUser = reqes[i].fromUserID;
+			var routeID = reqes[i].routeID;
+			base.rest.getUser(fromUser).then(function(user) {
+				base.rest.getRoute(routeID).then(function(route) {
+				view.renderRequest(user,route);
+				});
+			});
+			}
         },
         renderPart: function(route){
         		var t = view.template();   
@@ -21,11 +32,23 @@ base.homeController = function() {
                 t.parentElement.appendChild(clone);
 
         },
-        renderRequest: function(reqs){
+        renderRequest: function(user,route){
        			var t = view.reqTemplate();   
-        		view.reqUpdate(t.content.querySelector('tr'), reqs);
+        		view.reqUpdate(t.content.querySelector('tr'), user,route);
         		var clone = document.importNode(t.content, true);
                 t.parentElement.appendChild(clone);
+				
+				var trElement = document.querySelector('#bookingRequest-template').parentElement.querySelector('tr:last-of-type');
+				var buttons = trElement.querySelectorAll('button');
+				
+				buttons[0].onclick = function(event){
+					//IMPLEMENT ACCEPT BOOKREQ HERE
+					console.log("Accept");
+				};
+				buttons[1].onclick = function(event){
+					//IMPLEMENT DENY BOOKREQ HERE
+					console.log("Deny");
+				};
         },
         update: function(trElement, route) {
         	 var tds = trElement.children;
@@ -40,20 +63,15 @@ base.homeController = function() {
             
              //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         }, 
-        reqUpdate: function(trElement,request) {
+        reqUpdate: function(trElement,user,route) {
                 		var tds = trElement.children;
-        	//get user
-        	var fromUser = view.getUser(request.fromUserID);
-        	console.log(fromUser);
-        	//get Route
-        		//var route = base.rest.getRoute(request.routeID)
-        		//console.log(route);
+        	
         		
-			tds[0].textContent = request.fromUserID;
+			tds[0].textContent = user.userName;
 			
-			tds[1].textContent = "TBA";
-			tds[2].textContent = "TBA";
-			tds[3].textContent = "TBA";
+			tds[1].textContent = route.destination;
+			tds[2].textContent = route.timeOfDeparture;
+			tds[3].textContent = route.bookingEndTimeModifier;
         
         
         },
@@ -82,8 +100,7 @@ base.homeController = function() {
 	                view.render()
 	            }); 
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
-	            	reqModel = bookingRequests;
-	            	view.renderReq();
+	            	view.renderReq(bookingRequests);
 	            }); 
 	            			      
             });
