@@ -145,8 +145,7 @@ public class RouteDataAccess extends DataAccess<Route> {
     }
     
     public List<Route> getRoutesWithPassenger(int userID){
-    	return query("SELECT * FROM Routes " +
-                "WHERE passengers LIKE '%' + ? + '%", userID); 
+    	return query("SELECT * FROM Routes WHERE passengers LIKE ?", Integer.toString(userID)); 
     }
     
 }

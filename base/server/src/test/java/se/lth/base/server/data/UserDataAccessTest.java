@@ -40,9 +40,9 @@ public class UserDataAccessTest extends BaseDataAccessTest {
         String passwordHash = userDao.generatePasswordHash(salt,test.getPassword()).toString();
         List<User> users = userDao.getUsers();
         assertTrue(users.stream().anyMatch(u -> u.getName().equals("userName") && u.getPassword().equals(passwordHash) && u.getPhoneNr().equals("0700 000 000") && u.getIsAdmin() == false));
-        System.out.println(passwordHash + users.get(2).getPassword());     
+        System.out.println(passwordHash + users.get(2).getPassword());
+        
     }
-    
     	@Test
 		public void updateUser() {
 			User test1 = userDao.addUser("userName", "password", "0070 000 000", false, "", "");
