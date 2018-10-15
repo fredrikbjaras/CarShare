@@ -10,24 +10,27 @@ base.homeController = function() {
     var view = {
         render: function() {
         	model.forEach(d => view.renderPart(d)); 
-        	console.log(model[1]);
-        	console.log(model);
         },
         renderPart: function(route){
         		var t = view.template();   
-        		console.log(route);
         		view.update(t.content.querySelector('tr'), route);
+        		var clone = document.importNode(t.content, true);
+                t.parentElement.appendChild(clone);
 
         },
 
         update: function(trElement, route) {
         	 var tds = trElement.children;
-        	 tds[0].textContent = route.location;
         	 console.log(route);
+        	 tds[0].textContent = route.location;
         	 tds[1].textContent = route.destination;
-             tds[2] = route.freeSeats;
-             tds[3] = route.timeOfDeparture;
-        	 //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
+        	 console.log(route.freeSeats);
+        	 tds[2].textContent = route.freeSeats;
+        	 tds[3].textContent = route.timeOfDeparture;
+        	 tds[4].textContent = route.timeOfArrival;
+
+            
+             //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         	
         },
         
