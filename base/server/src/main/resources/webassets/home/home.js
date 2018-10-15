@@ -9,22 +9,25 @@ base.homeController = function() {
 
     var view = {
         render: function() {
-        	model.forEach(d => view.renderPart(d)); // KOlla upp vad d är!
+        	model.forEach(d => view.renderPart(d)); 
+        	console.log(model[1]);
+        	console.log(model);
         },
-        renderpart: function(){
-        	var t = view.template();
-        	 view.update(t.content.querySelector('tr'), route);
+        renderPart: function(route){
+        		var t = view.template();   
+        		console.log(route);
+        		view.update(t.content.querySelector('tr'), route);
 
         },
 
         update: function(trElement, route) {
         	 var tds = trElement.children;
         	 tds[0].textContent = route.location;
+        	 console.log(route);
         	 tds[1].textContent = route.destination;
-             var d = route.timeOfDeparture;
-             tds[2].textContent = d.toLocaleDateString() + ' ' + d.toLocaleTimeString();
-             var e = route.timeOfArrival;
-        	 tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
+             tds[2] = route.freeSeats;
+             tds[3] = route.timeOfDeparture;
+        	 //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         	
         },
         
@@ -38,10 +41,9 @@ base.homeController = function() {
     var controller = {
 		load: function() {
 			base.rest.getLoggedInUser().then(function(user) {
-				console.log(user);
+				//console.log(user);
                 currentUser = user;		// Hämtar user
-				console.log(user.userID);	 
-				base.rest.getRoutes(currentUser.userID).then(function(routes) { // Hämtar sen route när man har usern
+				base.rest.getRoutes(currentUser.userName).then(function(routes) { // Hämtar sen route när man har usern
 	                model = routes;
 	                view.render();
 	            });        
