@@ -23,8 +23,8 @@ base.rest = (function() {
         };
     };
 
-    var Route = function(json) { // hejHej
-        //TODO
+    var Route = function(json) { 
+        Object.assign(this, json);
     };
 
     var BookingRequest = function(json) {
