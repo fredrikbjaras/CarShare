@@ -5,7 +5,22 @@
 <title>Home</title>
 <!-- title: username ? -->
 </head>
+<style>
+.button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: .375rem .75rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 2px 2px;
+    cursor: pointer;
+}
 
+.button2 {background-color: #f44336;} /* Red */
+</style>
 <body>
 	<h1>Home</h1>
 
@@ -68,9 +83,10 @@
 			<thead>
 				<tr>
 					<th scope="col">From</th>
-					<th>Route destination</th>
-					<th>Time of route</th>
-					<th>Expires</th>
+					<th>Destination</th>
+					<th>Departure</th>
+					<th>Valid until</th>
+					<th>Accept request?</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -80,6 +96,11 @@
 					<td></td>
 					<td></td>
 					<td></td>
+					<td>
+					<div class="btn-group">
+					<button class="button" id="acc">Accept</button>
+					<button class="button button2" id="deny">Deny</button>
+					</div></td>
 				</tr>
 				</template>
 			</tbody>
