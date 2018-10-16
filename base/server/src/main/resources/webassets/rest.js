@@ -142,8 +142,13 @@ base.rest = (function() {
         		.then(response => response.json())
         		.then(r => objOrError(r, Route));
         },
-        getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null) {
-        	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival };
+		getRoute: function(routeID) {
+            return baseFetch('/rest/route/' + routeID) // tagit bort + id
+                .then(response => response.json())
+                .then(r => new Route(r));
+        },
+        getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null, passengerUserName = null) {
+        	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival, passengerUserName: passengerUserName};
         	return baseFetch('rest/route/filter', {
             		method: 'POST',
             		body: JSON.stringify(routeFilterObj),
@@ -160,8 +165,17 @@ base.rest = (function() {
             .then(response => response.json())
             .then(br => objOrError(br, BookingRequest));
         },
-        deleteBookingRequest: function(bookingReqID) {
-            return baseFetch('/rest/booking-request/'+bookingReqID, {method: 'DELETE'});
+        getRequests: function(toUserID = -1, fromUserID = -1, routeID = -1, accepted = false) {
+        	var requestFilterObj = { routeID: routeID, fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
+        	return baseFetch('rest/booking-request/filter', {
+            		method: 'POST',
+            		body: JSON.stringify(requestFilterObj),
+            		headers: jsonHeader})
+            	.then(response => response.json())
+            	.then(requests => requests.map(r => new BookingRequest(r)));
+        },
+		deleteRequest: function(requestID) {
+            return baseFetch('/rest/booking-request/' + requestID, {method: 'DELETE'});
         },
         getFoos: function(userID) {
             var postfix = "";

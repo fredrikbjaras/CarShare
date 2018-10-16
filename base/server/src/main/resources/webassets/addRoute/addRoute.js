@@ -51,7 +51,6 @@ base.addRouteController = function() {
             departureTime += hour.options[hour.selectedIndex].text + ":";
             minute = document.getElementById('min2')
             departureTime += minute.options[minute.selectedIndex].text + ":00";
-
             limit = document.getElementById('limit')
             limitTime = limit.options[limit.selectedIndex].text + ";";
             console.log(thisUser.userID);
@@ -64,7 +63,8 @@ base.addRouteController = function() {
             console.log(limitTime);
         	base.rest.addRoute(thisUser.userID, model.origin, model.destination, arrivalTime, departureTime, model.passengers, model.description, limitTime).then(function(obj) {
                 if (obj.error) {
-                    alert(obj.message);
+                console.log(obj);
+                    alert(obj);
                 } else {
                 	alert("Route added");
                 }

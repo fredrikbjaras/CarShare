@@ -170,13 +170,15 @@ public class UserResource {
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
 	public User getUser(@PathParam("id") int userId) {
 		try {
-			if (user.getIsAdmin() || user.getUserID() == userId) {
+			User u = userDao.getUser(userId);
+			return u;
+			/*if (user.getIsAdmin() || user.getUserID() == userId) {
 				return userDao.getUser(userId);
 			} else if (userDao.sharesRoute(user.getUserID(), userId)) {
 				return new User(-1, null, null, userDao.getUser(userId).getPhoneNr(), false);
 			} else {
 				throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
-			}
+			}*/
 		} catch (DataAccessException e) {
 			// Man kanske inte behöver if-else-satserna i catch-blocket.
 			if (user.getIsAdmin() || user.getUserID() == userId || userDao.sharesRoute(user.getUserID(), userId)) {

@@ -86,7 +86,14 @@ public class BookingRequestResource {
 		if (bookDao.getBookingRequests(requestID) == null) {
 			throw new WebApplicationException("Booking request not found", Response.Status.BAD_REQUEST);
 		} else {
-			return bookDao.getBookingRequests(requestID);
+			BookingRequest request = bookDao.getBookingRequests(requestID);
+			if (user.getIsAdmin() || request.getFromUserID() == user.getUserID()
+					|| request.getToUserID() == user.getUserID()) {
+				return request;
+			} else {
+				throw new WebApplicationException("You don't have perssmision to see this Booking Request",
+						Response.Status.BAD_REQUEST);
+			}
 		}
 	}
 	
@@ -97,28 +104,45 @@ public class BookingRequestResource {
 	public List<BookingRequest> getRequests(BookingRequestFilter filter) {
 		if (user.getIsAdmin()) {
 			switch (filter.getFilter()) {
-				case 1: 
-					return bookDao.getBookingRequestsByRoute(filter.getRouteID());	
-				case 2:
-					return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
-				case 3:
-					return bookDao.getBookingRequestsToUser(filter.getToUserID());
-				default:
-					return bookDao.getAllBookingRequests();
-			}
-		} if (user.getIsAdmin()) {
-			switch (filter.getFilter()) {
-			case 1: 
+			case 1:
 				return bookDao.getBookingRequestsByRoute(filter.getRouteID());
 			case 2:
 				return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
 			case 3:
 				return bookDao.getBookingRequestsToUser(filter.getToUserID());
 			default:
-				throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
+				return bookDao.getAllBookingRequests();
 			}
-		} 	
-		throw new WebApplicationException("Something is wonky with the filter parameters", Response.Status.BAD_REQUEST);
+		} else {
+			switch (filter.getFilter()) {
+			case 1:
+				if (routeDao.getRoute(filter.getRouteID()).getDriverID() == user.getUserID()) {
+					return bookDao.getBookingRequestsByRoute(filter.getRouteID());
+				} else {
+					throw new WebApplicationException("You are not the Driver of this Route",
+							Response.Status.BAD_REQUEST);
+				}
+			case 2:
+				if (filter.getFromUserID() == user.getUserID()) {
+					return bookDao.getBookingRequestsFromUser(filter.getFromUserID());
+				} else {
+					throw new WebApplicationException("You are not the User whom these BookingRequest was sent from",
+							Response.Status.BAD_REQUEST);
+				}
+			case 3:
+				if (filter.getToUserID() == user.getUserID()) {
+					return bookDao.getBookingRequestsToUser(filter.getToUserID());
+				} 
+				else {
+					throw new WebApplicationException("You are not the User whom these BookingRequest was sent to",
+							Response.Status.BAD_REQUEST);
+				}
+			default:
+				throw new WebApplicationException("You don't have permission to see these requests",
+						Response.Status.BAD_REQUEST);
+
+			}
+		}
 	}
 	
 	/*
@@ -153,7 +177,8 @@ public class BookingRequestResource {
 			}
 			throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 		}
-		if (bookDao.getBookingRequests(requestID).getFromUserID() == user.getUserID() || user.getIsAdmin()) {
+		if (bookDao.getBookingRequests(requestID).getFromUserID() == user.getUserID() || user.getIsAdmin()
+				||bookDao.getBookingRequests(requestID).getToUserID() == user.getUserID()) {
 			bookDao.deleteBookingRequests(requestID);
 			return true;
 		}
