@@ -240,4 +240,18 @@ public class RouteResource {
 		}
 		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 	}
+	
+	@Path("{RouteID}")
+	@PermitAll
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public boolean addPassenger(int routeID, int passengerID) {
+		if(user.getIsAdmin() || routeDao.getRoute(routeID).getDriverID() == user.getUserID()) {
+		return routeDao.addPassengerToRoute(routeID,passengerID);
+		}
+		else {
+			throw new WebApplicationException("You are not allowed to edit this route", Response.Status.BAD_REQUEST);
+		}
+	}
 }
