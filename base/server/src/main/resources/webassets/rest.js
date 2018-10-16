@@ -23,12 +23,12 @@ base.rest = (function() {
         };
     };
 
-    var Route = function(json) { 
+    var Route = function(json) {
         Object.assign(this, json);
     };
 
     var BookingRequest = function(json) {
-        //TODO
+        Object.assign(this, json)
     };
 
     var FlagReport = function(json) {
@@ -150,6 +150,18 @@ base.rest = (function() {
             		headers: jsonHeader})
             	.then(response => response.json())
             	.then(routes => routes.map(r => new Route(r)));
+        },
+        addBookingRequest: function(routeID, fromUserID, toUserID) {
+            bookingRequestObj = {routeID: routeID, fromUserID: fromUserID, toUserID: toUserID}
+            return baseFetch('/rest/booking-request', {
+                method: 'POST',
+                body: JSON.stringify(bookingRequestObj),
+                headers: jsonHeader})
+            .then(response => response.json())
+            .then(br => objOrError(br, BookingRequest));
+        },
+        deleteBookingRequest: function(bookingReqID) {
+            return baseFetch('/rest/booking-request/'+bookingReqID, {method: 'DELETE'});
         },
         getFoos: function(userID) {
             var postfix = "";
