@@ -5,7 +5,9 @@ base.changeLocation = function(url) {
 base.homeController = function() {
     var model = [];
 	var currentUser = 8; 
-
+	var joinedModel = [];
+	
+	
     var view = {
         render: function() {
         model.forEach(d => view.renderPart(d)); 
@@ -28,6 +30,12 @@ base.homeController = function() {
 			}
 		}
         },
+        
+        renderJoined: function(){
+            joinedModel.forEach(d => view.renderPartJoined(d));	
+             },
+             
+           
         renderPart: function(route){
         		var t = view.template();   
         		view.update(t.content.querySelector('tr'), route);
@@ -35,6 +43,15 @@ base.homeController = function() {
                 t.parentElement.appendChild(clone);
 
         },
+        
+        renderPartJoined: function(joined){
+   			var t = view.joinedTemplate();   
+    		view.joinedUpdate(t.content.querySelector('tr'), joined);
+    		var clone = document.importNode(t.content, true);
+            t.parentElement.appendChild(clone);
+    },
+        
+        
         renderRequest: function(req,user,route){
        			var t = view.reqTemplate();   
         		view.reqUpdate(t.content.querySelector('tr'), user,route);
@@ -93,12 +110,30 @@ base.homeController = function() {
         
         
         },
+        
+        
+        joinedUpdate: function(trElement, joined) {
+          	 
+        	var tds = trElement.children;
+        	tds[0].textContent = joined.location;
+        	tds[1].textContent = joined.destination;
+        	tds[2].textContent = joined.freeSeats;
+        	tds[3].textContent = joined.timeOfDeparture;
+        	tds[4].textContent = joined.timeOfArrival;
+        },
+        
         template: function(){
         	return document.getElementById('createdRoutes-template');
         },
         reqTemplate: function(){
         	return document.getElementById('bookingRequest-template');
         },
+        
+        joinedTemplate: function(){
+        	return document.getElementById('joineddRoutes-template');
+        },
+        
+        
         getUser: function(id){
                 	base.rest.getUser(id).then(function(usr){
 					return usr;
@@ -119,6 +154,12 @@ base.homeController = function() {
 	            }); 
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
 	            	view.renderReq(bookingRequests);
+	            });        
+	            
+	            base.rest.getRoutes(null,currentUser.userName).then(function(joinedRoutes) {
+	            	 joinedModel = joinedRoutes;
+	            	 console.log(joinedRoutes);
+	            	view.renderJoined(joinedModel);
 	            }); 
 	            			      
             });
