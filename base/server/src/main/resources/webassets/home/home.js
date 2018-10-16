@@ -66,7 +66,11 @@ base.homeController = function() {
 					console.log("Accept");
 					
 					//Add Passenger
-					base.rest.deleteRequest
+					base.rest.addPassenger(route.routeID,user.userID).then(function(deleted){
+						if(deleted.ok==false){
+							alert("No empty seats");
+						}
+					});
 					
 					//Remove request and, if successfull, row in table
 					base.rest.deleteRequest(req.bookingReqID).then(function(deleted){

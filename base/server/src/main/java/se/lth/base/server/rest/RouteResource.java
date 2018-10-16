@@ -241,12 +241,12 @@ public class RouteResource {
 		throw new WebApplicationException("Requirements not met", Response.Status.BAD_REQUEST);
 	}
 	
-	@Path("{RouteID}")
+	@Path("{RouteID}/passenger/{passengerID}")
 	@PermitAll
-	@PUT
+	@POST
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public boolean addPassenger(int routeID, int passengerID) {
+	//@Consumes(MediaType.APPLICATION_JSON + ";charset=utf-8")
+	public boolean addPassenger(@PathParam("RouteID") int routeID, @PathParam("passengerID") int passengerID) {
 		if(user.getIsAdmin() || routeDao.getRoute(routeID).getDriverID() == user.getUserID()) {
 		return routeDao.addPassengerToRoute(routeID,passengerID);
 		}

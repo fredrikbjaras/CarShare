@@ -156,6 +156,9 @@ base.rest = (function() {
             	.then(response => response.json())
             	.then(routes => routes.map(r => new Route(r)));
         },
+        addPassenger: function(routeID,passengerID) {
+            return baseFetch('/rest/route/' + routeID + '/passenger/' + passengerID, {method: 'POST',});
+        },
         getRequests: function(toUserID = null,fromUserID = null,routeID = null,accepted = null) {
         var requestFilterObj = { routeID: routeID,fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
         	return baseFetch('rest/booking-request/filter', {
