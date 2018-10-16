@@ -9,11 +9,11 @@ public class BookingRequest {
 	private boolean accepted;
 	
     public BookingRequest(int bookingReqID, int routeID, int fromUserID, int toUserID, boolean accepted) {
-    this.bookingReqID = bookingReqID;
-    this.routeID = routeID;
-    this.fromUserID = fromUserID;
-    this.toUserID = toUserID;
-    this.accepted = accepted;
+	    this.bookingReqID = bookingReqID;
+	    this.routeID = routeID;
+	    this.fromUserID = fromUserID;
+	    this.toUserID = toUserID;
+	    this.accepted = accepted;
     }
     
     public int getBookingReqID() {

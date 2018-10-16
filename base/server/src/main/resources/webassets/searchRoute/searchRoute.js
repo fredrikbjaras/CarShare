@@ -25,8 +25,10 @@ base.searchRouteController = function() {
 		        	tds[3].innerHTML = route.timeOfDeparture;
 		        	tds[4].innerHTML = route.timeOfArrival;
 		        	tds[5].innerHTML = route.freeSeats;
-		        	var bookBtn = tds[6].getElementsByTagName('button')[0];
-		        	bookBtn.onclick = controller.submitBookingRequest(route.routeID, route.driverID);
+		        	tds[7].innerHTML = route.routeID;
+		        	var bookBtn = tds[6].querySelectorAll('button')[0];
+		        	bookBtn.setAttribute('onclick', "base.rest.addBookingRequest(" + route.routeID + ", " + route.driverID + ", " + model.currUser.userID + ")");
+		        	console.log(bookBtn);
 		        },
 		        render: function() {
 		        	console.log("render()");
@@ -76,13 +78,16 @@ base.searchRouteController = function() {
 		            	var fromUserID = user.userID;
 	                	base.rest.addBookingRequest(routeID, fromUserID, driverID);
 		            });
-		            return false;
 	            },
 
 		        load: function() {
 		        	console.log("load()");
 		        	document.getElementById('route-search-form').onsubmit = controller.searchRoute;
-		            document.getElementById('booking-request-form').onsubmit = controller.submitBookingRequest;
+		        	base.rest.getLoggedInUser().then(function(user) {		        	
+			        	console.log(user);
+			        	model.currUser = user;
+			        	console.log(model.currUser)
+		        	});
 
 		        }
 		    };
