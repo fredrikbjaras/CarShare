@@ -44,16 +44,18 @@ public class BookingRequestResource {
 	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public boolean addRequest(BookingRequest request) { 
+	public BookingRequest addRequest(BookingRequest request) { 
 		Route route = routeDao.getRoute(request.getRouteID());
 		String[] passengers = route.getPassengers().split(";");
 		User fromUser = userDao.getUser(request.getFromUserID());
 		User toUser = userDao.getUser(request.getToUserID());
 		
 		for(String passenger : passengers) {
-			if(fromUser.getUserID() == Integer.parseInt(passenger)) {
-				throw new WebApplicationException("This user is already on the specified route. ",
-						Response.Status.BAD_REQUEST);
+			if (passenger != null && !passenger.equals("")) {				
+				if (fromUser.getUserID() == Integer.parseInt(passenger)) {
+					throw new WebApplicationException("This user is already on the specified route. ",
+							Response.Status.BAD_REQUEST);
+				}
 			}
 		}
 		
@@ -73,9 +75,8 @@ public class BookingRequestResource {
 		
 		
 		//success
-		bookDao.addBookingRequests(route.getRouteID(), fromUser.getUserID(),
+		return bookDao.addBookingRequests(route.getRouteID(), fromUser.getUserID(),
 				toUser.getUserID(), request.getAccepted());
-		return true;
 	}
 	@Path("{BookingRequestID}")
 	@GET
@@ -154,14 +155,13 @@ public class BookingRequestResource {
 	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charsert=utf-8")
-	public boolean putRequest(BookingRequest requestUpdate) { 
+	public BookingRequest putRequest(BookingRequest requestUpdate) { 
 		BookingRequest oldRequest= bookDao.getBookingRequests(requestUpdate.getBookingReqID());
 		if(user.getUserID() != oldRequest.getFromUserID() && !user.getIsAdmin()) {
 			throw new WebApplicationException("Unable to edit others' requests. ", Response.Status.BAD_REQUEST);
 		}
-		bookDao.updateBookingRequests(oldRequest.getBookingReqID(), oldRequest.getRouteID(), 
-				oldRequest.getFromUserID(), oldRequest.getToUserID(), oldRequest.getAccepted());
-		return true; 
+		return bookDao.updateBookingRequests(oldRequest.getBookingReqID(), oldRequest.getRouteID(), 
+				oldRequest.getFromUserID(), oldRequest.getToUserID(), oldRequest.getAccepted()); 
 	}
 	
 	@Path("{RequestID}")

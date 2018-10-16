@@ -23,7 +23,7 @@ base.rest = (function() {
         };
     };
 
-    var Route = function(json) { 
+    var Route = function(json) {
         Object.assign(this, json);
     };
 
@@ -161,6 +161,17 @@ base.rest = (function() {
         },
         getRequests: function(toUserID = null,fromUserID = null,routeID = null,accepted = null) {
         var requestFilterObj = { routeID: routeID,fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
+        addBookingRequest: function(routeID, fromUserID, toUserID) {
+            bookingRequestObj = {routeID: routeID, fromUserID: fromUserID, toUserID: toUserID}
+            return baseFetch('/rest/booking-request', {
+                method: 'POST',
+                body: JSON.stringify(bookingRequestObj),
+                headers: jsonHeader})
+            .then(response => response.json())
+            .then(br => objOrError(br, BookingRequest));
+        },
+        getRequests: function(toUserID = -1, fromUserID = -1, routeID = -1, accepted = false) {
+        	var requestFilterObj = { routeID: routeID, fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
         	return baseFetch('rest/booking-request/filter', {
             		method: 'POST',
             		body: JSON.stringify(requestFilterObj),

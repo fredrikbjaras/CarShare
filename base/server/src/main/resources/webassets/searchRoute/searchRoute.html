@@ -33,17 +33,22 @@
 				<th>Departure</th>
 				<th>Arrival</th>
 				<th>Free seats</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			<template id="route-template">
 				<tr>
+					<td id="driver-id"></td>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
 					<td></td>
-					<td></td>
+					<td>
+						<button class="btn btn-primary">Book</button>
+					</td>
+					<td id="route-id" style="display: none"></td>
 				</tr>
 			</template>
 		</tbody>
@@ -51,14 +56,13 @@
 </div>
 
 
-<!-- Booking-request -->
+<!-- Booking-request
 <div>
 	<form class="form-horizontal" id="booking-request-form"
 		style="margin-top: 60px; display: block">
 		<div class="form-group row show-edit">
 			<button id="bookRoute" type="submit"
 				class="ml-auto mr-3 btn btn-secondary">Book route</button>
-			<!-- <label class="col-md-2 col-form-label" >Search</label> -->
 			<div class="col-md-10">
 				<input type="text" class="form-control" id="route-input"
 					placeholder="Route-id for selected route"> <input type="text"
@@ -68,5 +72,5 @@
 		</div>
 	</form>
 </div>
-
+-->
 
