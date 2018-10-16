@@ -159,8 +159,6 @@ base.rest = (function() {
         addPassenger: function(routeID,passengerID) {
             return baseFetch('/rest/route/' + routeID + '/passenger/' + passengerID, {method: 'POST',});
         },
-        getRequests: function(toUserID = null,fromUserID = null,routeID = null,accepted = null) {
-        var requestFilterObj = { routeID: routeID,fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
         addBookingRequest: function(routeID, fromUserID, toUserID) {
             bookingRequestObj = {routeID: routeID, fromUserID: fromUserID, toUserID: toUserID}
             return baseFetch('/rest/booking-request', {
@@ -170,8 +168,8 @@ base.rest = (function() {
             .then(response => response.json())
             .then(br => objOrError(br, BookingRequest));
         },
-        getRequests: function(toUserID = -1, fromUserID = -1, routeID = -1, accepted = false) {
-        	var requestFilterObj = { routeID: routeID, fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
+        getRequests: function(toUserID = null,fromUserID = null,routeID = null,accepted = null) {
+        var requestFilterObj = { routeID: routeID,fromUserID: fromUserID, toUserID: toUserID, accepted: accepted };
         	return baseFetch('rest/booking-request/filter', {
             		method: 'POST',
             		body: JSON.stringify(requestFilterObj),
