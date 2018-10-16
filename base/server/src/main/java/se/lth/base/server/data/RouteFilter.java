@@ -11,13 +11,13 @@ public class RouteFilter {
 		private final String departureTime;
 		private final String arrivalTime;
 	
-		public RouteFilter(String driverUserName, String passengerUserName, String location, String destination,String departureTime, String arrivalTime) {
+		public RouteFilter(String driverUserName, String location, String destination,String timeOfDeparture, String timeOfArrival, String passengerUserName) {
 			this.driverUserName = driverUserName;
 			this.passengerUserName = passengerUserName;
 			this.location = location;
 			this.destination = destination;
-			this.departureTime = departureTime;
-			this.arrivalTime = arrivalTime;
+			this.departureTime = timeOfDeparture;
+			this.arrivalTime = timeOfArrival;
 		}
 		
 		public String getDriverUserName() {
