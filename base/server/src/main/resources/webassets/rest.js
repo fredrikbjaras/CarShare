@@ -148,6 +148,12 @@ base.rest = (function() {
                 .then(r => new Route(r));
         },
         getRoutes: function(driverUserName = null, location = null, destination = null, timeOfDeparture = null, timeOfArrival = null, passengerUserName = null) {
+            driverUserName = (driverUserName === '') ? null : driverUserName;
+            location = (location === '') ? null : location;
+            destination = (destination === '') ? null : destination;
+            timeOfDeparture = (timeOfDeparture === '') ? null : timeOfDeparture;
+            timeOfArrival = (timeOfArrival === '') ? null : timeOfArrival;
+            passengerUserName = (passengerUserName === '') ? null : passengerUserName;
         	var routeFilterObj = { driverUserName: driverUserName, location: location, destination: destination, timeOfDeparture: timeOfDeparture, timeOfArrival: timeOfArrival, passengerUserName: passengerUserName};
         	return baseFetch('rest/route/filter', {
             		method: 'POST',

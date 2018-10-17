@@ -27,7 +27,12 @@ base.searchRouteController = function() {
 		        	tds[5].innerHTML = route.freeSeats;
 		        	tds[7].innerHTML = route.routeID;
 		        	var bookBtn = tds[6].querySelectorAll('button')[0];
-		        	bookBtn.setAttribute('onclick', "base.rest.addBookingRequest(" + route.routeID + ", " + route.driverID + ", " + model.currUser.userID + ")");
+		        	bookBtn.setAttribute('id', 'book' + route.routeID);
+		        	var routeID = route.routeID;
+		        	var fromUserID = model.currentUser.userID;
+		        	var driverID = route.driverID;
+		        	var bookFunc = "console.log('click');" + "base.rest.addBookingRequest(" + routeID + ", " + fromUserID + ", " + driverID + ").then(function(bookingReq) {if(bookingReq === undefined) {alert(\"Couldn't make booking request.\");} else {alert('Booking request sent.');} document.getElementById('book" + routeID +"').disabled = true;});";
+		        	bookBtn.setAttribute('onclick', bookFunc);
 		        	console.log(bookBtn);
 		        },
 		        render: function() {
@@ -62,6 +67,7 @@ base.searchRouteController = function() {
 	        		var destination = document.getElementById('destination-input').value;
 	        		var departureTime = document.getElementById('departure-input').value;
 	        		var arrivalTime = document.getElementById('arrival-input').value;
+	        		console.log(driverName + ", " + origin + ", " + destination + ", " + departureTime + ", " + arrivalTime);
 	        		base.rest.getRoutes(driverName, origin, destination, departureTime, arrivalTime).then(function(routes) {
 	        			console.log("Inside getRoutes REST call")
 	        			routes.forEach(route => console.log(route));
@@ -83,10 +89,10 @@ base.searchRouteController = function() {
 		        load: function() {
 		        	console.log("load()");
 		        	document.getElementById('route-search-form').onsubmit = controller.searchRoute;
-		        	base.rest.getLoggedInUser().then(function(user) {		        	
+		        	base.rest.getLoggedInUser().then(function(user) {
 			        	console.log(user);
-			        	model.currUser = user;
-			        	console.log(model.currUser)
+			        	model.currentUser = user;
+			        	console.log(model.currentUser)
 		        	});
 
 		        }
