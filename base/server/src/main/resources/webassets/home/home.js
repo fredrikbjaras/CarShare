@@ -69,6 +69,8 @@ base.homeController = function() {
 					base.rest.addPassenger(route.routeID,user.userID).then(function(deleted){
 						if(deleted.ok==false){
 							alert("No empty seats");
+						}else{
+						location.reload();
 						}
 					});
 					
@@ -160,7 +162,7 @@ base.homeController = function() {
 	            	view.renderReq(bookingRequests);
 	            });        
 	            
-	            base.rest.getRoutes(null,currentUser.userName).then(function(joinedRoutes) {
+	            base.rest.getRoutes(null,null,null,null,null,currentUser.userName).then(function(joinedRoutes) {
 	            	 joinedModel = joinedRoutes;
 	            	 console.log(joinedRoutes);
 	            	view.renderJoined(joinedModel);

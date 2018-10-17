@@ -55,7 +55,7 @@ CREATE TABLE Routes(routeID INT AUTO_INCREMENT NOT NULL,
 					);
 
 INSERT INTO Routes(routeID,driverID,freeSeats, location,destination,timeOfDeparture,timeOfArrival, passengers,description,bookingEndTime,recurring,finished) 
-	VALUES (1, 1000000001, 2, 'Här','Där', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),'','',CURRENT_TIMESTAMP(),'no',FALSE),
+	VALUES (1, 1000000001, 4, 'Här','Där', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(),'1000000000;','',CURRENT_TIMESTAMP(),'no',FALSE),
 		   (2, 1000000001, 3, 'Lund','Malmö', PARSEDATETIME('2020-01-02 09:00:00', 'yyyy-MM-dd HH:mm:ss'), PARSEDATETIME('2020-01-02 10:00:00', 'yyyy-MM-dd HH:mm:ss'),'','',PARSEDATETIME('2020-01-01 22:00:00', 'yyyy-MM-dd HH:mm:ss'),'no',FALSE);
 
 --Table used to store reports/flags 
