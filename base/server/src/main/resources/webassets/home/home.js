@@ -101,7 +101,7 @@ base.homeController = function() {
         	 //console.log(route.freeSeats);
         	 tds[2].textContent = route.freeSeats;
         	 tds[3].textContent = route.timeOfDeparture;
-        	 tds[4].textContent = route.timeOfArrival;
+        	// tds[4].textContent = route.timeOfArrival;
 
             
              //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
