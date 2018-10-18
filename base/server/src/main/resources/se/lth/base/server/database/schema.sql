@@ -16,7 +16,7 @@ CREATE TABLE User(userID INT AUTO_INCREMENT NOT NULL,
 				  isAdmin BOOLEAN NOT NULL DEFAULT FALSE,
 				  
                   PRIMARY KEY (userID),
-                  CHECK (LENGTH(userName) >= 8),
+                  CHECK (LENGTH(userName) >= 6),
 				  CHECK (LENGTH(userName) <= 16)
 				
 ); 
