@@ -185,6 +185,7 @@ public class UserDataAccess extends DataAccess<User> {
 	 *             if the username or password does not match.
 	 */
 	public Session authenticate(Credentials credentials) {
+		@SuppressWarnings("unused")
 		Supplier<DataAccessException> onError = () -> new DataAccessException("Username or password incorrect",
 				ErrorType.DATA_QUALITY);
 		long salt = new DataAccess<>(getDriverUrl(), (rs) -> rs.getLong(1))

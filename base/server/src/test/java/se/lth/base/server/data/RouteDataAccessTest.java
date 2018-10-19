@@ -98,17 +98,16 @@ public class RouteDataAccessTest {
 	@Test
 	public void getAllRoutesFromLocation() {
 		User test1= userDao.addUser("userName9", "password", "0700 000 000", false, "", "");
-		Route route1 = routeDao.addRoute(test1.getUserID(), 2, "Lund", "",  new Timestamp(1),  new Timestamp(2), "", "",  new Timestamp(3), 0, false);
-		Route route2 = routeDao.addRoute(test1.getUserID(), 2, "Lund", "",  new Timestamp(10),  new Timestamp(20), "", "",  new Timestamp(30), 0, false);
-		Route route3 = routeDao.addRoute(test1.getUserID(), 2, "Lund", "",  new Timestamp(11),  new Timestamp(21), "", "",  new Timestamp(31), 0, false);
-		List<Route> routes = routeDao.getAllRoutesFromLocation("Lund");
+		Route route1 = routeDao.addRoute(test1.getUserID(), 2, "genarp", "",  new Timestamp(1),  new Timestamp(2), "", "",  new Timestamp(3), 0, false);
+		Route route2 = routeDao.addRoute(test1.getUserID(), 2, "genarp", "",  new Timestamp(10),  new Timestamp(20), "", "",  new Timestamp(30), 0, false);
+		Route route3 = routeDao.addRoute(test1.getUserID(), 2, "genarp", "",  new Timestamp(11),  new Timestamp(21), "", "",  new Timestamp(31), 0, false);
+		List<Route> routes = routeDao.getAllRoutesFromLocation("genarp");
 		int counter = 0;
 		for (Route route : routes) {
-			if (route.getLocation().compareTo("Lund") == 0) {
+			if (route.getLocation().compareTo("genarp") == 0) {
 				counter++;
 			}
 		}
-		
 		assertEquals(3, counter);
 	}
 	@Test

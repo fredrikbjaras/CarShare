@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class RouteDataAccess extends DataAccess<Route> {
     private final UserDataAccess userDao = new UserDataAccess(Config.instance().getDatabaseDriver());
