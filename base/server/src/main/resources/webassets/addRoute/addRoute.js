@@ -52,7 +52,7 @@ base.addRouteController = function() {
             minute = document.getElementById('min2')
             departureTime += minute.options[minute.selectedIndex].text + ":00";
             limit = document.getElementById('limit')
-            limitTime = limit.options[limit.selectedIndex].text + ";";
+            limitTime = limit.options[limit.selectedIndex].text;
             console.log(thisUser.userID);
             console.log(model.origin);
             console.log(model.destination);
