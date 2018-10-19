@@ -41,23 +41,26 @@ public class BookingRequestResource {
 		// this.route = (Routes) context.getProperty(User.class.getSimpleName());
 		this.session = (Session) context.getProperty(Session.class.getSimpleName());
 	}
+
 	@POST
 	@PermitAll
 	@Produces(MediaType.APPLICATION_JSON + ";charset=utf-8")
-	public BookingRequest addRequest(BookingRequest request) { 
+	public BookingRequest addRequest(BookingRequest request) {
 		Route route = routeDao.getRoute(request.getRouteID());
-		String[] passengers = route.getPassengers().split(";");
 		User fromUser = userDao.getUser(request.getFromUserID());
 		User toUser = userDao.getUser(request.getToUserID());
-		
-		for(String passenger : passengers) {
-			if (passenger != null && !passenger.equals("")) {				
-				if (fromUser.getUserID() == Integer.parseInt(passenger)) {
-					throw new WebApplicationException("This user is already on the specified route. ",
-							Response.Status.BAD_REQUEST);
+		if (!(route.getPassengers() == null)) {
+			String[] passengers = route.getPassengers().split(";");
+			for (String passenger : passengers) {
+				if (passenger != null && !passenger.equals("")) {
+					if (fromUser.getUserID() == Integer.parseInt(passenger)) {
+						throw new WebApplicationException("This user is already on the specified route. ",
+								Response.Status.BAD_REQUEST);
+					}
 				}
 			}
 		}
+		
 		
 		Timestamp current = new Timestamp(System.currentTimeMillis());
 		if(current.after(route.getBookingEndTime())) {
