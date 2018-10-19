@@ -131,18 +131,24 @@ public class RouteDataAccess extends DataAccess<Route> {
      * @param passengerID
      * @return True if successful, false if passenger is already a passenger, no free seats available, or if the passenger is also the driver for the route.
      */
-    public boolean addPassengerToRoute(int routeID, int passengerID) {
-    List<Route> temp = query("SELECT * FROM Routes WHERE routeID = ?", routeID);
-    Route route = temp.get(0);
-    String currentPassengers = route.getPassengers();
-    String passengerIDString = Integer.toString(passengerID);
-    if (route.getFreeSeats() > 0 && !currentPassengers.contains(passengerIDString+";") && !route.getFinished()) {
-    		currentPassengers = currentPassengers + passengerIDString + ";";
-    		updateRoute(route.getRouteID(), route.getDriverID(), route.getFreeSeats() - 1, route.getLocation(), route.getDestination(), route.getTimeOfDeparture(), route.getTimeOfArrival(), currentPassengers, route.getDescription(),route.getBookingEndTime(), route.getRecurring(), route.getFinished());
-    		return true;
-    	}
-    return false;
-    }
+	public boolean addPassengerToRoute(int routeID, int passengerID) {
+		List<Route> temp = query("SELECT * FROM Routes WHERE routeID = ?", routeID);
+		Route route = temp.get(0);
+		String currentPassengers = route.getPassengers();
+		String passengerIDString = Integer.toString(passengerID);
+		if (route.getFreeSeats() > 0 && !route.getFinished()) {
+			if (currentPassengers == null) {
+				currentPassengers = passengerIDString + ";";
+				updateRoute(route.getRouteID(), route.getDriverID(), route.getFreeSeats() - 1, route.getLocation(), route.getDestination(), route.getTimeOfDeparture(), route.getTimeOfArrival(), currentPassengers, route.getDescription(), route.getBookingEndTime(), route.getRecurring(), route.getFinished());
+				return true;
+			} else if (!currentPassengers.contains(passengerIDString + ";")) {
+				currentPassengers = currentPassengers + passengerIDString + ";";
+				updateRoute(route.getRouteID(), route.getDriverID(), route.getFreeSeats() - 1, route.getLocation(), route.getDestination(), route.getTimeOfDeparture(), route.getTimeOfArrival(), currentPassengers, route.getDescription(), route.getBookingEndTime(), route.getRecurring(), route.getFinished());
+				return true;
+			}
+		}
+		return false;
+	}
     
     public List<Route> getRoutesWithPassenger(int userID){
     	String param = Integer.toString(userID) + ";";
