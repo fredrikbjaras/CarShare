@@ -12,22 +12,19 @@ base.homeController = function() {
         render: function() {
         model.forEach(d => view.renderPart(d)); 
         },
-        renderReq: function(reqes){
+        renderReq: function(req){
 			
         //reqes.forEach(d => view.renderRequest(d));
 		var i;
-		if(reqes!=null){
-		for(i = 0;i<reqes.length;i++){
+		if(req!=null){
 			//view.renderRequest(reqes[i]);
-			var fromUser = reqes[i].fromUserID;
-			var routeID = reqes[i].routeID;
-			var req = reqes[i]
+			var fromUser = req.fromUserID;
+			var routeID = req.routeID;
 			base.rest.getUser(fromUser).then(function(user) {
 				base.rest.getRoute(routeID).then(function(route) {
 				view.renderRequest(req,user,route);
 				});
 			});
-			}
 		}
         },
         
@@ -66,6 +63,7 @@ base.homeController = function() {
 					console.log("Accept");
 					
 					//Add Passenger
+					var id = route.routeID;
 					base.rest.addPassenger(route.routeID,user.userID).then(function(deleted){
 						if(deleted.ok==false){
 							alert("No empty seats");
@@ -159,7 +157,9 @@ base.homeController = function() {
 	                view.render()
 	            }); 
 	            base.rest.getRequests(currentUser.userID).then(function(bookingRequests) {
-	            	view.renderReq(bookingRequests);
+	            	//view.renderReq(bookingRequests);
+	            	bookingRequests.forEach(d=> view.renderReq(d));
+	            	console.log(bookingRequests);
 	            });        
 	            
 	            base.rest.getRoutes(null,null,null,null,null,currentUser.userName).then(function(joinedRoutes) {
