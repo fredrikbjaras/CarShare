@@ -43,10 +43,14 @@ public class RouteResource {
 			List<Route> tempList = routeDao.getAllRoutesFromUser(route.getDriverID());
 			for (int i = 0; i < tempList.size(); i++) {
 				// checks if the driver already has a route on that specific time.
-				if ((tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture)
-						&& tempList.get(i).getTimeOfDeparture().after(timeStampOfArrival))
-						|| (tempList.get(i).getTimeOfArrival().after(timeStampOfDeparture)
-								&& tempList.get(i).getTimeOfDeparture().before(timeStampOfDeparture))) {
+				if ((timeStampOfDeparture.before(tempList.get(i).getTimeOfDeparture())
+						&& timeStampOfArrival.after(tempList.get(i).getTimeOfDeparture()))
+						
+						|| (timeStampOfDeparture.after(tempList.get(i).getTimeOfDeparture())
+								&& timeStampOfDeparture.before(tempList.get(i).getTimeOfArrival()))
+						
+							|| timeStampOfDeparture.equals(tempList.get(i).getTimeOfDeparture())
+									&& timeStampOfArrival.equals(tempList.get(i).getTimeOfArrival())) {
 					throw new WebApplicationException("This user already has a route during the specified timeframe",
 							Response.Status.BAD_REQUEST);
 				}
