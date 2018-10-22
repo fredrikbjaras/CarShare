@@ -93,16 +93,12 @@ base.homeController = function() {
         },
         update: function(trElement, route) {
         	 var tds = trElement.children;
-        	 //console.log(route);
         	 tds[0].textContent = route.location;
         	 tds[1].textContent = route.destination;
-        	 //console.log(route.freeSeats);
         	 tds[2].textContent = route.freeSeats;
         	 tds[3].textContent = route.timeOfDeparture;
-        	// tds[4].textContent = route.timeOfArrival;
+        	 tds[4].textContent = route.timeOfArrival;
 
-            
-             //tds[3].textContent = e.toLocaleDateString() + ' ' + e.toLocaleTimeString();
         }, 
         reqUpdate: function(trElement,user,route) {
 			

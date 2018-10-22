@@ -6,6 +6,7 @@ base.userAdminController = function() {
         routes: [],
        
     };
+    var tds; 
 
     var view = {
     		
@@ -26,9 +27,14 @@ base.userAdminController = function() {
         
         renderPartRoute: function(route) {
         	 var t = document.getElementById('allRoutes-template');
-             view.updateRoute(t.content.querySelector('tr'), route);
+             
+        	 
+        	 view.updateRoute(t.content.querySelector('tr'), route);
              var clone = document.importNode(t.content, true);
              t.parentElement.appendChild(clone);
+             
+             
+             
         },
         
         updateUser: function(liElement, user) {
@@ -38,16 +44,29 @@ base.userAdminController = function() {
         	 tds[2].textContent = user.phoneNr;
         	 },
     
+        	 
+
+       	 getUser: function(id){
+             	base.rest.getUser(id).then(function(usr){
+             		console.log("usr");
+             		return usr;
+             						});
+       	 },
+       	
+             	
         updateRoute: function(liElement,route){
         	 var tds = liElement.children;
-        	 console.log(route);
-        	 tds[0].textContent = route.passengers;
-        	 tds[1].textContent = route.location;
-        	 tds[2].textContent = route.destination;
-        	 tds[3].textContent = route.timeOfDeparture;
-        	 tds[4].textContent = route.timeOfArrival;
-        	 tds[5].textContent = route.freeSeats;
-
+        		base.rest.getUser(route.driverID).then(function(usr){
+             	console.log(usr);	
+             	tds[0].textContent = route.driverID;
+               	 });
+        		tds[0].textContent = route.driverID;
+        		tds[1].textContent = route.location;
+        		tds[2].textContent = route.destination;
+        		tds[3].textContent = route.timeOfDeparture;
+        		tds[4].textContent = route.timeOfArrival;
+        		tds[5].textContent = route.freeSeats;
+       		
         },
 /*
  * showForm: function(formId){ console.log('första hej'); var form =
