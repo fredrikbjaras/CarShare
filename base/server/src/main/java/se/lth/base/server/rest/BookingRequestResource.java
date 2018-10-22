@@ -49,6 +49,11 @@ public class BookingRequestResource {
 		Route route = routeDao.getRoute(request.getRouteID());
 		User fromUser = userDao.getUser(request.getFromUserID());
 		User toUser = userDao.getUser(request.getToUserID());
+		
+		if (fromUser.getUserID() == route.getDriverID()) {
+			throw new WebApplicationException("You are the driver of this route. ",
+				Response.Status.BAD_REQUEST);
+		}
 		if (!(route.getPassengers() == null)) {
 			String[] passengers = route.getPassengers().split(";");
 			for (String passenger : passengers) {
