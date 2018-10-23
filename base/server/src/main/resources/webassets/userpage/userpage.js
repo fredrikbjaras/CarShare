@@ -20,13 +20,16 @@ base.userpageController = function() {
         	var deleteButton = document.getElementById('delete-user');
         	
         	deleteButton.onclick = function(event){
+        	if(confirm("Are you sure you want to delete your account?")){
         	base.rest.getLoggedInUser().then(function(u) {
 					base.rest.deleteUser(u.userID).then(function(response) {
+						alert("Account removed");
             			base.rest.logout().then(function(response){
                 			base.changeLocation('/login/login.html');
             		});
 				});	
 			});
+			}
     	};
 	}	
 	};
