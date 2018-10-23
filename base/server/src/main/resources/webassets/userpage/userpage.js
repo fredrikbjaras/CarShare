@@ -17,13 +17,19 @@ base.userpageController = function() {
         	document.getElementById('set-password').defaultValue = '';//model.password;
         	document.getElementById('set-phoneNbr').defaultValue = model.phoneNr;
         	document.getElementById('set-description').defaultValue = model.description;
-        },
-
-        resetEdit: function() {
-           view.render();
-        }
-
-    };
+        	var deleteButton = document.getElementById('delete-user');
+        	
+        	deleteButton.onclick = function(event){
+        	base.rest.getLoggedInUser().then(function(u) {
+					base.rest.deleteUser(u.userID).then(function(response) {
+            			base.rest.logout().then(function(response){
+                			base.changeLocation('/login/login.html');
+            		});
+				});	
+			});
+    	};
+	}	
+	};
 
     var controller = {
         submitChange: function() { //pop up notis att det är ändrad
@@ -39,7 +45,7 @@ base.userpageController = function() {
         },
 
 
-        deleteUser: function(delteEvent){
+        deleteUser: function(deleteEvent){
         	base.rest.deleteUser(model.userId).then(function(response) {
             	base.rest.logout().then(function(response){
                 base.changeLocation('/login/login.html');

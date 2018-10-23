@@ -216,10 +216,10 @@ public class UserResource {
 		}
 	}
 
-	@Path("{username}")
+	@Path("{id}")
 	@PermitAll
 	@DELETE
-	public boolean deleteUser(int userId) {
+	public boolean deleteUser(@PathParam("id") int userId) {
 
 		if (currentUser().getIsAdmin()) {
 			if (userId == currentUser().getUserID()) {

@@ -51,7 +51,7 @@ CREATE TABLE Routes(routeID INT AUTO_INCREMENT NOT NULL,
 					finished BOOLEAN NOT NULL,
 
 					PRIMARY KEY(routeId),
-					FOREIGN KEY(driverID) REFERENCES User(userID)
+					FOREIGN KEY(driverID) REFERENCES User(userID) ON DELETE CASCADE
 					);
 
 INSERT INTO Routes(routeID,driverID,freeSeats, location,destination,timeOfDeparture,timeOfArrival, passengers,description,bookingEndTime,recurring,finished) 
